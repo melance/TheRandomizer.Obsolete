@@ -1,0 +1,8 @@
+﻿@model TheRandomizer.Generators.GeneratorInfo
+
+<tr>
+    <td>@Html.ActionLink(Model.Name, "Generate", new { Id = Model.Id } )</td>
+    <td>Model.Description</td>
+    <td>@Model.TagList</td>
+    <td>&nbsp;</td>
+</tr>

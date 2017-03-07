@@ -1,0 +1,59 @@
+﻿@using TheRandomizer.WebApp.Models
+@model List<GeneratorTypeModel>
+@{
+    ViewBag.Title = "Select Generator Type";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Select Generator Type</h2>
+<table class="table table-striped">
+    <tbody>
+        @foreach (var generatorType in Model)
+        {
+        <tr>
+            <th>
+                @Html.ActionLink(generatorType.Name, generatorType.Action)
+            </th>
+            <td>
+                @generatorType.Description
+            </td>
+        </tr>
+        }
+    </tbody>
+</table>
+
+<hr />
+
+<h2>Or Upload a Generator File</h2>
+
+@using (Html.BeginForm("SelectGeneratorType","UserContent", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+<div class="form-group">
+    <div class="row">
+        <div class="col-md-4">
+            <input type="file" name="upload" id="file" accept=".rnd.xml" style="max-width: 100%" />
+        </div>
+        <div class="col-md-8">
+            <button type="submit" id="submit" class="btn btn-default" disabled>Upload</button>
+        </div>
+    </div>
+    <div class="row @(string.IsNullOrEmpty(ViewBag.UploadError) ? "hidden" : "")">
+        <label class="field-validation-error text-danger">@ViewBag.UploadError</label>
+    </div>
+</div>
+}
+
+<script>
+    $(document).ready(function()
+    {
+        $("#file").on("change", "", function () {
+            if ($(this).val()) {
+                $('#submit').removeAttr('disabled'); 
+            }
+            else
+            {
+                $('#submit').attr('disabled', true);
+            }
+        })
+    })
+</script>
