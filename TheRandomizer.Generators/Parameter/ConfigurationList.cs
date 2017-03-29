@@ -9,6 +9,12 @@ namespace TheRandomizer.Generators.Parameter
 {
     public class ConfigurationList : List<Configuration>
     {
+        public ConfigurationList() : base() { }
+
+        public ConfigurationList(int capacity) : base(capacity) { }
+
+        public ConfigurationList(IEnumerable<Configuration> collection) : base(collection) { }
+        
         /// <summary>
         /// Determines whether an element with the given name is in the ConfigurationList
         /// </summary>

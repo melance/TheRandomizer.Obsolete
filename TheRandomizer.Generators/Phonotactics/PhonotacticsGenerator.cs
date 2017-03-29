@@ -7,6 +7,7 @@ using System.Xml.Serialization;
 using TheRandomizer.Generators.Lexer;
 using System.Globalization;
 using TheRandomizer.Generators.Attributes;
+using System.ComponentModel.DataAnnotations;
 
 namespace TheRandomizer.Generators.Phonotactics
 {
@@ -23,6 +24,7 @@ namespace TheRandomizer.Generators.Phonotactics
         /// Propert : Change to Proper case
         /// </remarks>
         [XmlElement("textCase")]
+        [Display(Name = "Text Case")]
         public TextCase TextCase { get; set; } = TextCase.None;
 
         /// <summary>List of Syllable Definitions</summary>

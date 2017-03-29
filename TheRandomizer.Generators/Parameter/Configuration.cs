@@ -25,8 +25,7 @@ namespace TheRandomizer.Generators.Parameter
             Integer,
             Decimal,
             List,
-            Date,
-            MultiSelect
+            Date
         }
         #endregion
 

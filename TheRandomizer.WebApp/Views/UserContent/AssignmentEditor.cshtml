@@ -6,8 +6,15 @@
     
 }
 
-@section TRScripts { @Scripts.Render("~/Scripts/TheRandomizer.ItemListMaintenance.js") }
+@section TRScripts {
+    <script src="~/Scripts/bootstrap-tokenfield.js"></script>
+    <script src="~/Scripts/jquery-ui-1.12.1.js"></script>
+    @Scripts.Render("~/Scripts/TheRandomizer.ItemListMaintenance.js")
+}
 
+@section TRStyles {
+    <link href="~/Content/bootstrap-tokenfield/bootstrap-tokenfield.css" rel="stylesheet" type="text/css" />
+}
 <h2>@ViewBag.Title</h2>
 
 @using (Html.BeginForm("AssignmentEditor", "UserContent", FormMethod.Post))
@@ -20,17 +27,57 @@
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         @Html.HiddenFor(model => model.Id)
 
+        @Html.Partial("_EditorSubmit")
+
         @Html.EditorFor(bg => bg)
-
-        @*@Html.EditorFor(ag => ag.Items)*@
-
-        @Html.Partial("_LineItemList", Model.Items)
-
-        <div class="form-group">
+        
+        @Html.ValidationMessageFor(model => model.LineItems, "", new { @class = "text-danger" })
+        <div class="row">
             <div class="col-md-12">
-                <input type="submit" value="Save" class="btn btn-default" name="Submit"/>
+                <div class="panel panel-default">
+                    <div class="panel-heading clearfix">
+                        <b class="panel-title">Items</b>
+                        <a href="#" data-toggle="collapse" data-target="#ItemContainer" style="color: black;"><span id="ItemCollapseIcon"></span></a>
+                        <div class="btn-group-sm pull-right">
+                            <button id="ClearItems" type="button" class="btn btn-default" title="Clear all of the items"><span class="glyphicon glyphicon-remove"></span> Clear</button>
+                            <div class="btn-group btn-group-sm">
+                                <button id="AddItem" type="button" class="btn btn-default" title="Add a new items"><span class="glyphicon glyphicon-plus"></span> Add</button>
+                                <button id="AddItems" class="btn btn-default dropdown-toggle" title="Add several items" data-toggle="dropdown">
+                                    <span class="caret"></span>
+                                    <span class="sr-only">Toggle Dropdown</span>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a href="#" name="AddItems" data-count="5">5</a></li>
+                                    <li><a href="#" name="AddItems" data-count="10">10</a></li>
+                                    <li><a href="#" name="AddItems" data-count="15">15</a></li>
+                                    <li><a href="#" name="AddItems" data-count="20">20</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel-body panel-collapse collapse in" id="ItemContainer">
+                        <div class="form-group">
+                            <div class="col-md-2">@Html.Label("Name", htmlAttributes: new { @class = "control-label" })</div>
+                            <div class="col-md-1">@Html.Label("Weight", htmlAttributes: new { @class = "control-label" })</div>
+                            <div class="col-md-2">@Html.Label("Next", htmlAttributes: new { @class = "control-label" })</div>
+                            <div class="col-md-2">@Html.Label("Variable", htmlAttributes: new { @class = "control-label" })</div>
+                            <div class="col-md-4">@Html.Label("Expression", htmlAttributes: new { @class = "control-label" }) </div>
+                            <div class="col-md-1">&nbsp;</div>
+                        </div>
+                        <div id="Items" class="itemListStriped" data-item-container>
+                            <input type="hidden" id="ItemIndex" value="@Model.LineItems.Count" />
+                            @for (var i = 0; i < Model.LineItems.Count; i++)
+                            {
+                                @Html.EditorFor(model => model.LineItems[i])
+                            }
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
+
+
+        @Html.Partial("_EditorSubmit")
     </div>
 }
 
@@ -39,5 +86,41 @@
 </div>
 
 <script>
-    
+    $('document').ready(function () {
+        $('#Items').EnableDisableItemUpDowns();
+
+        $("#Items").on("click", "[data-toggle = 'DeleteItem']", function () {
+            $(this).parents("[data-item-row]").deleteItem();
+        })
+
+        $("#ClearItems").click(function () {
+            $('#Items').clearItems("Confirm", "Are you sure you want to clear all items?");
+        })
+
+        $("#AddItem").click(function () {
+            var index = $("#ItemIndex").val();
+            $("#ItemIndex").val(index + 1);
+            $("#Items").addItem("CreateLineItem", index);
+            return false;
+        })
+
+        $("[name = 'AddItems']").click(function () {
+            var count = parseInt($(this).attr("data-count"));
+            for (var i = 0; i < count; i++) {
+                $("#Items").addItem("CreateLineItem");
+            }
+        })
+
+        $("#Items").on("click", "[data-toggle = 'MoveItemUp']", function () {
+            var selected = $(this).parents('[data-item-row]');
+            selected.moveItemUp();
+        })
+
+        $("#Items").on("click", "[data-toggle = 'MoveItemDown']", function () {
+            var selected = $(this).parents('[data-item-row]');
+            selected.moveItemDown();
+        })
+
+        RegisterCollapseElement("#ItemContainer", "#ItemCollapseIcon");
+    })
 </script>

@@ -1,0 +1,160 @@
+﻿@model TheRandomizer.Generators.Phonotactics.PhonotacticsGenerator
+
+@{
+    ViewBag.Title = "Phonotactics Editor";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+@section TRScripts {
+    <script src="~/Scripts/bootstrap-tokenfield.js"></script>
+    <script src="~/Scripts/jquery-ui-1.12.1.js"></script>
+    @Scripts.Render("~/Scripts/TheRandomizer.ItemListMaintenance.js")
+}
+
+@section TRStyles {
+    <link href="~/Content/bootstrap-tokenfield/bootstrap-tokenfield.css" rel="stylesheet" type="text/css" />
+}
+
+<h2>@ViewBag.Title</h2>
+
+@using (Html.BeginForm("AssignmentEditor", "UserContent", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <h4>@(string.IsNullOrWhiteSpace(Model.Name) ? "New Generator" : Model.Name)</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.Id)
+
+        @Html.EditorFor(bg => bg)
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <b class="panel-title">Definitions</b>
+                        <a href="#" data-toggle="collapse" data-target="#DefinitionContainer" style="color: black;"><span id="InfoCollapseIcon"></span></a>
+                        <div class="btn-group-sm pull-right">
+                            <button id="ClearDefinitions" type="button" class="btn btn-default" title="Clear all of the definitions"><span class="glyphicon glyphicon-remove"></span> Clear</button>
+                            <button id="AddDefinition" type="button" class="btn btn-default" title="Add a new definition"><span class="glyphicon glyphicon-plus"></span> Add</button>
+                        </div>
+                    </div>
+
+                    <div class="panel-body panel-collapse collapse in">
+                        <div class="form-group">
+                            <div class="col-md-1"><label class="control-label">Key</label></div>
+                            <div class="col-md-9"><label class="control-label">Definition</label></div>
+                        </div>
+                        <div class="itemListStriped" id="Definitions" data-item-container>
+                            <input type="hidden" id="DefinitionIndex" value="@Model.Definitions.Count" />
+                            @for (var i = 0; i < Model.Definitions.Count; i++)
+                            {
+                                Html.EditorFor(model => model.Definitions[i]);
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <b class="panel-title">Patterns</b>
+                        <a href="#" data-toggle="collapse" data-target="#Patterns" style="color: black;"><span id="PatternCollapseIcon"></span></a>
+                        <div class="btn-group-sm pull-right">
+                            <button id="ClearPatterns" type="button" class="btn btn-default" title="Clear all of the patterns"><span class="glyphicon glyphicon-remove"></span> Clear</button>
+                            <button id="AddPattern" type="button" class="btn btn-default" title="Add a new pattern"><span class="glyphicon glyphicon-plus"></span> Add</button>
+                        </div>
+                    </div>
+                    <div class="panel-body panel-collapse collapse in" id="Patterns">
+                        <div class="row">
+                            <fieldset class="form-inline">
+                                @Html.LabelFor(model => model.TextCase, htmlAttributes: new { @class = "control-label text-left col-md-2" })
+                                @Html.EnumDropDownListFor(model => model.TextCase, htmlAttributes: new { @class = "form-control col-md-8", @title = "The text case to use for the resulting output." })
+                            </fieldset>
+                        </div>
+                        <div class="col-md-12">
+                            <div class="form-group">
+                                <div class="col-md-9"><label class="control-label">Pattern</label></div>
+                                <div class="col-md-2"><label class="control-label">Weight</label></div>
+                            </div>
+                            <div id="PatternList" name="PatternList" class="itemListStriped" data-item-container>
+                                <input type="hidden" id="PatternIndex" value="@Model.Patterns.Count" />
+                                @for (var i = 0; i < Model.Patterns.Count; i++)
+                                {
+                                    @Html.EditorFor(model => model.Patterns[i])
+                                }
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        @Html.Partial("_EditorSubmit")
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+<script>
+    $(document).ready(function () {
+
+        $("#Definitions").on("click", "[data-toggle = 'DeleteItem']", function () {
+            $(this).parents("[data-item-row]").deleteItem();
+        })
+
+        $("#ClearDefinitions").click(function () {
+            $('#Definitions').clearItems("Confirm", "Are you sure you want to clear all definitions?");
+        })
+
+        $("#AddDefinition").click(function () {
+            var index = $("#DefinitionIndex").val();
+            $("#DefinitionIndex").val(index + 1);
+            $("#Definitions").addItem("CreateDefinition", index);
+            return false;
+        })
+
+        $("#Definitions").on("click", "[data-toggle = 'MoveItemUp']", function () {
+            var selected = $(this).parents('[data-item-row]');
+            selected.moveItemUp();
+        })
+
+        $("#Definitions").on("click", "[data-toggle = 'MoveItemDown']", function () {
+            var selected = $(this).parents('[data-item-row]');
+            selected.moveItemDown();
+        })
+
+        $("#Patterns").on("click", "[data-toggle = 'DeleteItem']", function () {
+            $(this).parents("[data-item-row]").deleteItem();
+        })
+
+        $("#ClearPatterns").click(function () {
+            $('#Patterns').clearItems("Confirm", "Are you sure you want to clear all patterns?");
+        })
+
+        $("#AddPattern").click(function () {
+            var index = parseInt($("#PatternIndex").val());
+            $("#PatternIndex").val(index + 1);
+            $("#PatternList").addItem("CreatePattern", index);
+            return false;
+        })
+
+        $("#Patterns").on("click", "[data-toggle = 'MoveItemUp']", function () {
+            var selected = $(this).parents('[data-item-row]');
+            selected.moveItemUp();
+        })
+
+        $("#Patterns").on("click", "[data-toggle = 'MoveItemDown']", function () {
+            var selected = $(this).parents('[data-item-row]');
+            selected.moveItemDown();
+        })
+
+        RegisterCollapseElement("#Definitions", "#DefinitionCollapseIcon");
+        RegisterCollapseElement("#Patterns", "#PatternCollapseIcon");
+    })
+</script>

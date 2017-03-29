@@ -1,4 +1,5 @@
 ﻿@model TheRandomizer.WebApp.Models.SearchModel
+@using TheRandomizer.WebApp.Controllers
 
 @{
     ViewBag.Title = "Home Page";
@@ -8,98 +9,231 @@
 <h2>Generators</h2>
 @using (Html.BeginForm())
 {
-<div class="col-md-12">
-    <div class="panel panel-default">
-        <div class="panel-heading clearfix">
-            <a href="#" data-toggle="collapse" data-target="#SearchCriteria" style="color: black;"><b class="panel-title">Criteria</b></a>
-            <div class="btn-group-sm pull-right">
-                <button id="Search" type="submit" class="btn btn-default" title="Create new Generator"><span class="glyphicon glyphicon-search"></span> Search</button>
+    <div class="col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-heading clearfix">
+                <b class="panel-title">Criteria</b>
+                <a href="#" data-toggle="collapse" data-target="#SearchCriteria" style="color: black;"><span id="CollapseSearchIcon"></span></a>
+                <div class="btn-group-sm pull-right">
+                    <button id="Search" type="submit" class="btn btn-default" title=""><span class="glyphicon glyphicon-search"></span> Search</button>
+                </div>
             </div>
-        </div>
-        <div class="panel-body panel-collapse collapse in" id="SearchCriteria">
-            <div class="row">
-                <div class="form-group col-md-12">
-                    @Html.LabelFor(model => model.Tags, htmlAttributes: new { @class = "control-label text-left col-md-2" })
-                    <div id="Tags" class="btn-group col-md-10" data-toggle="buttons">
-                        @foreach (var tag in Model.Tags)
-                        {
-                            <label class="btn btn-default @(tag.Value ? "active" : "")">
-                                <input name="@("tag" + tag.Key)" type="checkbox" @(tag.Value ? "checked" : "") autocomplete="off" /> @tag.Key
-                            </label>
-                        }
+            <div class="panel-body panel-collapse collapse in" id="SearchCriteria">
+                <div class="row">
+                    <div class="form-group col-md-12">
+                        @Html.LabelFor(model => model.Tags, htmlAttributes: new { @class = "control-label text-left col-md-2" })
+                        <div id="Tags" class="col-md-10" data-toggle="buttons">
+                            @if (Model.Tags.Count() == 0)
+                            {
+                                <label class="text-danger">No Tags Available</label>
+                            }
+                            @foreach (var tag in Model.Tags)
+                            {
+                                <label class="btn btn-default @(tag.Value ? "active" : "")">
+                                    <input name="@("tag" + tag.Key)" type="checkbox" @(tag.Value ? "checked" : "") autocomplete="off" /> @tag.Key
+                                </label>
+                            }
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="form-group col-md-12">
-                    @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label text-left col-md-2" })
-                    @Html.TextBoxFor(model => model.Name, htmlAttributes: new { @class = "input-control col-md-10", @title = "Search for generators whose name contains this value." })
+                <div class="row">
+                    <div class="form-group col-md-12">
+                        <fieldset class="form-inline">
+                            @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label text-left col-md-2" })
+                            @Html.TextBoxFor(model => model.Name, htmlAttributes: new { @class = "form-control col-md-10", title = "Search for generators whose name contains this value." })
+                        </fieldset>
+                    </div>
                 </div>
-            </div>
-            <div class="row">
-                <div class="form-group col-md-12">
-                    @Html.LabelFor(model => model.FavoritesOnly, htmlAttributes: new { @class = "control-label text-left col-md-2" })
-                    <input type="checkbox" name="FavoritesOnly" class="btn btn-default col-md-10" @(Model.FavoritesOnly ? "checked" : "") data-toggle="toggle" data-on="Yes" data-off="No" />
+                <div class="row">
+                    <div class="form-group col-md-12">
+                        <fieldset class="form-inline">
+                            @Html.LabelFor(model => model.Author, htmlAttributes: new { @class = "control-label text-left col-md-2" })
+                            @Html.DropDownListFor(model => model.Author, HomeController.GetAuthors(), htmlAttributes: new { @class = "form-control col-md-10", @title = "Search for generators by this author." })
+                        </fieldset>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-12">
+                        <fieldset class="form-inline">
+                            @Html.LabelFor(model => model.OpenNewTab, htmlAttributes: new { @class = "control-label text-left col-md-2" })
+                            <input type="checkbox" id="OpenNewTab" name="OpenNewTab" class="btn btn-default col-md-10" @(Model.FavoritesOnly ? "checked" : "") data-toggle="toggle" data-on="New Tab" data-off="This Tab" />
+                        </fieldset>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-md-12 @(User.Identity.IsAuthenticated ? "" : "hidden")">
+                        @Html.LabelFor(model => model.FavoritesOnly, htmlAttributes: new { @class = "control-label text-left col-md-2" })
+                        <input type="checkbox" name="FavoritesOnly" class="btn btn-default col-md-10" @(Model.FavoritesOnly ? "checked" : "") data-toggle="toggle" data-on="Yes" data-off="No" />
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
-}
 
-<div class="col-md-12">
-    <div class="panel panel-default">
-        <div class="panel-heading clearfix">
-            <b class="panel-title">Generators</b>
-            <div class="btn-group-sm pull-right">
-                <a href="~/UserContent/SelectGeneratorType" id="AddGenerator" type="button" class="btn btn-default" title="Create new Generator"><span class="glyphicon glyphicon-plus"></span> Create</a>
-            </div>
-        </div>
-        <div class="panel-body">
-            <table class="table table-striped">
-                <thead>
-                    <tr>
-                        <th class="col-md-2">
-                            @Html.Label("Name", htmlAttributes: new { @class = "control-label" })
-                        </th>
-                        <th class="col-md-5">
-                            @Html.Label("Description", htmlAttributes: new { @class = "control-label" })
-                        </th>
-                        <th class="col-md-4">
-                            @Html.Label("Tags", htmlAttributes: new { @class = "control-label" })
-                        </th>
-                        <th class="col-md-1">
-                            &nbsp;
-                        </th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @Html.DisplayFor(model => model.Results)
-                </tbody>
-            </table>
-            <div class="row">
-                <div class="col-md-8">
-                    <div class="btn-group">
-                        <button name="PageFirst" class="btn btn-default" @(Model.Page == 1 ? "disabled" : "")>&laquo;</button>
-                        <button name="PagePrevious" class="btn btn-default" @(Model.Page == 1 ? "disabled" : "")>&lsaquo;</button>
-                        @for (var i = 1; i <= Model.TotalPages; i++)
+    <div class="col-md-12">
+        <div class="panel panel-default">
+            <div class="panel-heading clearfix">
+                <b class="panel-title">Generators</b>
+                @if (Request.IsAuthenticated)
+                {
+                <div class="btn-group btn-group-sm pull-right">
+                    <a href="~/UserContent/SelectGeneratorType" id="AddGenerator" type="button" class="btn btn-default" title="Create new Generator"><span class="glyphicon glyphicon-plus"></span> Create</a>
+                    <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                        <span class="caret"></span>
+                        <span class="sr-only">Toggle Dropdown</span>
+                    </button>
+                    <ul class="dropdown-menu" id="GeneratorType">
+                        @foreach (var generator in UserContentController.GeneratorTypes)
                         {
-                            var isCurrentPage = Model.Page == i;
-                        
-                            <button class="btn @(isCurrentPage ? "btn-primary" : "btn-default")" @(isCurrentPage ? "disabled" : "") name="page" data-page="@i.ToString()">@i.ToString()</button>
+                            <li>@Html.ActionLink(generator.Name, generator.Action, "UserContent")</li>
                         }
-                        <button name="PageNext" class="btn btn-default" @(Model.Page == Model.TotalPages ? "disabled" : "")>&rsaquo;</button>                        
-                        <button name="PageLast" class="btn btn-default" @(Model.Page == Model.TotalPages ? "disabled" : "")>&raquo;</button>
-                    </div>
+                    </ul>
                 </div>
-                <div class="col-md-4">
+                }
+            </div>
+            <div class="panel-body">
+                @Html.HiddenFor(model => model.PageSize)
+                @Html.HiddenFor(model => model.Page)
+                @if (Model.TotalResults == 0)
+                {
+                    <div class="text-danger text-center"><b>No Generators Found</b></div>
+                }
+                else
+                {
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th class="col-md-3">
+                                    @Html.Label("Name", htmlAttributes: new { @class = "control-label" })
+                                </th>
+                                <th class="col-md-5">
+                                    @Html.Label("Description", htmlAttributes: new { @class = "control-label" })
+                                </th>
+                                <th class="col-md-3">
+                                    @Html.Label("Tags", htmlAttributes: new { @class = "control-label" })
+                                </th>
+                                <th class="col-md-1">
+                                    &nbsp;
+                                </th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @Html.DisplayFor(model => model.Results)
+                        </tbody>
+                    </table>
+                }
+                <div class="row"><div class="col-md-12 text-muted">Showing @Model.First @(@Model.First == Model.Last ? "" : $"- {Model.Last}") of @Model.TotalResults</div></div>
+                <div class="row">
+                    <div class="col-md-10">
+                        <div class="btn-group">
+                            <button name="ChangePage" data-page="1" class="btn btn-default" @(Model.Page == 1  || Model.TotalResults == 0 ? "disabled" : "")>&laquo;</button>
+                            <button name="ChangePage" data-page="@(Model.Page-1)" class="btn btn-default" @(Model.Page == 1  || Model.TotalResults == 0 ? "disabled" : "")>&lsaquo;</button>
+                            @for (var i = 1; i <= Model.TotalPages ; i++)
+                            {
+                                var isCurrentPage = Model.Page == i;
 
+                                <button class="btn @(isCurrentPage ? "btn-primary" : "btn-default")" @(isCurrentPage ? "disabled" : "") name="ChangePage" data-page="@i.ToString()">@i.ToString()</button>
+                            }
+                            <button name="ChangePage" data-page="@(Model.Page+1)" class="btn btn-default" @(Model.Page == Model.TotalPages || Model.TotalResults == 0 ? "disabled" : "")>&rsaquo;</button>
+                            <button name="ChangePage" data-page="@Model.TotalPages" class="btn btn-default" @(Model.Page == Model.TotalPages || Model.TotalResults == 0 ? "disabled" : "")>&raquo;</button>
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="row">
+                            <div class="form-group">
+                                <div class="input-group">
+                                    <span class="input-group-addon" title="Generators per page">
+                                        <span class="glyphicon glyphicon-th-list"></span>
+                                    </span>
+                                    <select id="ChangePageSize" class="form-control dropdown" style="max-width: 5em;">
+                                        @{
+                                            var pageSizes = new Int32[] { 5, 10, 20, 50 };
+                                            foreach (var pageSize in pageSizes)
+                                            {
+                                                var isSelected = Model.PageSize == pageSize;
+                                                <option class="" @(isSelected ? "selected" : "") value="@pageSize">@pageSize</option>
+                                            }
+                                        }
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
+                                    }
 
 <script>
+    $(document).ready(function () {
 
+        var openNewTab = Cookies.get("OpenNewTab");
+        var favoritesOnly = Cookies.get("favoritesOnly");
+
+        if (openNewTab != undefined) {
+            $("#OpenNewTab").bootstrapToggle(openNewTab);
+        }
+
+        SetLinkTarget($("#OpenNewTab").prop("checked"));
+
+        if (favoritesOnly != undefined) {
+            $("#FavoritesOnly").bootstrapToggle(favoritesOnly);
+        }
+
+        $("#Search").click(function () {
+            Cookies.set("OpenNewTab", $("#OpenNewTab").val())
+        })
+
+        $("[name = 'ChangePage']").click(function () {
+            $("#Page").val($(this).data("page"));
+        })
+
+        $("#ChangePageSize").change(function () {
+            $("#PageSize").val($(this).val());
+            $("#Page").val(1);
+            this.form.submit();
+        })
+
+        $("[name = 'OpenNewTab'").change(function () {
+            SetLinkTarget(this.checked);
+        })
+
+        function SetLinkTarget (openNewTab)
+        {
+            var links = $('[name = "OpenGenerator"');
+            for (let link of links)
+            {
+                link.target = openNewTab ? "_blank" : "_self";
+            }
+        }
+
+        $("[name = 'ToggleFavorite']").click(function () {
+            var span = $(this);
+            var id = span.data("id");
+            var isFavorite = !Boolean(span.data("isFavorite"));
+            var data = { id: id, isFavorite: isFavorite };
+            $.ajax({
+                url: "/Home/SetFavorite",
+                data: data,
+                type: "POST",
+                success: function (result) {
+                    span.data("isFavorite", result);
+                    if (result) {
+                        span.removeClass("glyphicon-star-empty");
+                        span.addClass("glyphicon-star");
+                        span.attr("title", "Click to remove this generator from your favorites.");
+                    }
+                    else {
+                        span.removeClass("glyphicon-star");
+                        span.addClass("glyphicon-star-empty");
+                        span.attr("title", "Click to add this generator from your favorites.");
+                    }
+                }
+            })
+            return false;
+        })
+
+        RegisterCollapseElement("#SearchCriteria", "#CollapseSearchIcon");
+    })
 </script>

@@ -4,7 +4,8 @@
     <div class="col-md-12">
         <div class="panel panel-default">
             <div class="panel-heading clearfix">
-                <a href="#" data-toggle="collapse" data-target="#ItemContainer" style="color: black;"><b class="panel-title">Items</b></a>
+                <b class="panel-title">Items</b>
+                <a href="#" data-toggle="collapse" data-target="#ItemContainer" style="color: black;"><span id="ItemCollapseIcon"></span></a>
                 <div class="btn-group-sm pull-right">
                     <button id="ClearItems" type="button" class="btn btn-default" title="Clear all of the items"><span class="glyphicon glyphicon-remove"></span> Clear</button>
                     <div class="btn-group btn-group-sm">
@@ -31,8 +32,12 @@
                     <div class="col-md-4">@Html.Label("Expression", htmlAttributes: new { @class = "control-label" }) </div>
                     <div class="col-md-1">&nbsp;</div>
                 </div>
-                <div id="Items" data-item-container>
-                    @Html.EditorFor(model => model)
+                <div id="Items" class="itemListStriped" data-item-container>
+                    <input type="hidden" id="ItemIndex" value="@Model.Count" />
+                    @for (var i = 0; i < Model.Count; i++)
+                    {
+                        @Html.EditorFor(model => model[i])
+                    }
                 </div>
             </div>
         </div>
@@ -52,7 +57,9 @@ $('document').ready(function () {
         })
 
         $("#AddItem").click(function () {
-            $("#Items").addItem("CreateLineItem");
+            var index = $("#ItemIndex").val();
+            $("#ItemIndex").val(index + 1);
+            $("#Items").addItem("CreateLineItem", index);
             return false;
         })
 
@@ -73,5 +80,7 @@ $('document').ready(function () {
             var selected = $(this).parents('[data-item-row]');
             selected.moveItemDown();
         })
+
+        RegisterCollapseElement("#ItemContainer", "#ItemCollapseIcon");
 })
 </script>

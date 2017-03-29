@@ -1,34 +1,61 @@
-﻿<!DOCTYPE html>
+﻿@using TheRandomizer.WebApp.Controllers
+
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@ViewBag.Title - My ASP.NET Application</title>
+    <title>@ViewBag.Title - The Randomizer</title>
     @Scripts.Render("~/bundles/jquery")
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
     @Scripts.Render("~/bundles/bootstrap")
-    @Scripts.Render("~/Scripts/jquery.unobtrusive-ajax.min.js")  
+    @Scripts.Render("~/Scripts/jquery.unobtrusive-ajax.min.js")
+    @Scripts.Render("~/Scripts/therandomizer.js")
+    @Scripts.Render("~/Scripts/js-cookie/js.cookie.js")
     @RenderSection("TRScripts", false)
+    @RenderSection("TRStyles", false)
 </head>
 <body>
+    <div class="loader"></div>
     <div class="navbar navbar-inverse navbar-fixed-top">
         <div class="container">
             <div class="navbar-header">
-                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+                <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#NavbarTop">
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
                 </button>
+                <img src="\TheRandomizer64.png" />
                 @Html.ActionLink("The Randomizer", "Index", "Home", new { area = "" }, new { @class = "navbar-brand", @id = "Title" })
             </div>
-            <div class="navbar-collapse collapse">
+            <div class="navbar-collapse collapse" id="NavbarTop">
                 <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Home", "Index", "Home")</li>
+                    <li>@Html.ActionLink("Home", "Index", "Home")</li>                    
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Create <b class="caret"></b></a>
+                        <ul class="dropdown-menu" id="GeneratorType">
+                            <li>@Html.ActionLink("Create Generator", "SelectGeneratorType", "UserContent")</li>
+                            <li role="separator" class="divider"></li>
+                            @foreach (var generator in UserContentController.GeneratorTypes)
+                            {
+                                <li>@Html.ActionLink(generator.Name, generator.Action, "UserContent")</li>
+                            }
+                        </ul>
+                    </li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">Themes <b class="caret"></b></a>
+                        <ul class="dropdown-menu" id="ThemeSelector">
+                            <li><a href="#" data-theme="default" class="theme-link">Default</a></li>
+                            <li><a href="#" data-theme="slate" class="theme-link">Slate</a></li>
+                            <li><a href="#" data-theme="spacelab" class="theme-link">Space Lab</a></li>
+                        </ul>
+                    </li>
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Help <span class="caret"></span></a>
                         <ul class="dropdown-menu">
                             <li>@Html.ActionLink("Help", "Help", "Help")</li>
+                            <li>@Html.ActionLink("Tour", "Tour", "Help")</li>
                             <li>@Html.ActionLink("About", "About", "Home")</li>
                         </ul>
                     </li>
@@ -47,5 +74,49 @@
     </div>
 
     @RenderSection("scripts", required: false)
+
+    <link rel="stylesheet" type="text/css" href="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.css" />
+    <script src="//cdnjs.cloudflare.com/ajax/libs/cookieconsent2/3.0.3/cookieconsent.min.js"></script>
+    <script>
+        window.addEventListener("load", function () {
+            window.cookieconsent.initialise({
+                "palette": {
+                    "popup": {
+                        "background": "#edeff5",
+                        "text": "#838391"
+                    },
+                    "button": {
+                        "background": "#4b81e8"
+                    }
+                },
+                "theme": "classic"
+            })
+        });
+
+        var themes = {
+            "default": "/content/bootstrap.min.css",
+            "slate": "/content/themes/bootstrap.slate.min.css",
+            "spacelab": "/content/themes/bootstrap.spacelab.min.css"
+        }
+
+        var theme = Cookies.get("theme");
+
+        if (theme == undefined || themes[theme] == null) { theme = "default"; }
+
+        var themesheet = $('<link href="' + themes[theme] + '" rel="stylesheet" />');
+        themesheet.appendTo('head');
+
+        $(document).ready(function () {
+            $(function () {
+                $('.theme-link').click(function () {
+                    var themeName = $(this).attr('data-theme');
+                    var themeurl = themes[themeName];
+                    themesheet.attr('href', themeurl);
+                    Cookies.set("theme", themeName);
+                });
+
+            });
+        })
+    </script>
 </body>
 </html>

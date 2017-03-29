@@ -1,0 +1,86 @@
+﻿@using TheRandomizer.Generators.Dice
+@model DiceGenerator
+@{
+    ViewBag.Title = "Dice Editor";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+
+@section TRScripts {
+    <script src="~/Scripts/bootstrap-tokenfield.js"></script>
+    <script src="~/Scripts/jquery-ui-1.12.1.js"></script>
+    @Scripts.Render("~/Scripts/TheRandomizer.ItemListMaintenance.js")
+}
+
+
+@section TRStyles {
+    <link href="~/Content/bootstrap-tokenfield/bootstrap-tokenfield.css" rel="stylesheet" type="text/css" />
+}
+<style>
+    #divSupportsMaxLength {
+        display: none;
+    }
+</style>
+
+<h2>@ViewBag.Title</h2>
+
+@using (Html.BeginForm("DiceEditor", "UserContent", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <h4>@(string.IsNullOrWhiteSpace(Model.Name) ? "New Generator" : Model.Name)</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.Id)
+
+        @Html.EditorFor(model => model)
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading clearfix">
+                        <b class="panel-title">Dice Functions</b>
+                        <a href="#" data-toggle="collapse" data-target="#Functions"><span id="FunctionCollapseIcon"></span></a>
+                        <div class="btn-group-sm pull-right">
+                            <button id="ClearFunctions" type="button" class="btn btn-default" title="Clear all of the functions"><span class="glyphicon glyphicon-remove"></span> Clear</button>
+                            <div class="btn-group btn-group-sm">
+                                <button id="AddFunction" type="button" class="btn btn-default" title="Add a new function"><span class="glyphicon glyphicon-plus"></span> Add</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel-body itemListStriped" id="Functions" data-item-container>
+                        <input type="hidden" id="FunctionIndex" value="@Model.Functions.Count" />
+                        @for (var i = 0; i < Model.Functions.Count; i++)
+                        {
+                            @Html.EditorFor(model => model.Functions[i])
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @Html.Partial("_EditorSubmit")
+    </div>
+}
+
+<script>
+$('document').ready(function () {
+    $("#Functions").on("click", "[data-toggle = 'DeleteItem']", function () {
+        $(this).parents("[data-item-row]").deleteItem();
+    })
+
+    $("#ClearFunctions").click(function () {
+        $('#Functions').clearItems("Confirm", "Are you sure you want to clear all functions?");
+    })
+
+    $("#AddFunction").click(function () {
+        var index = $("#FunctionIndex").val();
+        $("#FunctionIndex").val(index + 1);
+        $("#Functions").addItem("CreateRollFunction", index);
+        return false;
+    })
+
+    RegisterCollapseElement("#Functions", "#CollapseFunctionIcon");
+})
+</script>

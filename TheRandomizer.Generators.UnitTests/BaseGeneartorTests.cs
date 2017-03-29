@@ -36,7 +36,7 @@ namespace TheRandomizer.Generators.UnitTests
             var result = string.Empty;
             generator.Name = "CalculatorTest";
             item.Name = "Start";
-            generator.Items.Add(item);
+            generator.LineItems.Add(item);
             foreach (var expression in expressions)
             {
                 item.Expression = expression.Key;
