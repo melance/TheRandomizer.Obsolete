@@ -235,6 +235,7 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="HelperClasses\GenericExtensions.cs" />
     <Compile Include="HelperClasses\MVCExtensions.cs" />
     <Compile Include="HelperClasses\Settings.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -447,8 +448,7 @@
     <Content Include="Views\Help\Terminology.cshtml" />
     <Content Include="Views\Help\Calculations.cshtml" />
     <Content Include="Views\Help\Assignment.cshtml" />
-    <Content Include="Views\Shared\EditorTemplates\RandomTable.cshtml" />
-    <Content Include="Views\Shared\EditorTemplates\LoopTable.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\BaseTable.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

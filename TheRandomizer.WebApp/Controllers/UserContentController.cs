@@ -267,11 +267,25 @@ namespace TheRandomizer.WebApp.Controllers
             return SaveGenerator(generator);
         }
 
-        public ActionResult CreateTable(Int32 index, Type type)
+        public ActionResult CreateRandomTable(Int32 index)
+        {
+            return CreateTable(index, new RandomTable());
+        }
+
+        public ActionResult CreateLoopTable(Int32 index)
+        {
+            return CreateTable(index, new LoopTable());
+        }
+
+        public ActionResult CreateSelectTable(Int32 index)
+        {
+            return CreateTable(index, new SelectTable());
+        }
+
+        private ActionResult CreateTable(Int32 index, BaseTable model)
         {
             ViewData.TemplateInfo.HtmlFieldPrefix = $"Tables[{index}]";
-            var model = Activator.CreateInstance(type);
-            return PartialView("~/Views/Shared/EditorTemplates/Definition.cshtml", model);
+            return PartialView("~/Views/Shared/EditorTemplates/BaseTable.cshtml", model);
         }
         #endregion
 

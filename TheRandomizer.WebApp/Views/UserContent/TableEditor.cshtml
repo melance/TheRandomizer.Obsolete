@@ -6,6 +6,11 @@
     
 }
 
+<style>
+    #divSupportsMaxLength {
+        display: none;
+    }
+</style>
 
 @section TRScripts {
     <script src="~/Scripts/bootstrap-tokenfield.js"></script>
@@ -40,27 +45,23 @@
                         <div class="btn-group-sm pull-right">
                             <button id="ClearTables" type="button" class="btn btn-default" title="Clear all of the tables"><span class="glyphicon glyphicon-remove"></span> Clear</button>
                             <div class="btn-group btn-group-sm">
-                                <button id="AddTable" type="button" class="btn btn-default" title="Add a new table"><span class="glyphicon glyphicon-plus"></span> Add</button>
+                                <button type="button" class="btn btn-default dropdown-toggle" title="Add a new table" data-toggle="dropdown">Add <b class="caret"></b></button>
+                                <ul class="dropdown-menu" id="GeneratorType">
+                                    <li><a href="#" id="AddRandomTable">Random Table</a></li>
+                                    <li><a href="#" id="AddLoopTable">Loop Table</a></li>
+                                    <li><a href="#" id="AddSelectTable">Select Table</a></li>
+                                </ul>
                             </div>
                         </div>
                     </div>
                     <div class="panel-body panel-collapse collapse in" id="TableContainer">
-                        @*<div class="form-group">
-                            <div class="col-md-2">@Html.Label("Name", htmlAttributes: new { @class = "control-label" })</div>
-                            <div class="col-md-1">@Html.Label("Weight", htmlAttributes: new { @class = "control-label" })</div>
-                            <div class="col-md-2">@Html.Label("Next", htmlAttributes: new { @class = "control-label" })</div>
-                            <div class="col-md-2">@Html.Label("Variable", htmlAttributes: new { @class = "control-label" })</div>
-                            <div class="col-md-4">@Html.Label("Expression", htmlAttributes: new { @class = "control-label" }) </div>
-                            <div class="col-md-1">&nbsp;</div>
-                        </div>
-                        <div id="Items" class="itemListStriped" data-item-container>
-                            <input type="hidden" id="ItemIndex" value="@Model.LineItems.Count" />
-                            @for (var i = 0; i < Model.LineItems.Count; i++)
+                        <div id="Tables" class="itemListStriped" data-item-container>
+                            <input type="hidden" id="TableIndex" value="@Model.Tables.Count" />
+                            @for (var i = 0; i < Model.Tables.Count; i++)
                             {
-                                @Html.EditorFor(model => model.LineItems[i])
+                                @Html.EditorFor(model => model.Tables[i])
                             }
-                        </div>*@
-                        @Html.EditorFor(model => model.Tables)
+                        </div>
                     </div>
                 </div>
             </div>
@@ -77,20 +78,34 @@
 
 <script>
     $('document').ready(function () {
-        $('#Items').EnableDisableItemUpDowns();
+        $('#Items').EnableDisableItemUpDowns(); //Todo: Add Item Up Down buttons
 
         $("#Tables").on("click", "[data-toggle = 'DeleteTable']", function () {
             $(this).parents("[data-item-row]").deleteItem();
         })
 
         $("#ClearTables").click(function () {
-            $('#Tables').ClearTables("Confirm", "Are you sure you want to clear all of the tables?");
+            $('#Tables').clearItems("Confirm", "Are you sure you want to clear all of the tables?");
         })
 
-        $("#AddTable").click(function () {
+        $("#AddRandomTable").click(function () { 
             var index = $("#TableIndex").val();
             $("#TableIndex").val(index + 1);
-            $("#Tables").AddTable("CreateTable", index);
+            $("#Tables").addItem("CreateRandomTable", index);
+            return false;
+        })
+
+        $("#AddLoopTable").click(function () { 
+            var index = $("#TableIndex").val();
+            $("#TableIndex").val(index + 1);
+            $("#Tables").addItem("CreateLoopTable", index);
+            return false;
+        })
+
+        $("#AddSelectTable").click(function () { 
+            var index = $("#TableIndex").val();
+            $("#TableIndex").val(index + 1);
+            $("#Tables").addItem("CreateSelectTable", index);
             return false;
         })
 
@@ -112,5 +127,9 @@
         })
 
         RegisterCollapseElement("#TableContainer", "#TableCollapseIcon");
+
+        $(".dropdown-menu a").click(function () {
+            $(this).closest(".dropdown-menu").prev().dropdown("toggle");
+        });
     })
 </script>

@@ -1,0 +1,84 @@
+﻿@using TheRandomizer.Generators.Table
+@using TheRandomizer.WebApp.HelperClasses
+@model BaseTable
+
+@{
+    RandomTable randomTable = Model as RandomTable;
+    LoopTable loopTable = Model as LoopTable;
+    SelectTable selectTable = Model as SelectTable;
+}
+
+<div class="form-group row" name="LineItem" data-item-row>
+    <div class="col-md-12">
+        <div class="text-info">@Model.GetDisplayName()</div>
+        <div class="form-group">
+            @Html.LabelFor(bt => bt.Name, htmlAttributes: new { @class = "control-label text-left col-md-3" })
+            @Html.LabelFor(bt => bt.Column, htmlAttributes: new { @class = "control-label text-left col-md-3" })
+            @Html.LabelFor(bt => bt.SkipTable, htmlAttributes: new { @class = "control-label text-left col-md-3"})
+            @Html.LabelFor(bt => bt.Delimiter, htmlAttributes: new { @class = "control-label text-left col-md-2" })
+        </div>
+        <div class="form-group">
+            <div class="col-md-3">
+                @Html.TextBoxFor(bt => bt.Name, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(bt => bt.Name, "", htmlAttributes: new { @class = "text-danger" })
+            </div>
+            <div class="col-md-3">
+                @Html.TextBoxFor(bt => bt.Column, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(bt => bt.Column, "", htmlAttributes: new { @class = "text-danger" })
+            </div>
+            <div class="col-md-3">
+                @Html.TextBoxFor(bt => bt.SkipTable, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(bt => bt.SkipTable, "", htmlAttributes: new { @class = "text-danger" })
+            </div>
+            <div class="col-md-2">
+                @Html.TextBoxFor(bt => bt.Delimiter, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(bt => bt.Delimiter, "", htmlAttributes: new { @class = "text-danger" })
+            </div>
+            <div class="col-md-1">                
+                <button type="button" class="btn btn-sm btn-default" data-toggle = 'DeleteTable'><span class="glyphicon glyphicon-remove"></span></button>
+                <div class="btn-group btn-group-xs btn-group-vertical">
+                    <button name="MoveUp" type="button" class="btn btn-default" data-toggle="MoveItemUp" title="Move this table up"><span class="glyphicon glyphicon-chevron-up"></span></button>
+                    <button name="MoveDown" type="button" class="btn btn-default" data-toggle="MoveItemDown" title="Move this table down"><span class="glyphicon glyphicon-chevron-down"></span></button>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(bt => bt.Repeat, htmlAttributes: new { @class = "control-label text-left col-md-2" })
+            @Html.LabelFor(bt => bt.RepeatJoin, htmlAttributes: new { @class = "control-label text-left col-md-2" })
+            @if (randomTable != null)
+            {
+                @Html.LabelFor(bt => randomTable.Modifier, htmlAttributes: new { @class = "control-label text-left col-md-3" })
+            }
+            @if (selectTable != null)
+            {
+                @Html.LabelFor(bt => selectTable.SelectValue, htmlAttributes: new { @class = "control-label text-left col-md-3" })
+            }
+        </div>
+        <div class="form-group">
+            <div class="col-md-2">
+                @Html.TextBoxFor(bt => bt.Repeat, htmlAttributes: new { @class = "form-control", @type = "number" })
+                @Html.ValidationMessageFor(bt => bt.Repeat, "", htmlAttributes: new { @class = "text-danger" })
+            </div>
+            <div class="col-md-2">
+                @Html.TextBoxFor(bt => bt.RepeatJoin, htmlAttributes: new { @class = "form-control" })
+                @Html.ValidationMessageFor(bt => bt.RepeatJoin, "", htmlAttributes: new { @class = "text-danger" })
+            </div>
+            <div class="col-md-3">
+                @if (randomTable != null)
+                {
+                    @Html.TextBoxFor(bt => randomTable.Modifier, htmlAttributes: new { @class = "form-control" })
+                    @Html.ValidationMessageFor(bt => randomTable.Modifier, "", htmlAttributes: new { @class = "text-danger" })
+                }
+                @if (selectTable != null)
+                {
+                    @Html.TextBoxFor(bt => selectTable.SelectValue, htmlAttributes: new { @class = "form-control" })
+                    @Html.ValidationMessageFor(bt => selectTable.SelectValue, "", htmlAttributes: new { @class = "text-danger" })
+                }
+            </div>
+        </div>
+        <div class="form-group col-md-12">
+            @Html.LabelFor(bt => bt.Value, htmlAttributes: new { @class = "control-label text-left" })
+            @Html.TextAreaFor(bt => bt.Value, htmlAttributes: new { @class = "form-control col-md-12", rows = "10", style = "font-family: Consolas, Courier New, Courier, Monospace;"})
+        </div>
+    </div>
+</div>
