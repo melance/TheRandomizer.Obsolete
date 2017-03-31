@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Xml.Serialization;
 using TheRandomizer.Utility;
 using TheRandomizer.Generators.Attributes;
+using System.ComponentModel.DataAnnotations;
 
 namespace TheRandomizer.Generators.List
 {
@@ -17,11 +18,14 @@ namespace TheRandomizer.Generators.List
         /// The newline delimited string of items to choose from
         /// </summary>
         [XmlElement("items")]
+        [Required]
         public string Items { get; set; }
+
         /// <summary>
         /// If true, maintaines whitespace at the beginning and end of the result
         /// </summary>
         [XmlElement("keepWhitespace")]
+        [Display(Name = "Keep Whitespace")]
         public bool KeepWhitespace { get; set; } = false;
 
         /// <summary>

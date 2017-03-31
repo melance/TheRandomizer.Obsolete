@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Data;
 using System.Linq;
 using System.Text;
@@ -8,6 +9,7 @@ using System.Xml.Serialization;
 
 namespace TheRandomizer.Generators.Table
 {
+    [DisplayName("Random Table")]
     public class RandomTable : BaseTable
     {
         #region Properties

@@ -11,15 +11,30 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using Microsoft.Owin.Security;
 using TheRandomizer.WebApp.Models;
+using SendGrid.Helpers.Mail;
+using SendGrid;
 
 namespace TheRandomizer.WebApp
 {
     public class EmailService : IIdentityMessageService
     {
-        public Task SendAsync(IdentityMessage message)
+        public async Task SendAsync(IdentityMessage message)
         {
             // Plug in your email service here to send an email.
-            return Task.FromResult(0);
+
+            await ConfigSendGridAsync(message);
+        }
+
+        public async Task ConfigSendGridAsync(IdentityMessage message)
+        {
+            string apiKey = HelperClasses.Settings.GetSetting<string>("sendGridApiKey");
+            SendGridClient client = new SendGridClient(apiKey);
+            var from = new EmailAddress(HelperClasses.Settings.GetSetting<string>("fromAddress"));
+            var to = new EmailAddress(message.Destination);
+            var subject = message.Subject;
+            var content = new Content("text/html", message.Body);
+            var mail = MailHelper.CreateSingleEmail(from, to, subject, message.Body, message.Body);
+            dynamic response = await client.SendEmailAsync(mail);
         }
     }
 
@@ -54,10 +69,10 @@ namespace TheRandomizer.WebApp
             manager.PasswordValidator = new PasswordValidator
             {
                 RequiredLength = 6,
-                RequireNonLetterOrDigit = true,
-                RequireDigit = true,
-                RequireLowercase = true,
-                RequireUppercase = true,
+                RequireNonLetterOrDigit = false,
+                RequireDigit = false,
+                RequireLowercase = false,
+                RequireUppercase = false,
             };
 
             // Configure user lockout defaults

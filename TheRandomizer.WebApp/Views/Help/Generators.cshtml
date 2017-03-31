@@ -1,0 +1,102 @@
+﻿
+@{
+    ViewBag.Title = "Generators";
+    Layout = "~/Views/Help/_HelpLayout.cshtml";
+}
+
+<h3>Generators</h3>
+
+<p>
+Generators that contain the rules necessary for The Randomizer to know how to generate content. These files can be very simple or very complex depending on the needs of the grammar.
+Different generator types have different strengths that can be leveraged for different needs.  For example, creating a simple "Choose One from a List", List Generators shine.  Or for classic rpg random tables like those found in AD&amp;D are usually easiest to build using Table Generators.
+More details about each type can be found in the other sections of this category.
+</p>
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <div class="panel-title">
+            Common Properties
+        </div>
+    </div>
+    <div class="panel-body">
+        <p>
+            Each generator has unique properties that drive their process, however; all generators share a set of properties as listed below.
+        </p>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th class="col-md-3">Property</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Name</td>
+                    <td>The name of the generator.  It must be unique.</td>
+                </tr>
+                <tr>
+                    <td>Author</td>
+                    <td>The name of the author of the generator.</td>
+                </tr>
+                <tr>
+                    <td>Description</td>
+                    <td>A short description of the purpose and output of the generator.</td>
+                </tr>
+                <tr>
+                    <td>Tags</td>
+                    <td>A list of tags pertaining to the contents of the generator.  Used for filtering generators.</td>
+                </tr>
+                <tr>
+                    <td>Supports Max Length</td>
+                    <td>This determines if the generator supports limiting the length of the result.  This is generally used for name type generators that are potentially infinite.  This property is not available on all generator types.</td>
+                </tr>
+                <tr>
+                    <td>Parameters</td>
+                    <td>A list of parameters that the user will supply to the generator.</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div class="panel panel-default" id="Parameters">
+    <div class="panel-heading">
+        <div class="panel-title">
+            Parameters
+        </div>
+    </div>
+    <div class="panel-body">
+        <p>
+            Not all generators support parameters but for those that do, they can be quite useful for making a generator more flexible.  
+        </p>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Property</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Name</td>
+                    <td>The name used to reference the parameter in the generator.</td>
+                </tr>
+                <tr>
+                    <td>Display Name</td>
+                    <td>The name displayed to the user when using the generator.  If this is not provided, Name is used instead.</td>
+                </tr>
+                <tr>
+                    <td>Value</td>
+                    <td>The default value of the parameter.</td>
+                </tr>
+                <tr>
+                    <td>Type</td>
+                    <td>The type of the parameter which determines what sort of control is shown to the user.</td>
+                </tr>
+                <tr>
+                    <td>Options</td>
+                    <td>For List type parameters, this is the list of options given to the user.</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

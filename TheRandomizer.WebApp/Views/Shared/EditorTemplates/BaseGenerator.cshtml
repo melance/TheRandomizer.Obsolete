@@ -1,31 +1,37 @@
 ﻿@model TheRandomizer.Generators.BaseGenerator
 @using TheRandomizer.Generators
+@using TheRandomizer.WebApp.Controllers
 
 <div class="row">
     <div class="col-md-12">
         <div class="panel panel-default">
-            <div class="panel-heading">
-                <a href="#" data-toggle="collapse" data-target="#Information" style="color: black;"><b class="panel-title">Information</b></a>
+            <div class="panel-heading clearfix">
+                <b class="panel-title">Information</b>
+                <a href="#" data-toggle="collapse" data-target="#Information" style="color: black;"><span id="InfoCollapseIcon"></span></a>
             </div>
             <div class="panel-body panel-collapse collapse in" id="Information">
                 <div class="form-group">
-                    @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label text-left col-md-4" })
-                    <div class="col-md-8">
-                        @Html.TextBoxFor(model => model.Name, htmlAttributes: new { @class = "form-control", @title = "The unique name of the generator." })
-                        @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
-                    </div>
+                    <fieldset class="form-inline">
+                        @Html.LabelFor(model => model.Name, htmlAttributes: new { @class = "control-label text-left col-md-2" })
+                        <div class="col-md-8">
+                            @Html.TextBoxFor(model => model.Name, htmlAttributes: new { @class = "form-control", @title = "The unique name of the generator." })
+                            @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
+                        </div>
+                    </fieldset>
                 </div>
 
                 <div class="form-group">
-                    @Html.LabelFor(model => model.Author, htmlAttributes: new { @class = "control-label text-left col-md-4" })
-                    <div class="col-md-8">
-                        @Html.EditorFor(model => model.Author, new { htmlAttributes = new { @class = "form-control", @title = "The name or username of the author of the generator." } })
-                        @Html.ValidationMessageFor(model => model.Author, "", new { @class = "text-danger" })
-                    </div>
+                    <fieldset class="form-inline">
+                        @Html.LabelFor(model => model.Author, htmlAttributes: new { @class = "control-label text-left col-md-2" })
+                        <div class="col-md-8">
+                            @Html.EditorFor(model => model.Author, new { htmlAttributes = new { @class = "form-control", @title = "The name or username of the author of the generator." } })
+                            @Html.ValidationMessageFor(model => model.Author, "", new { @class = "text-danger" })
+                        </div>
+                    </fieldset>
                 </div>
 
                 <div class="form-group">
-                    @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "control-label text-left col-md-4" })
+                    @Html.LabelFor(model => model.Description, htmlAttributes: new { @class = "control-label text-left col-md-2" })
                     <div class="col-md-8">
                         @Html.TextAreaFor(model => model.Description, htmlAttributes: new { @class = "form-control", @title = "A brief description of what the generator does." })
                         @Html.ValidationMessageFor(model => model.Description, "", new { @class = "text-danger" })
@@ -33,23 +39,24 @@
                 </div>
 
                 <div class="form-group">
-                    @Html.LabelFor(model => model.TagList, htmlAttributes: new { @class = "control-label text-left col-md-4" })
+                    @Html.LabelFor(model => model.TagList, htmlAttributes: new { @class = "control-label text-left col-md-2" })
                     <div class="col-md-8">
-                        @Html.TextBoxFor(model => model.TagList, htmlAttributes: new { @class = "form-control", @title = "A comma separated list of tags for the generator" })
+                        @Html.TextBoxFor(model => model.TagList, htmlAttributes: new { @class = "tokenfield form-control", @title = "A list of tags used for categorizing the generator" })
                         @Html.ValidationMessageFor(model => model.TagList, "", new { @class = "text-danger" })
-
                     </div>
                 </div>
 
                 <div class="form-group">
-                    @Html.LabelFor(model => model.OutputFormat, htmlAttributes: new { @class = "control-label text-left col-md-4" })
-                    <div class="col-md-8">
-                        @Html.EnumDropDownListFor(model => model.OutputFormat, htmlAttributes: new { @class = "form-control", @title = "The type of output expected by the generator." })
-                    </div>
+                    <fieldset class="form-inline">
+                        @Html.LabelFor(model => model.OutputFormat, htmlAttributes: new { @class = "control-label text-left col-md-2" })
+                        <div class="col-md-8">
+                            @Html.EnumDropDownListFor(model => model.OutputFormat, htmlAttributes: new { @class = "form-control", @title = "The type of output expected by the generator." })
+                        </div>
+                    </fieldset>
                 </div>
 
                 <div class="form-group">
-                    @Html.LabelFor(model => model.Url, htmlAttributes: new { @class = "control-label text-left col-md-4" })
+                    @Html.LabelFor(model => model.Url, htmlAttributes: new { @class = "control-label text-left col-md-2" })
                     <div class="col-md-8">
                         @Html.TextBoxFor(model => model.Url, htmlAttributes: new { @class = "form-control", @type = "url", @title = "An optional url to present to users of the generator" })
                         @Html.ValidationMessageFor(model => model.Url, "", new { @class = "text-danger" })
@@ -57,7 +64,7 @@
                 </div>
 
                 <div class="form-group" id="divSupportsMaxLength">
-                    @Html.LabelFor(model => model.SupportsMaxLength, htmlAttributes: new { @class = "control-label text-left col-md-4" })
+                    @Html.LabelFor(model => model.SupportsMaxLength, htmlAttributes: new { @class = "control-label text-left col-md-2" })
                     <div class="col-md-8">
                         @Html.CheckBoxFor(model => model.SupportsMaxLength, htmlAttributes: new { @data_toggle = "toggle", @data_on = "Yes", @data_off = "No", @class = "btn btn-default" })
                         @Html.ValidationMessageFor(model => model.SupportsMaxLength, "", new { @class = "text-danger" })
@@ -67,17 +74,18 @@
         </div>
     </div>
 </div>
-<div class="row">
+<div class="row" id="ParameterContainer">
     <div class="col-md-12">
         <div class="panel panel-default">
             <div class="panel-heading clearfix">
-                <a href="#" data-toggle="collapse" data-target="#ParameterContainer" style="color: black;"><b class="panel-title">Parameters</b></a>
+                <b class="panel-title">Parameters</b>
+                <a href="#" data-toggle="collapse" data-target="#ParameterList" style="color: black;"><span id="ParameterCollapseIcon"></span></a>
                 <div class="btn-group-sm pull-right">
                     <button id="ClearParameters" type="button" class="btn btn-default" title="Clear all of the parameters"><span class="glyphicon glyphicon-remove"></span> Clear</button>
-                    <button id="AddParameter"type="button" class="btn btn-default" title="Add a new parameter"><span class="glyphicon glyphicon-plus"></span> Add</button>
+                    <button id="AddParameter" type="button" class="btn btn-default" title="Add a new parameter"><span class="glyphicon glyphicon-plus"></span> Add</button>
                 </div>
             </div>
-            <div class="panel-body panel-collapse collapse in" id="ParameterContainer">
+            <div class="panel-body panel-collapse collapse in" id="ParameterList">
                 <div class="form-group">
                     <div class="col-md-2">@Html.Label("Name", htmlAttributes: new { @class = "control-label" })</div>
                     <div class="col-md-2">@Html.Label("Display Name", htmlAttributes: new { @class = "control-label" })</div>
@@ -86,8 +94,12 @@
                     <div class="col-md-3">@Html.Label("Options", htmlAttributes: new { @class = "control-label" }) </div>
                     <div class="col-md-1">&nbsp;</div>
                 </div>
-                <div id="Parameters" data-item-container>
-                    @Html.EditorFor(bg => bg.Parameters)
+                <div id="Parameters" name="Parameters" class="itemListStriped" data-item-container>
+                    <input type="hidden" id="ParameterIndex" value="@Model.Parameters.Count" />
+                    @for (var i = 0; i < Model.Parameters.Count; i++)
+                    {
+                        @Html.EditorFor(bg => bg.Parameters[i])
+                    }
                 </div>
             </div>
         </div>
@@ -96,6 +108,22 @@
 
 <script>
     $(document).ready(function () {
+        $('.tokenfield').tokenfield({
+            name: "tagListField",
+            autocomplete: {
+                source: [@Html.Raw(string.Join(",", HomeController.GetTags().Select(t => $"'{t}'").ToArray()))],
+                delay: 100
+            }
+        });
+
+        $('.tokenfield').on('tokenfield:createtoken', function (event) {
+            var existingTokens = $(this).tokenfield('getTokens');
+            $.each(existingTokens, function (index, token) {
+                if (token.value === event.attrs.value)
+                    event.preventDefault();
+            });
+        });
+
         $('#Parameters').EnableDisableItemUpDowns();
 
         $("#Parameters").on("click", "[data-toggle = 'DeleteItem']", function () {
@@ -107,10 +135,12 @@
         })
 
         $("#AddParameter").click(function () {
-            $("#Parameters").addItem("CreateParameter");
+            var index = parseInt($("#ParameterIndex").val());
+            $("#ParameterIndex").val(index + 1);
+            $("#Parameters").addItem("CreateParameter", index);
             return false;
         })
-        
+
         $("#Parameters").on("click", "[data-toggle = 'MoveItemUp']", function () {
             var selected = $(this).parents('[data-item-row]');
             selected.moveItemUp();
@@ -120,5 +150,8 @@
             var selected = $(this).parents('[data-item-row]');
             selected.moveItemDown();
         })
+
+        RegisterCollapseElement("#Information", "#InfoCollapseIcon");
+        RegisterCollapseElement("#ParameterList", "#ParameterCollapseIcon");
     })
 </script>

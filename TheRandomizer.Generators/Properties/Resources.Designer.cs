@@ -59,25 +59,5 @@ namespace TheRandomizer.Generators.Properties {
                 resourceCulture = value;
             }
         }
-        
-        /// <summary>
-        ///   Looks up a localized string similar to &lt;xsl:stylesheet xmlns:xsl=&quot;http://www.w3.org/1999/XSL/Transform&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot; version=&quot;2.0&quot;&gt;
-        ///  &lt;xsl:template match=&quot;Grammar&quot;&gt;
-        ///    &lt;generator&gt;&lt;xsl:apply-templates select=&quot;@*|node()&quot;/&gt;&lt;/generator&gt;
-        ///  &lt;/xsl:template&gt;
-        ///  &lt;xsl:template match=&quot;Grammar/@version&quot;&gt;
-        ///    &lt;xsl:attribute name=&quot;version&quot;&gt;
-        ///      &lt;xsl:value-of select=&quot;2.0&quot; /&gt;
-        ///    &lt;/xsl:attribute&gt;
-        ///  &lt;/xsl:template&gt;
-        ///  &lt;xsl:template match=&quot;Grammar/@type&quot;&gt;
-        ///    &lt;xsl:attribute name=&quot;xsi:type&quot; &gt;
-        ///      &lt;xsl:if test= [rest of string was truncated]&quot;;.
-        /// </summary>
-        internal static string Version1To2Transform {
-            get {
-                return ResourceManager.GetString("Version1To2Transform", resourceCulture);
-            }
-        }
     }
 }

@@ -26,12 +26,13 @@
         return this;
     };
 
-    $.fn.addItem = function (url) {
+    $.fn.addItem = function (url, index) {
         var element = this;
         $.ajax({
             async: true,
             url: url,
             type: 'GET',
+            data: { index: index },
             success: function (partialView) {
                 var item = $(partialView).appendTo(element);
                 item.EnableDisableItemUpDown();

@@ -19,7 +19,7 @@
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <MvcBuildViews>false</MvcBuildViews>
     <UseIISExpress>true</UseIISExpress>
-    <IISExpressSSLPort />
+    <IISExpressSSLPort>44324</IISExpressSSLPort>
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
@@ -48,6 +48,10 @@
   <ItemGroup>
     <Reference Include="Antlr3.Runtime, Version=3.5.0.2, Culture=neutral, PublicKeyToken=eb42632606e9261f, processorArchitecture=MSIL">
       <HintPath>..\packages\Antlr.3.5.0.2\lib\Antlr3.Runtime.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="BeginCollectionItem, Version=1.2.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\BeginCollectionItem.1.2.1.0\lib\net35\BeginCollectionItem.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="LiteDB, Version=3.0.1.0, Culture=neutral, PublicKeyToken=4ee40123013c9f27, processorArchitecture=MSIL">
@@ -89,6 +93,14 @@
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="SendGrid, Version=9.0.12.0, Culture=neutral, PublicKeyToken=4f047e93159395ca, processorArchitecture=MSIL">
+      <HintPath>..\packages\Sendgrid.9.0.12\lib\net452\SendGrid.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="SendGrid.CSharp.HTTP.Client, Version=3.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\SendGrid.CSharp.HTTP.Client.3.1.0\lib\SendGrid.CSharp.HTTP.Client.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
@@ -213,7 +225,9 @@
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\AccountController.cs" />
-    <Compile Include="Controllers\GenerateAPIController.cs" />
+    <Compile Include="Controllers\AdminController.cs" />
+    <Compile Include="Controllers\ErrorController.cs" />
+    <Compile Include="Controllers\HelpController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\UserContentController.cs" />
@@ -221,13 +235,26 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="HelperClasses\AuthenticationCollection.cs" />
+    <Compile Include="HelperClasses\AuthenticationElement.cs" />
+    <Compile Include="HelperClasses\AuthenticationSection.cs" />
+    <Compile Include="HelperClasses\GenericExtensions.cs" />
     <Compile Include="HelperClasses\MVCExtensions.cs" />
+    <Compile Include="HelperClasses\Settings.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\GenerateModel.cs" />
     <Compile Include="Models\GeneratorTypeModel.cs" />
     <Compile Include="Models\IdentityModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
+    <Compile Include="Models\UserModel.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Compile Include="Startup.cs" />
+    <Compile Include="Tasks.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap-dialog.css" />
@@ -235,15 +262,17 @@
     <Content Include="Content\bootstrap-theme.min.css" />
     <Content Include="Content\bootstrap-toggle.css" />
     <Content Include="Content\bootstrap-toggle.min.css" />
+    <Content Include="Content\bootstrap-tokenfield\bootstrap-tokenfield.css" />
+    <Content Include="Content\bootstrap-tokenfield\tokenfield-typeahead.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
-    <Content Include="Content\jquery.tagsinput.css" />
-    <Content Include="Content\shepherd\shepherd-theme-arrows-plain-buttons.css" />
-    <Content Include="Content\shepherd\shepherd-theme-arrows.css" />
-    <Content Include="Content\shepherd\shepherd-theme-dark.css" />
-    <Content Include="Content\shepherd\shepherd-theme-default.css" />
-    <Content Include="Content\shepherd\shepherd-theme-square-dark.css" />
-    <Content Include="Content\shepherd\shepherd-theme-square.css" />
+    <Content Include="Content\codemirror.css" />
+    <Content Include="Content\CodeMirrorThemes\neat.css" />
+    <Content Include="Content\Images\cc.png" />
+    <Content Include="Content\Images\gears.gif" />
+    <Content Include="Content\Images\Randomizer1.png" />
+    <Content Include="Content\Images\Randomizer1024x1024.png" />
+    <Content Include="Content\navbar-fixed-side.css" />
     <Content Include="Content\tether\tether-theme-arrows-dark.css" />
     <Content Include="Content\tether\tether-theme-arrows-dark.min.css" />
     <Content Include="Content\tether\tether-theme-arrows.css" />
@@ -252,10 +281,62 @@
     <Content Include="Content\tether\tether-theme-basic.min.css" />
     <Content Include="Content\tether\tether.css" />
     <Content Include="Content\tether\tether.min.css" />
-    <Content Include="favicon.ico" />
+    <Content Include="Content\themes\base\accordion.css" />
+    <Content Include="Content\themes\base\all.css" />
+    <Content Include="Content\themes\base\autocomplete.css" />
+    <Content Include="Content\themes\base\base.css" />
+    <Content Include="Content\themes\base\button.css" />
+    <Content Include="Content\themes\base\core.css" />
+    <Content Include="Content\themes\base\datepicker.css" />
+    <Content Include="Content\themes\base\dialog.css" />
+    <Content Include="Content\themes\base\draggable.css" />
+    <Content Include="Content\themes\base\images\ui-bg_flat_0_aaaaaa_40x100.png" />
+    <Content Include="Content\themes\base\images\ui-bg_flat_75_ffffff_40x100.png" />
+    <Content Include="Content\themes\base\images\ui-bg_glass_55_fbf9ee_1x400.png" />
+    <Content Include="Content\themes\base\images\ui-bg_glass_65_ffffff_1x400.png" />
+    <Content Include="Content\themes\base\images\ui-bg_glass_75_dadada_1x400.png" />
+    <Content Include="Content\themes\base\images\ui-bg_glass_75_e6e6e6_1x400.png" />
+    <Content Include="Content\themes\base\images\ui-bg_glass_95_fef1ec_1x400.png" />
+    <Content Include="Content\themes\base\images\ui-bg_highlight-soft_75_cccccc_1x100.png" />
+    <Content Include="Content\themes\base\images\ui-icons_222222_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_2e83ff_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_444444_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_454545_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_555555_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_777620_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_777777_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_888888_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_cc0000_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_cd0a0a_256x240.png" />
+    <Content Include="Content\themes\base\images\ui-icons_ffffff_256x240.png" />
+    <Content Include="Content\themes\base\jquery-ui.css" />
+    <Content Include="Content\themes\base\jquery-ui.min.css" />
+    <Content Include="Content\themes\base\menu.css" />
+    <Content Include="Content\themes\base\progressbar.css" />
+    <Content Include="Content\themes\base\resizable.css" />
+    <Content Include="Content\themes\base\selectable.css" />
+    <Content Include="Content\themes\base\selectmenu.css" />
+    <Content Include="Content\themes\base\slider.css" />
+    <Content Include="Content\themes\base\sortable.css" />
+    <Content Include="Content\themes\base\spinner.css" />
+    <Content Include="Content\themes\base\tabs.css" />
+    <Content Include="Content\themes\base\theme.css" />
+    <Content Include="Content\themes\base\tooltip.css" />
+    <Content Include="Content\themes\bootstrap.slate.min.css" />
+    <Content Include="Content\themes\bootstrap.spacelab.min.css" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="Scripts\bootstrap-tokenfield.js" />
+    <Content Include="Scripts\codemirror.js" />
+    <Content Include="Scripts\CodeMirrorModes\lua.js" />
+    <Content Include="Scripts\CodeMirrorModes\xml.js" />
+    <Content Include="Scripts\jquery-ui-1.12.1.js" />
+    <Content Include="Scripts\jquery-ui-1.12.1.min.js" />
+    <Content Include="Scripts\TheRandomizer.js" />
+    <Content Include="TheRandomizer64.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Scripts\ai.0.22.9-build00167.js" />
     <Content Include="Scripts\ai.0.22.9-build00167.min.js" />
     <Content Include="Scripts\bootstrap-dialog.js" />
@@ -279,6 +360,9 @@
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Content\bootstrap-dialog.less" />
+    <Content Include="Content\fonts\glyphicons-halflings-regular.woff2" />
+    <Content Include="Content\bootstrap-tokenfield\tokenfield-typeahead.less" />
+    <Content Include="Content\bootstrap-tokenfield\bootstrap-tokenfield.less" />
     <None Include="Scripts\jquery-3.1.1.intellisense.js" />
     <Content Include="Scripts\jquery-3.1.1.js" />
     <Content Include="Scripts\jquery-3.1.1.min.js" />
@@ -298,12 +382,13 @@
     <Content Include="Scripts\respond.matchmedia.addListener.js" />
     <Content Include="Scripts\respond.matchmedia.addListener.min.js" />
     <Content Include="Scripts\respond.min.js" />
-    <Content Include="Scripts\shepherd\shepherd.js" />
-    <Content Include="Scripts\shepherd\shepherd.min.js" />
     <Content Include="Scripts\tether\tether.js" />
     <Content Include="Scripts\tether\tether.min.js" />
     <Content Include="Scripts\TheRandomizer.ItemListMaintenance.js" />
     <Content Include="Scripts\_references.js" />
+    <Content Include="favicon.ico">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -343,13 +428,35 @@
     <Content Include="Views\Shared\EditorTemplates\Configuration.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\LineItem.cshtml" />
     <Content Include="Views\UserContent\_LineItemList.cshtml" />
-    <Content Include="Views\Shared\DisplayTemplates\GeneratorInfo.cshtml" />
+    <Content Include="Views\Shared\DisplayTemplates\SearchResult.cshtml" />
     <Content Include="Views\UserContent\SelectGeneratorType.cshtml" />
+    <Content Include="Views\UserContent\ListEditor.cshtml" />
+    <Content Include="Views\UserContent\_EditorSubmit.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\RollFunction.cshtml" />
+    <Content Include="Views\UserContent\DiceEditor.cshtml" />
+    <Content Include="Views\Home\Generate.cshtml" />
+    <Content Include="Views\Home\_Results.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\Collection.cshtml" />
+    <Content Include="Views\UserContent\LuaEditor.cshtml" />
+    <Content Include="Views\UserContent\PhonotacticsEditor.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\Pattern.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\Definition.cshtml" />
+    <Content Include="Views\UserContent\TableEditor.cshtml" />
+    <Content Include="Views\UserContent\Export.cshtml" />
+    <Content Include="Views\Error\NotFound.cshtml" />
+    <Content Include="Views\Help\_HelpLayout.cshtml" />
+    <Content Include="Views\Help\Index.cshtml" />
+    <Content Include="Views\Help\Generators.cshtml" />
+    <Content Include="Views\Help\License.cshtml" />
+    <Content Include="Views\Help\Terminology.cshtml" />
+    <Content Include="Views\Help\Calculations.cshtml" />
+    <Content Include="Views\Help\Assignment.cshtml" />
+    <Content Include="Views\Shared\EditorTemplates\BaseTable.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Views\Generate\" />
-    <Folder Include="Views\SearchAPI\" />
+    <Folder Include="Resources\" />
+    <Folder Include="Views\Admin\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
@@ -370,6 +477,12 @@
   <ItemGroup>
     <Service Include="{4A0DDDB5-7A95-4FBF-97CC-616D07737A77}" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
     <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
@@ -389,7 +502,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>65260</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:65260/</IISUrl>
+          <IISUrl>https://localhost:44324/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

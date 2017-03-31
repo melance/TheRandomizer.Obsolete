@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Linq;
 using System.Text;
@@ -8,10 +10,12 @@ using System.Xml.Serialization;
 
 namespace TheRandomizer.Generators.Table
 {
+    [DisplayName("Select Table")]
     public class SelectTable : BaseTable
     {
         /// <summary>The value to find in Column</summary>
         [XmlAttribute("selectValue")]
+        [Display(Name = "Select Value")]
         public string SelectValue { get; set; }
 
         protected override Dictionary<string, object> ProcessTableInternal()

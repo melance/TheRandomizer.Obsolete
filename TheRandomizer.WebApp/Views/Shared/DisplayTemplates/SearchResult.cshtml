@@ -1,0 +1,27 @@
+﻿@model TheRandomizer.WebApp.Models.SearchResult
+
+<tr>
+    <td>@Html.ActionLink(Model.Name, "Generate", new { Id = Model.Id }, new { name = "OpenGenerator" } )</td>
+    <td>@Model.Description</td>
+    <td>@Model.TagList</td>
+    <td>
+        @if (Request.IsAuthenticated)
+        { 
+            <span style="font-size: 1.5em; cursor: pointer;" class="glyphicon @(Model.IsFavorite ? "glyphicon-star" : "glyphicon-star-empty")" name="ToggleFavorite" data-id="@Model.Id" data-is-favorite="@Model.IsFavorite" title="@(Model.IsFavorite ? "Click to remove this generator from your favorites." : "Click to add this generator from your favorites.")"></span>
+        }
+        else
+        {
+            <span>&nbsp;</span>
+        }
+    </td>
+    <td>
+        @if (Request.IsAuthenticated && Model.IsOwner && !Model.Published)
+        {
+            <a class="btn btn-sm btn-default" href="/UserContent/EditGenerator/@Model.Id" title="Edit this generator"><span class="glyphicon glyphicon-edit"></span></a>
+        }
+        else
+        {
+            <span>&nbsp;</span>
+        }
+    </td>
+</tr>

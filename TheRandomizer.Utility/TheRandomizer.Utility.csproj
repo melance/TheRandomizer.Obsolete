@@ -39,9 +39,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Collections\DisposableList.cs" />
     <Compile Include="Common.cs" />
     <Compile Include="IntegerExtensions.cs" />
     <Compile Include="LinqExtensions.cs" />
+    <Compile Include="SimpleEncryption.cs" />
     <Compile Include="StringExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
