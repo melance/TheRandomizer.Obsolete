@@ -25,5 +25,11 @@ namespace TheRandomizer.WebApp.HelperClasses
                 return defaultValue;
             }
         }
+
+        public static AuthenticationElement GetAuthentication(string name)
+        {
+            var section = (AuthenticationSection)ConfigurationManager.GetSection("AuthenticationSection");
+            return section.AuthenticationItems[name];
+        }
     }
 }

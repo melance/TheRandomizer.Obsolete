@@ -125,7 +125,10 @@
                 <div class="row"><div class="col-md-12 text-muted">Showing @Model.First @(@Model.First == Model.Last ? "" : $"- {Model.Last}") of @Model.TotalResults</div></div>
                 <div class="row">
                     <div class="col-md-10">
-                        <div class="btn-group">
+@{
+    //Todo: Instead of disabling the unavailab buttons, hide them
+}
+                        <div class="btn-group"> 
                             <button name="ChangePage" data-page="1" class="btn btn-default" @(Model.Page == 1  || Model.TotalResults == 0 ? "disabled" : "")>&laquo;</button>
                             <button name="ChangePage" data-page="@(Model.Page-1)" class="btn btn-default" @(Model.Page == 1  || Model.TotalResults == 0 ? "disabled" : "")>&lsaquo;</button>
                             @for (var i = 1; i <= Model.TotalPages ; i++)

@@ -235,6 +235,9 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="HelperClasses\AuthenticationCollection.cs" />
+    <Compile Include="HelperClasses\AuthenticationElement.cs" />
+    <Compile Include="HelperClasses\AuthenticationSection.cs" />
     <Compile Include="HelperClasses\GenericExtensions.cs" />
     <Compile Include="HelperClasses\MVCExtensions.cs" />
     <Compile Include="HelperClasses\Settings.cs" />
@@ -454,7 +457,6 @@
     <Folder Include="App_Data\" />
     <Folder Include="Resources\" />
     <Folder Include="Views\Admin\" />
-    <Folder Include="Views\Generate\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
