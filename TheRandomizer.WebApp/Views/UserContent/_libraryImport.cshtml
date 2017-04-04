@@ -1,0 +1,23 @@
+﻿@using TheRandomizer.WebApp.Controllers
+@model string
+
+<div class="form-group row" name="Import" data-item-row>
+    <div class="col-md-11">
+        <select class="form-control col-md-6" name="ImportSelect">
+            <option></option>
+            @foreach (var libraryName in UserContentController.Libraries)
+            {
+                <option>@libraryName</option>
+            }
+        </select>
+    </div>
+    <div class="col-md-1">
+        <button type="button" name="DeleteItem" class="btn btn-default btn-sm" data-toggle="DeleteImport" title="Delete Import"><span class="glyphicon glyphicon-remove"></span></button>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $("[name = 'ImportSelect'").combobox();
+    })
+</script>

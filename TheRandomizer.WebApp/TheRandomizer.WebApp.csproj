@@ -257,6 +257,7 @@
     <Compile Include="Tasks.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Content\bootstrap-combobox.css" />
     <Content Include="Content\bootstrap-dialog.css" />
     <Content Include="Content\bootstrap-theme.css" />
     <Content Include="Content\bootstrap-theme.min.css" />
@@ -327,6 +328,7 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="Scripts\bootstrap-combobox.js" />
     <Content Include="Scripts\bootstrap-tokenfield.js" />
     <Content Include="Scripts\codemirror.js" />
     <Content Include="Scripts\CodeMirrorModes\lua.js" />
@@ -452,6 +454,7 @@
     <Content Include="Views\Help\Calculations.cshtml" />
     <Content Include="Views\Help\Assignment.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\BaseTable.cshtml" />
+    <Content Include="Views\UserContent\_libraryImport.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -8,7 +8,8 @@ using TheRandomizer.Generators.Lexer;
 using TheRandomizer.Utility;
 using TheRandomizer.Generators.Exceptions;
 using TheRandomizer.Generators.Attributes;
-using System.ComponentModel.DataAnnotations;
+using System.Xml;
+using System.IO;
 
 namespace TheRandomizer.Generators.Assignment
 {
@@ -20,6 +21,32 @@ namespace TheRandomizer.Generators.Assignment
         private const string START_ITEM = "Start";
         private const Int32 MAX_RECURSION_DEPTH = 100;
         private const Int32 MAX_LOOP_COUNT = 1000000;
+        #endregion
+
+        #region Static Methods
+        public static AssignmentGenerator DeserializeLibrary(string xml)
+        {
+            var document = new XmlDocument();
+            var generator = new AssignmentGenerator();
+            using (var reader = new StringReader(xml))
+            {
+                document.Load(reader);
+            }
+
+            foreach (var item in document.GetElementsByTagName("item"))
+            {
+                var lineItem = new LineItem();
+                var element = (XmlElement)item;
+                lineItem.Name = element.GetAttribute("name");
+                lineItem.Next = element.GetAttribute("next");
+                lineItem.Variable = element.GetAttribute("variable");
+                lineItem.Weight = element.GetAttribute("weight") == string.Empty ? 1 : Convert.ToInt32(element.GetAttribute("weight"));
+                lineItem.Expression = element.InnerText;
+                generator.LineItems.Add(lineItem);
+            }
+            generator.IsLibrary = true;
+            return generator;
+        }
         #endregion
 
         #region Constructors
@@ -101,13 +128,13 @@ namespace TheRandomizer.Generators.Assignment
             {
                 var e = new RequestGeneratorEventArgs(import);
                 OnRequestGenerator(e);
-                if (string.IsNullOrWhiteSpace(e.Generator))
+                if (e.Generator != null)
                 {
                     throw new Exceptions.LibraryNotFoundException(import);
                 }
                 else
                 {
-                    LineItems.AddRange(((AssignmentGenerator)BaseGenerator.Deserialize(e.Generator)).LineItems);
+                    LineItems.AddRange(((AssignmentGenerator)e.Generator).LineItems);
                 }
             }
         }

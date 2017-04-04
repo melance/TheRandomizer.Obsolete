@@ -223,7 +223,7 @@ namespace TheRandomizer.Generators.UnitTests
                 var xml = @"<items>
                                 <item name='Start'>World</item>
                             </items>";
-                e.Generator = CreateGeneratorXml(xml);
+                e.Generator = BaseGenerator.Deserialize(CreateGeneratorXml(xml));
             }
         }
 

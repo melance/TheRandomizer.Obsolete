@@ -54,5 +54,25 @@ namespace TheRandomizer.WebApp.HelperClasses
                 return (AuthenticationElement)BaseGet(name);
             }
         }
+
+        public void Add(AuthenticationElement item)
+        {
+            BaseAdd(item);
+        }
+
+        public void RemoveAt(Int32 index)
+        {
+            BaseRemoveAt(index);
+        }
+
+        public void Remove(AuthenticationElement item)
+        {
+            if (BaseIndexOf(item) >= 0) BaseRemove(item);
+        }
+
+        public void Clear()
+        {
+            BaseClear();
+        }
     }
 }
