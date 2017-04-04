@@ -1,9 +1,26 @@
 ﻿@model TheRandomizer.WebApp.Models.SearchResult
 
-<tr>
-    <td>@Html.ActionLink(Model.Name, "Generate", new { Id = Model.Id }, new { name = "OpenGenerator" } )</td>
+<tr class="@(Model.IsPublished == false ? "text-info" : "")">
+    @if (Model.IsLibrary)
+    {
+        <td>Model.Name</td>
+    }
+    else
+    {
+        <td>@Html.ActionLink(Model.Name, "Generate", new { Id = Model.Id }, new { name = "OpenGenerator" } )</td>
+    }
     <td>@Model.Description</td>
     <td>@Model.TagList</td>
+    <td>
+        @if (Model.IsLibrary)
+        {
+            <span class="glyphicon glyphicon-book"></span>
+        }
+        else
+        {
+            <span>&nbsp;</span>
+        }
+    </td>
     <td>
         @if (Request.IsAuthenticated)
         { 

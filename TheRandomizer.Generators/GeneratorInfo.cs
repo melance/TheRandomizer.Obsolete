@@ -37,15 +37,16 @@ namespace TheRandomizer.Generators
         {
             // Deserialize
             var generator = BaseGenerator.Deserialize(reader);
-            this.Name = generator.Name;
-            this.Author = generator.Author;
-            this.Description = generator.Description;
-            this.OutputFormat = generator.OutputFormat;
-            this.SupportsMaxLength = generator.SupportsMaxLength;
-            this.Tags.AddRange(generator.Tags);
-            this.Url = generator.Url;
-            this.Version = generator.Version;
-            if (generator.GetType() == typeof(Assignment.AssignmentGenerator)) this.IsLibrary = ((Assignment.AssignmentGenerator)generator).IsLibrary;
+            Name = generator.Name;
+            Author = generator.Author;
+            Description = generator.Description;
+            OutputFormat = generator.OutputFormat;
+            SupportsMaxLength = generator.SupportsMaxLength;
+            Tags.AddRange(generator.Tags);
+            Url = generator.Url;
+            Version = generator.Version;
+            Published = generator.Published;
+            if (generator.GetType() == typeof(Assignment.AssignmentGenerator)) IsLibrary = ((Assignment.AssignmentGenerator)generator).IsLibrary;
         }
 
         public void WriteXml(XmlWriter writer)

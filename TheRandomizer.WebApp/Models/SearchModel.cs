@@ -57,5 +57,6 @@ namespace TheRandomizer.WebApp.Models
 
 		public bool IsFavorite { get; set; } = false;
 		public bool IsOwner { get; set; } = false;
+		public bool IsPublished { get; set; } = true;
 	}
 }

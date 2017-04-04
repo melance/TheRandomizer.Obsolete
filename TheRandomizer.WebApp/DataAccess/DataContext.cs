@@ -112,7 +112,8 @@ namespace TheRandomizer.WebApp.DataAccess
                                   && (criteria.Name == null || bg.Name.IndexOf(criteria.Name, StringComparison.CurrentCultureIgnoreCase) >= 0)
                                   && (!criteria.FavoritesOnly || User.Favorites.Contains(bg.Id))
                                   && (criteria.Author == null || bg.Author.Equals(criteria.Author, StringComparison.CurrentCultureIgnoreCase))
-                                  && (criteria.IncludeLibraries || bg.IsLibrary == false));
+                                  && (criteria.IncludeLibraries || bg.IsLibrary == false)
+                                  && (bg.Published || User.OwnerOfGenerator.Contains(bg.Id)));
 
                 criteria.TotalResults = collection.Count();
                 criteria.TotalPages = (Int32)Math.Ceiling((double)collection.Count() / criteria.PageSize);

@@ -12,8 +12,4 @@ namespace TheRandomizer.WebApp
     //Todo: Contact Page
     
     //Todo: Page Tours
-
-    //Todo: Handle request for generator
-
-    //Todo: Convert Library files to Assignment Generators
 }

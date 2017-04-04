@@ -154,7 +154,7 @@ namespace TheRandomizer.WebApp.Controllers
         
         public ActionResult About()
         {
-            ViewBag.Message = "The Randomizer is an always free and open source application designed with role-playing games and story tellers in mind. It is a customizable random thing generator able to generate nearly limitless things including and certainly not limited to names, plot hooks, and maps.";
+            ViewBag.Message = "The Randomizer is an always free and open source application designed with role-playing games and story tellers in mind. It is a customizable random thing generator able to generate nearly limitless content including and certainly not limited to names, plot hooks, and maps.";
 
             return View();
         }

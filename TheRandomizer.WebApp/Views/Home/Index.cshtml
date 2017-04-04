@@ -66,6 +66,12 @@
                         <input type="checkbox" name="FavoritesOnly" class="btn btn-default col-md-10" @(Model.FavoritesOnly ? "checked" : "") data-toggle="toggle" data-on="Yes" data-off="No" />
                     </div>
                 </div>
+                <div class="row">
+                    <div class="form-group col-md-12">
+                        @Html.LabelFor(model => model.IncludeLibraries, htmlAttributes: new { @class = "control-label text-left col-md-2" })
+                        <input type="checkbox" name="IncludeLibraries" class="btn btn-default col-md-10" @(Model.IncludeLibraries ? "checked" : "") data-toggle="toggle" data-on="Yes" data-off="No" />
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -112,8 +118,8 @@
                                 <th class="col-md-3">
                                     @Html.Label("Tags", htmlAttributes: new { @class = "control-label" })
                                 </th>
-                                <th class="col-md-1">
-                                    &nbsp;
+                                <th class="col-md-1" colspan="3">
+                                    &nbsp; 
                                 </th>
                             </tr>
                         </thead>

@@ -257,6 +257,8 @@ namespace TheRandomizer.Generators
             generator.Tags.AddRange(Tags);
             generator.Url = Url;
             generator.Version = Version;
+            generator.Published = Published;
+            if (this.GetType() == typeof(Assignment.AssignmentGenerator)) generator.IsLibrary = ((Assignment.AssignmentGenerator)this).IsLibrary;
             return generator;
         }
         #endregion
