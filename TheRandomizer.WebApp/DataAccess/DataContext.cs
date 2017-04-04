@@ -51,6 +51,15 @@ namespace TheRandomizer.WebApp.DataAccess
                 return generator;
             }
         }        
+
+        public static BaseGenerator GetGenerator(string name)
+        {
+            using (var db = OpenDatabase())
+            {
+                var generator = db.GetCollection<BaseGenerator>(GENERATORS_COLLECTION).FindOne(bg => bg.Name.Equals(name, StringComparison.InvariantCultureIgnoreCase));
+                return generator;
+            }
+        }
         
         public static BaseGenerator UpsertGenerator(BaseGenerator generator)
         {
@@ -102,7 +111,8 @@ namespace TheRandomizer.WebApp.DataAccess
                     .Where(bg => (bg.Tags == null || bg.Tags.Count == 0 || bg.Tags.Intersect(tags).Count() == tags.Count()) 
                                   && (criteria.Name == null || bg.Name.IndexOf(criteria.Name, StringComparison.CurrentCultureIgnoreCase) >= 0)
                                   && (!criteria.FavoritesOnly || User.Favorites.Contains(bg.Id))
-                                  && (criteria.Author == null || bg.Author.Equals(criteria.Author, StringComparison.CurrentCultureIgnoreCase)));
+                                  && (criteria.Author == null || bg.Author.Equals(criteria.Author, StringComparison.CurrentCultureIgnoreCase))
+                                  && (criteria.IncludeLibraries || bg.IsLibrary == false));
 
                 criteria.TotalResults = collection.Count();
                 criteria.TotalPages = (Int32)Math.Ceiling((double)collection.Count() / criteria.PageSize);
@@ -161,6 +171,19 @@ namespace TheRandomizer.WebApp.DataAccess
                                 .FindAll()
                                 .Select(bg => bg.Author)
                                 .Distinct();
+                return list;
+            }
+        }
+
+        public static IEnumerable<string> GetLibraryNames()
+        {
+            using (var db = OpenDatabase())
+            {
+                var list = db.GetCollection<BaseGenerator>(GENERATORS_COLLECTION)
+                                .FindAll()
+                                .OfType<AssignmentGenerator>()
+                                .Where(ag => ag.IsLibrary)
+                                .Select(ag => ag.Name);
                 return list;
             }
         }

@@ -8,7 +8,7 @@ namespace TheRandomizer.WebApp.HelperClasses
 {
     public class AuthenticationElement : ConfigurationElement
     {
-        [ConfigurationProperty("key", IsRequired = true, IsKey = true)]
+        [ConfigurationProperty("name", IsRequired = true, IsKey = true)]
         public string Name
         {
             get

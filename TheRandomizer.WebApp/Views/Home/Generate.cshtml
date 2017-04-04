@@ -61,14 +61,6 @@
 								case Configuration.ParameterType.Date:
 									<input type="date" name="@value" class="form-control" value="@parameter.Value" />
 									break;
-								case Configuration.ParameterType.MultiSelect:
-									<select name="@value" class="form-control" multiple>
-										@foreach (var option in parameter.Options)
-										{
-											<option value="@option.Value" @(parameter.Value == option.Value ? "Selected" : "")>@option.DisplayName</option>
-										}
-									</select>
-									break;
 								case Configuration.ParameterType.List:
 									<select name="@value" class="form-control">
 										@foreach (var option in parameter.Options)

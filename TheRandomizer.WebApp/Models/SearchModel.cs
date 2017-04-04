@@ -15,6 +15,8 @@ namespace TheRandomizer.WebApp.Models
 		public string Author { get; set; }
 		[Display(Name = "Favorites Only")]
 		public bool FavoritesOnly { get; set; }
+		[Display(Name = "Include Libraries")]
+		public bool IncludeLibraries { get; set; }
 		[Display(Name = "Generators Open In")]
 		public bool OpenNewTab { get; set; }
 		[Display(Name = "Page Size")]

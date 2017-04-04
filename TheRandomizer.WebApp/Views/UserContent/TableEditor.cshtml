@@ -41,7 +41,7 @@
                 <div class="panel panel-default">
                     <div class="panel-heading clearfix">
                         <b class="panel-title">Tables</b>
-                        <a href="#" data-toggle="collapse" data-target="#TableContainer" style="color: black;"><span id="TableCollapseIcon"></span></a>
+                        <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#TableContainer" style="color:black"><span id="TableCollapseIcon"></span></button>
                         <div class="btn-group-sm pull-right">
                             <button id="ClearTables" type="button" class="btn btn-default" title="Clear all of the tables"><span class="glyphicon glyphicon-remove"></span> Clear</button>
                             <div class="btn-group btn-group-sm">
@@ -78,7 +78,7 @@
 
 <script>
     $('document').ready(function () {
-        $('#Items').EnableDisableItemUpDowns(); //Todo: Add Item Up Down buttons
+        $('#Items').EnableDisableItemUpDowns();
 
         $("#Tables").on("click", "[data-toggle = 'DeleteTable']", function () {
             $(this).parents("[data-item-row]").deleteItem();

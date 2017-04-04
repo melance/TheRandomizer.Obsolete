@@ -28,7 +28,7 @@ namespace TheRandomizer.WebApp.HelperClasses
 
         public static AuthenticationElement GetAuthentication(string name)
         {
-            var section = (AuthenticationSection)ConfigurationManager.GetSection("AuthenticationSection");
+            var section = (AuthenticationSection)ConfigurationManager.GetSection("authenticationSettings");
             return section.AuthenticationItems[name];
         }
     }

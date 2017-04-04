@@ -38,6 +38,13 @@ namespace TheRandomizer.WebApp.Controllers
             }
         }
         
+        public static List<string> Libraries
+        {
+            get
+            {
+                return new List<string>(DataAccess.DataContext.GetLibraryNames());
+            }
+        }
 
         #region Base Generator
         [HttpPost]
@@ -101,7 +108,7 @@ namespace TheRandomizer.WebApp.Controllers
                     // Check if this is a library file
                     if (upload.FileName.EndsWith(".lib.xml"))
                     {
-                        //Todo: deserialize Libraries
+                        model = AssignmentGenerator.DeserializeLibrary(xml);
                     }
                     else
                     {
@@ -175,6 +182,12 @@ namespace TheRandomizer.WebApp.Controllers
         {
             ViewData.TemplateInfo.HtmlFieldPrefix = $"LineItems[{index}]";
             return PartialView("~/Views/Shared/EditorTemplates/LineItem.cshtml");
+        }
+
+        public ActionResult CreateLibraryImport(Int32 index)
+        {
+            ViewData.TemplateInfo.HtmlFieldPrefix = $"Imports[{index}]";
+            return PartialView("_LibraryImport");
         }
         #endregion
 

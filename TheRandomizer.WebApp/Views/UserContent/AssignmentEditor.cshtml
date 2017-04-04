@@ -9,11 +9,13 @@
 @section TRScripts {
     <script src="~/Scripts/bootstrap-tokenfield.js"></script>
     <script src="~/Scripts/jquery-ui-1.12.1.js"></script>
+    <script src="~/Scripts/bootstrap-combobox.js"></script>
     @Scripts.Render("~/Scripts/TheRandomizer.ItemListMaintenance.js")
 }
 
 @section TRStyles {
     <link href="~/Content/bootstrap-tokenfield/bootstrap-tokenfield.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/bootstrap-combobox.css" rel="stylesheet" type="text/css" />
 }
 <h2>@ViewBag.Title</h2>
 
@@ -37,7 +39,7 @@
                 <div class="panel panel-default">
                     <div class="panel-heading clearfix">
                         <b class="panel-title">Items</b>
-                        <a href="#" data-toggle="collapse" data-target="#ItemContainer" style="color: black;"><span id="ItemCollapseIcon"></span></a>
+                        <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#ItemContainer" style="color:black"><span id="ItemCollapseIcon"></span></button>
                         <div class="btn-group-sm pull-right">
                             <button id="ClearItems" type="button" class="btn btn-default" title="Clear all of the items"><span class="glyphicon glyphicon-remove"></span> Clear</button>
                             <div class="btn-group btn-group-sm">
@@ -75,8 +77,31 @@
                 </div>
             </div>
         </div>
-
-
+        <div class="row">
+            <div class="col-md-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading clearfix">
+                        <b class="panel-title">Imports</b>
+                        <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#ImportContainer" style="color:black"><span id="ImportCollapseIcon"></span></button>
+                        <div class="btn-group-sm pull-right">
+                            <button id="ClearImports" type="button" class="btn btn-default" title="Clear all of the imports"><span class="glyphicon glyphicon-remove"></span> Clear</button>
+                            <div class="btn-group btn-group-sm">
+                                <button id="AddImport" type="button" class="btn btn-default" title="Add a new import"><span class="glyphicon glyphicon-plus"></span> Add</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel-body panel-collapse collapse in" id="ImportContainer">
+                        <div id="Imports" class="itemListStriped" data-item-container>
+                            <input type="hidden" id="ImportIndex" value="@Model.Imports.Count" />
+                            @for (var i = 0; i < Model.Imports.Count; i++)
+                            {
+                                @Html.Partial("_libraryImport", Model.Imports[i])
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         @Html.Partial("_EditorSubmit")
     </div>
 }
@@ -87,6 +112,7 @@
 
 <script>
     $('document').ready(function () {
+        // Line Item Maintenance Methods
         $('#Items').EnableDisableItemUpDowns();
 
         $("#Items").on("click", "[data-toggle = 'DeleteItem']", function () {
@@ -122,5 +148,22 @@
         })
 
         RegisterCollapseElement("#ItemContainer", "#ItemCollapseIcon");
-    })
+
+        // Import Maintenance Methods
+        $("#Items").on("click", "[data-toggle = 'DeleteItem']", function () {
+            $(this).parents("[data-item-row]").deleteItem();
+        })
+
+        $("#ClearImports").click(function () {
+            $("#Imports").clearItems("Confirm", "Are you sure you want to clear all imports?");
+        })
+
+        $("#AddImport").click(function () {
+            var index = $("#ImportIndex").val();
+            $("#ImportIndex").val(index + 1);
+            $("#Imports").addItem("CreateLibraryImport", index);
+        })
+
+        RegisterCollapseElement("#ImportContainer", "#ImportCollapseIcon");
+    });
 </script>

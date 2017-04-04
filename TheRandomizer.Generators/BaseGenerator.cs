@@ -342,7 +342,7 @@ namespace TheRandomizer.Generators
                             var arg = new RequestGeneratorEventArgs(parameters[0].ToString());
                             BaseGenerator generator;
                             OnRequestGenerator(arg);
-                            generator = BaseGenerator.Deserialize(arg.Generator);
+                            generator = arg.Generator;
                             if (parameters.Count() > 1)
                             {
                                 for (var i = 1; i < parameters.Count(); i += 2)

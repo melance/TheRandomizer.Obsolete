@@ -41,7 +41,7 @@
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <b class="panel-title">Definitions</b>
-                        <a href="#" data-toggle="collapse" data-target="#DefinitionContainer" style="color: black;"><span id="InfoCollapseIcon"></span></a>
+                        <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#DefinitionContainer" style="color:black"><span id="DefinitionCollapseIcon"></span></button>
                         <div class="btn-group-sm pull-right">
                             <button id="ClearDefinitions" type="button" class="btn btn-default" title="Clear all of the definitions"><span class="glyphicon glyphicon-remove"></span> Clear</button>
                             <button id="AddDefinition" type="button" class="btn btn-default" title="Add a new definition"><span class="glyphicon glyphicon-plus"></span> Add</button>
@@ -69,19 +69,13 @@
                 <div class="panel panel-default">
                     <div class="panel-heading">
                         <b class="panel-title">Patterns</b>
-                        <a href="#" data-toggle="collapse" data-target="#Patterns" style="color: black;"><span id="PatternCollapseIcon"></span></a>
+                        <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#Patterns" style="color:black"><span id="PatternCollapseIcon"></span></button>
                         <div class="btn-group-sm pull-right">
                             <button id="ClearPatterns" type="button" class="btn btn-default" title="Clear all of the patterns"><span class="glyphicon glyphicon-remove"></span> Clear</button>
                             <button id="AddPattern" type="button" class="btn btn-default" title="Add a new pattern"><span class="glyphicon glyphicon-plus"></span> Add</button>
                         </div>
                     </div>
                     <div class="panel-body panel-collapse collapse in" id="Patterns">
-                        <div class="row">
-                            <fieldset class="form-inline">
-                                @Html.LabelFor(model => model.TextCase, htmlAttributes: new { @class = "control-label text-left col-md-2" })
-                                @Html.EnumDropDownListFor(model => model.TextCase, htmlAttributes: new { @class = "form-control col-md-8", @title = "The text case to use for the resulting output." })
-                            </fieldset>
-                        </div>
                         <div class="col-md-12">
                             <div class="form-group">
                                 <div class="col-md-9"><label class="control-label">Pattern</label></div>

@@ -25,6 +25,8 @@ namespace TheRandomizer.Generators
             }
             return generator;
         }
+
+        public bool IsLibrary { get; set; } = false;
         
         public XmlSchema GetSchema()
         {
@@ -43,6 +45,7 @@ namespace TheRandomizer.Generators
             this.Tags.AddRange(generator.Tags);
             this.Url = generator.Url;
             this.Version = generator.Version;
+            if (generator.GetType() == typeof(Assignment.AssignmentGenerator)) this.IsLibrary = ((Assignment.AssignmentGenerator)generator).IsLibrary;
         }
 
         public void WriteXml(XmlWriter writer)

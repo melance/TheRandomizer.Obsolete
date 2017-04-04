@@ -122,7 +122,14 @@ namespace TheRandomizer.WebApp.Controllers
                             generator.Parameters[parameter.Name].Value = parameter.Value;
                         }
                     }
+                    generator.RequestGenerator += RequestGenerator;
                     var results = generator.Generate(model.Repeat, model.MaxLength);
+                    generator.RequestGenerator -= RequestGenerator;
+                    switch (generator.OutputFormat)
+                    {
+                        case (OutputFormat.Html): break;
+                        case (OutputFormat.Text): results = results.Select(r => HttpUtility.HtmlEncode(r)); break;
+                    }
                     return PartialView("_Results", results);
                 }
                 catch (Exception ex)
@@ -180,6 +187,11 @@ namespace TheRandomizer.WebApp.Controllers
                 return (T)Convert.ChangeType(Request.Form[key], typeof(T));
             }
             return defaultValue;
+        }
+
+        private void RequestGenerator(object sender, RequestGeneratorEventArgs e)
+        {
+            e.Generator = DataAccess.DataContext.GetGenerator(e.Name);
         }
     }
 }
