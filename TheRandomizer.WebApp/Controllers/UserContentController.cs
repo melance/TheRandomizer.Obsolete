@@ -14,6 +14,9 @@ using TheRandomizer.WebApp.Models;
 using TheRandomizer.Generators;
 using System.Web.Script.Serialization;
 using System.Text;
+using Microsoft.AspNet.Identity;
+using TheRandomizer.WebApp.HelperClasses;
+using static TheRandomizer.WebApp.HelperClasses.GlobalConstants;
 
 namespace TheRandomizer.WebApp.Controllers
 {
@@ -37,7 +40,7 @@ namespace TheRandomizer.WebApp.Controllers
                 return value.OrderBy(gtm => gtm.Name).ToList();
             }
         }
-        
+
         public static List<string> Libraries
         {
             get
@@ -64,6 +67,7 @@ namespace TheRandomizer.WebApp.Controllers
             return PartialView("~/Views/Shared/EditorTemplates/Configuration.cshtml");
         }
 
+        [IsOwner(ADMINISTRATOR_ROLE)]
         public ActionResult EditGenerator(Int32 Id)
         {
             var model = DataAccess.DataContext.GetGenerator(Id);
@@ -75,6 +79,16 @@ namespace TheRandomizer.WebApp.Controllers
         public ActionResult SelectGeneratorType()
         {                      
             return View(GeneratorTypes);            
+        }
+
+        [IsOwner]
+        public ActionResult Publish(Int32 id)
+        {
+            var url = Request.UrlReferrer.AbsoluteUri;
+            var model = DataAccess.DataContext.GetGenerator(id);
+            var body = $"A request to publish the <a href={url}>{model.Name}</a> generator has been submitted by {User.Identity.GetUserName()}";
+            HelperClasses.Email.Send(string.Empty, "the.randomizer.app@gmail.com", "Publish Request", body);            
+            return View(model);
         }
 
         [HttpPost]
@@ -148,6 +162,7 @@ namespace TheRandomizer.WebApp.Controllers
             return this.File(System.Text.Encoding.UTF8.GetBytes(model), "text/xml", fileName);
         }
 
+        [IsOwner(ADMINISTRATOR_ROLE)]
         public ActionResult DeleteGenerator(Int32 id)
         {
             try
@@ -172,6 +187,7 @@ namespace TheRandomizer.WebApp.Controllers
             return View(model);
         }
 
+        [IsOwner]
         [HttpPost]
         public ActionResult AssignmentEditor(AssignmentGenerator generator)
         {
@@ -197,6 +213,7 @@ namespace TheRandomizer.WebApp.Controllers
             return View(new ListGenerator());
         }
 
+        [IsOwner]
         [HttpPost]
         public ActionResult ListEditor(ListGenerator generator)
         {
@@ -212,6 +229,7 @@ namespace TheRandomizer.WebApp.Controllers
             return View(model);
         }
 
+        [IsOwner]
         [HttpPost]
         [ValidateInput(false)]
         public ActionResult DiceEditor(DiceGenerator generator)
@@ -232,6 +250,7 @@ namespace TheRandomizer.WebApp.Controllers
             return View(new LUAGenerator());
         }
 
+        [IsOwner]
         [HttpPost]
         public ActionResult LuaEditor(LUAGenerator generator)
         {
@@ -248,6 +267,7 @@ namespace TheRandomizer.WebApp.Controllers
             return View(model);
         }
 
+        [IsOwner]
         [HttpPost]
         public ActionResult PhonotacticsEditor(PhonotacticsGenerator generator)
         {
@@ -274,6 +294,7 @@ namespace TheRandomizer.WebApp.Controllers
             return View(model);
         }
 
+        [IsOwner]
         [HttpPost]
         public ActionResult TableEditor(TableGenerator generator)
         {

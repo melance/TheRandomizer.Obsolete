@@ -20,21 +20,7 @@ namespace TheRandomizer.WebApp
     {
         public async Task SendAsync(IdentityMessage message)
         {
-            // Plug in your email service here to send an email.
-
-            await ConfigSendGridAsync(message);
-        }
-
-        public async Task ConfigSendGridAsync(IdentityMessage message)
-        {
-            string apiKey = HelperClasses.Settings.GetSetting<string>("sendGridApiKey");
-            SendGridClient client = new SendGridClient(apiKey);
-            var from = new EmailAddress(HelperClasses.Settings.GetSetting<string>("fromAddress"));
-            var to = new EmailAddress(message.Destination);
-            var subject = message.Subject;
-            var content = new Content("text/html", message.Body);
-            var mail = MailHelper.CreateSingleEmail(from, to, subject, message.Body, message.Body);
-            dynamic response = await client.SendEmailAsync(mail);
+            await Task.Run(HelperClasses.Email.Send(string.Empty, message.Destination, message.Subject, message.Body));
         }
     }
 

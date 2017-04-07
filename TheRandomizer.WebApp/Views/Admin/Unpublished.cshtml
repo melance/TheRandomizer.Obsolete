@@ -1,0 +1,59 @@
+﻿@model List<GeneratorInfo>
+
+@{
+    ViewBag.Title = "Unpublished Generators";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Unpublished Generators</h2>
+
+@using (Html.BeginForm("Publish", "Admin", FormMethod.Post))
+{
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th class="col-md-2">
+                @Html.Label("Name", htmlAttributes: new { @class = "control-label" })
+            </th>
+            <th class="col-md-2">
+                @Html.Label("Author", htmlAttributes: new { @class = "control-label" })
+            </th>
+            <th class="col-md-4">
+                @Html.Label("Description", htmlAttributes: new { @class = "control-label" })
+            </th>
+            <th class="col-md-3">
+                @Html.Label("Tags", htmlAttributes: new { @class = "control-label" })
+            </th>
+            <th class="col-md-1" colspan="3">
+                &nbsp;
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var info in Model)
+        {
+            <tr>
+                <td class="col-md-2">
+                    @info.Name
+                </td>
+                <td class="col-md-2">
+                    @info.Author
+                </td>
+                <td class="col-md-4">
+                    @info.Description
+                </td>
+                <td class="col-md-3">
+                    @info.TagList
+                </td>
+                <td class="col-md-3">
+                    <div class="btn-group-xs">
+                        <input type="hidden" value="@info.Id" />
+                        <button type="button" class="btn btn-primary" title="Publish"><span class="glyphicon glyphicon-ok"></span></button>
+                        <button type="button" class="btn btn-danger" title="Delete"><span class="glyphicon glyphicon-remove"></span></button>
+                    </div>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+}

@@ -38,7 +38,12 @@ namespace TheRandomizer.WebApp.Models
 			Id = info.Id;
 			Name = info.Name;
 			Description = info.Description;
-			Tags.AddRange(info.Tags);
+			Published = info.Published;
+			Author = info.Author;
+            IsLibrary = info.IsLibrary;
+            OutputFormat = info.OutputFormat;
+            SupportsMaxLength = info.SupportsMaxLength;
+			Tags.AddRange(info.Tags);            
 
 			var user = DataContext.User;
 
@@ -57,6 +62,5 @@ namespace TheRandomizer.WebApp.Models
 
 		public bool IsFavorite { get; set; } = false;
 		public bool IsOwner { get; set; } = false;
-		public bool IsPublished { get; set; } = true;
 	}
 }

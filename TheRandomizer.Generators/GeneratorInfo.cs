@@ -7,6 +7,7 @@ using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
 using System.IO;
+using TheRandomizer.Generators.Attributes;
 
 namespace TheRandomizer.Generators
 {
@@ -17,13 +18,15 @@ namespace TheRandomizer.Generators
     {
         public new static GeneratorInfo Deserialize(string xml)
         {
-            var generator = new GeneratorInfo();
+            var info = new GeneratorInfo();
+            BaseGenerator generator;
             xml = TransformXml.TransformToLatestVersion(xml);
             using (var writer = XmlReader.Create(new StringReader(xml)))
             {
-                generator.ReadXml(writer);
+                info.ReadXml(writer);
+                generator = BaseGenerator.Deserialize(writer);
             }
-            return generator;
+            return info;
         }
 
         public bool IsLibrary { get; set; } = false;

@@ -61,6 +61,17 @@ namespace TheRandomizer.WebApp.DataAccess
             }
         }
         
+        public static BaseGenerator PublishGenerator(Int32 id)
+        {
+            using (var db = OpenDatabase())
+            {
+                var generator = GetGenerator(id);
+                generator.Published = true;
+                db.GetCollection<BaseGenerator>(GENERATORS_COLLECTION).Update(generator);
+                return generator;
+            }
+        }
+
         public static BaseGenerator UpsertGenerator(BaseGenerator generator)
         {
             try
@@ -123,6 +134,21 @@ namespace TheRandomizer.WebApp.DataAccess
             }
 
             return criteria;
+        }
+
+        public static List<GeneratorInfo> GetUnpublished()
+        {
+            using (var db = OpenDatabase())
+            {
+                var collection = db.GetCollection<BaseGenerator>(GENERATORS_COLLECTION)
+                    .FindAll()
+                    .Select(bg => bg.AsGeneratorInfo())
+                    .OrderBy(bg => bg.Name)
+                    .Where(bg => bg.Published == false)
+                    .ToList();
+
+                return collection;
+            }
         }
 
         public static bool SetFavorite(Int32 generatorId, bool isFavorite)

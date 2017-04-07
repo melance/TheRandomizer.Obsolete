@@ -29,8 +29,6 @@
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
         @Html.HiddenFor(model => model.Id)
 
-        @Html.Partial("_EditorSubmit")
-
         @Html.EditorFor(bg => bg)
         
         @Html.ValidationMessageFor(model => model.LineItems, "", new { @class = "text-danger" })
@@ -102,7 +100,6 @@
                 </div>
             </div>
         </div>
-        @Html.Partial("_EditorSubmit")
     </div>
 }
 

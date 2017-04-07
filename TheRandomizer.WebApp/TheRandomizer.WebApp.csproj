@@ -230,6 +230,7 @@
     <Compile Include="Controllers\HelpController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\RolesController.cs" />
     <Compile Include="Controllers\UserContentController.cs" />
     <Compile Include="DataAccess\DataContext.cs" />
     <Compile Include="Global.asax.cs">
@@ -238,7 +239,11 @@
     <Compile Include="HelperClasses\AuthenticationCollection.cs" />
     <Compile Include="HelperClasses\AuthenticationElement.cs" />
     <Compile Include="HelperClasses\AuthenticationSection.cs" />
+    <Compile Include="HelperClasses\GlobalConstants.cs" />
+    <Compile Include="HelperClasses\Email.cs" />
     <Compile Include="HelperClasses\GenericExtensions.cs" />
+    <Compile Include="HelperClasses\IdentityExtensions.cs" />
+    <Compile Include="HelperClasses\IsOwnerAttribute.cs" />
     <Compile Include="HelperClasses\MVCExtensions.cs" />
     <Compile Include="HelperClasses\Settings.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
@@ -433,7 +438,7 @@
     <Content Include="Views\Shared\DisplayTemplates\SearchResult.cshtml" />
     <Content Include="Views\UserContent\SelectGeneratorType.cshtml" />
     <Content Include="Views\UserContent\ListEditor.cshtml" />
-    <Content Include="Views\UserContent\_EditorSubmit.cshtml" />
+    <Content Include="Views\UserContent\_EditorButtons.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\RollFunction.cshtml" />
     <Content Include="Views\UserContent\DiceEditor.cshtml" />
     <Content Include="Views\Home\Generate.cshtml" />
@@ -455,11 +460,16 @@
     <Content Include="Views\Help\Assignment.cshtml" />
     <Content Include="Views\Shared\EditorTemplates\BaseTable.cshtml" />
     <Content Include="Views\UserContent\_libraryImport.cshtml" />
+    <Content Include="Views\Admin\Unpublished.cshtml" />
+    <Content Include="Views\Roles\Index.cshtml" />
+    <Content Include="Views\Roles\Edit.cshtml" />
+    <Content Include="Views\UserContent\_AdminButtons.cshtml" />
+    <Content Include="Views\UserContent\Publish.cshtml" />
+    <Content Include="Views\Admin\Publish.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Resources\" />
-    <Folder Include="Views\Admin\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

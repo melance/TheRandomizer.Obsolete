@@ -3,7 +3,18 @@
 @using TheRandomizer.Generators.Assignment
 @using TheRandomizer.Generators.Phonotactics
 @using TheRandomizer.WebApp.Controllers
+@using TheRandomizer.WebApp.HelperClasses
 
+
+<div class="col-md-6 pull-left">
+    @Html.Partial("_EditorButtons")
+</div>
+<div class="col-md-6 pull-right">
+    @if (User.Identity.GetIsAdministrator() && Model.Id != 0)
+    {
+        @Html.Partial("_AdminButtons", Model.Id)
+    }
+</div>
 <div class="row">
     <div class="col-md-12">
         <div class="panel panel-default">
