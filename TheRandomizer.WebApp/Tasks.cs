@@ -5,7 +5,7 @@ using System.Web;
 
 namespace TheRandomizer.WebApp
 {
-    //Todo: Administrative tools: publish, data editor (CRUD), assign owner
+    //Todo: Administrative tools: data editor (CRUD), assign owner
 
     //Todo: Help Page
 

@@ -131,20 +131,23 @@
                 <div class="row"><div class="col-md-12 text-muted">Showing @Model.First @(@Model.First == Model.Last ? "" : $"- {Model.Last}") of @Model.TotalResults</div></div>
                 <div class="row">
                     <div class="col-md-10">
-@{
-    //Todo: Instead of disabling the unavailab buttons, hide them
-}
                         <div class="btn-group"> 
-                            <button name="ChangePage" data-page="1" class="btn btn-default" @(Model.Page == 1  || Model.TotalResults == 0 ? "disabled" : "")>&laquo;</button>
-                            <button name="ChangePage" data-page="@(Model.Page-1)" class="btn btn-default" @(Model.Page == 1  || Model.TotalResults == 0 ? "disabled" : "")>&lsaquo;</button>
+                            @if (Model.Page > 1 && Model.TotalResults != 0)
+                            { 
+                                <button name = "ChangePage" data - page = "1" class="btn btn-default">&laquo;</button>
+                                <button name="ChangePage" data-page="@(Model.Page-1)" class="btn btn-default">&lsaquo;</button>
+                            }
                             @for (var i = 1; i <= Model.TotalPages ; i++)
                             {
                                 var isCurrentPage = Model.Page == i;
 
                                 <button class="btn @(isCurrentPage ? "btn-primary" : "btn-default")" @(isCurrentPage ? "disabled" : "") name="ChangePage" data-page="@i.ToString()">@i.ToString()</button>
                             }
-                            <button name="ChangePage" data-page="@(Model.Page+1)" class="btn btn-default" @(Model.Page == Model.TotalPages || Model.TotalResults == 0 ? "disabled" : "")>&rsaquo;</button>
-                            <button name="ChangePage" data-page="@Model.TotalPages" class="btn btn-default" @(Model.Page == Model.TotalPages || Model.TotalResults == 0 ? "disabled" : "")>&raquo;</button>
+                            @if (Model.Page != Model.TotalPages && Model.TotalResults != 0)
+                            {
+                                <button name="ChangePage" data-page="@(Model.Page+1)" class="btn btn-default">&rsaquo;</button>
+                                <button name="ChangePage" data-page="@Model.TotalPages" class="btn btn-default">&raquo;</button>
+                            }
                         </div>
                     </div>
                     <div class="col-md-2">
@@ -176,7 +179,8 @@
 
 <script>
     $(document).ready(function () {
-
+        $('[data-toggle="popover"]').popover();
+        
         var openNewTab = Cookies.get("OpenNewTab");
         var favoritesOnly = Cookies.get("favoritesOnly");
 

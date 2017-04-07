@@ -9,6 +9,7 @@ using TheRandomizer.Generators.Parameter;
 using System.IO;
 using System.ComponentModel.DataAnnotations;
 using LiteDB;
+using TheRandomizer.Generators.Attributes;
 
 namespace TheRandomizer.Generators
 {
@@ -258,7 +259,7 @@ namespace TheRandomizer.Generators
             generator.Url = Url;
             generator.Version = Version;
             generator.Published = Published;
-            if (this.GetType() == typeof(Assignment.AssignmentGenerator)) generator.IsLibrary = ((Assignment.AssignmentGenerator)this).IsLibrary;
+            if (GetType() == typeof(Assignment.AssignmentGenerator)) generator.IsLibrary = ((Assignment.AssignmentGenerator)this).IsLibrary;
             return generator;
         }
         #endregion

@@ -1,0 +1,69 @@
+﻿<div class="modal fade bootstrap-dialog type-warning" id="confirmPublishRequest" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="bootstrap-dialog-header">
+                    <div class="bootstrap-dialog-close-button"><button class="close">×</button></div>
+                    <div class="bootstrap-dialog-title">Confirm Publish Request</div>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div class="bootstrap-dialog-body">
+                    <div class="bootstrap-dialog-message">
+                        Are you sure you want to request publishing of this genertor?  Once it is published, it will no longer be available for editing.
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="bootstrap-dialog-footer">
+                    <div class="bootstrap-dialog-footer-buttons">
+                        <button type="button" class="btn btn-default" data-dismiss="modal"><span class="bootstrap-dialog-button-icon glyphicon glyphicon-remove"></span> No</button>
+                        <a href="/usercontent/publish/@Model.Id" class="btn btn-primary btn-ok"><span class="bootstrap-dialog-button-icon glyphicon glyphicon-ok"></span> Yes</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade bootstrap-dialog type-danger" id="confirmDeleteGenerator" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="bootstrap-dialog-header">
+                    <div class="bootstrap-dialog-close-button"><button class="close">×</button></div>
+                    <div class="bootstrap-dialog-title">Confirm Delete Generator</div>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div class="bootstrap-dialog-body">
+                    <div class="bootstrap-dialog-message">
+                        Are you sure you want to delete this generator?  Once this is done, it cannot be undone.
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="bootstrap-dialog-footer">
+                    <div class="bootstrap-dialog-footer-buttons">
+                        <button type="button" class="btn btn-default" data-dismiss="modal"><span class="bootstrap-dialog-button-icon glyphicon glyphicon-remove"></span> No</button>
+                        <a href="/usercontent/delete/@Model.Id" class="btn btn-danger btn-ok"><span class="bootstrap-dialog-button-icon glyphicon glyphicon-ok"></span> Yes</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="form-group">
+    <div class="col-md-12">
+        <div class="btn-group">
+            <button type="submit" value="Save" class="btn btn-primary" name="Submit" title="Save"><span class="glyphicon glyphicon-save"></span></button>
+            <button type="submit" value="Save & Close" class="btn btn-default" name="Submit" title="Save & Close"><span class="glyphicon glyphicon-saved"></span></button>
+            <a href="/home/index" class="btn btn-default" name="Cancel" title="Close"><span class="glyphicon glyphicon-remove"></span></a>
+        </div>
+        <div class="btn-group">
+            <button id="publishRequest" type="button" class="btn btn-default" title="Request Publish" data-toggle="modal" data-target="#confirmPublishRequest"><span class="glyphicon glyphicon-ok"></span></button>
+            <button id="deleteGenerator" type="button" class="btn btn-default" title="Delete" data-toggle="modal" data-target="#confirmDeleteGenerator"><span class="glyphicon glyphicon-remove text-danger"></span></button>
+        </div>
+    </div>
+</div>

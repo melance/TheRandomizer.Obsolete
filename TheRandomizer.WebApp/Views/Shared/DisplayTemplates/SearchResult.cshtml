@@ -1,6 +1,39 @@
 ﻿@model TheRandomizer.WebApp.Models.SearchResult
 
-<tr class="@(Model.IsPublished == false ? "text-info" : "")">
+<div class="modal fade bootstrap-dialog type-primary" id="Info@(Model.Id)" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="bootstrap-dialog-header">
+                    <div class="bootstrap-dialog-close-button"><button class="close">×</button></div>
+                    <div class="bootstrap-dialog-title">@Model.Name</div>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div class="bootstrap-dialog-body">
+                    <div class="bootstrap-dialog-message">
+                        By: <i>@Model.Author</i><br />
+                        @Model.Description<br />
+                        <hr />
+                        <b>Tags: </b> @Model.TagList<br />
+                        <b>Is Library: </b> @Model.IsLibrary<br />
+                        <b>Output Format: </b> @Model.OutputFormat<br />
+                        <b>Is Published: </b> @Model.Published<br />
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="bootstrap-dialog-footer">
+                    <div class="bootstrap-dialog-footer-buttons">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Ok</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<tr class="@(Model.Published == false ? "text-info" : "")">
     @if (Model.IsLibrary)
     {
         <td>Model.Name</td>
@@ -22,6 +55,9 @@
         }
     </td>
     <td>
+        <span style="font-size: 1.5em; cursor: pointer;" data-toggle="modal" data-target="#Info@(Model.Id)"><span class="glyphicon glyphicon-info-sign"></span></span>
+    </td>
+    <td>
         @if (Request.IsAuthenticated)
         { 
             <span style="font-size: 1.5em; cursor: pointer;" class="glyphicon @(Model.IsFavorite ? "glyphicon-star" : "glyphicon-star-empty")" name="ToggleFavorite" data-id="@Model.Id" data-is-favorite="@Model.IsFavorite" title="@(Model.IsFavorite ? "Click to remove this generator from your favorites." : "Click to add this generator from your favorites.")"></span>
@@ -39,6 +75,6 @@
         else
         {
             <span>&nbsp;</span>
-        }
+        }       
     </td>
 </tr>
