@@ -40,7 +40,7 @@ namespace TheRandomizer.WebApp.DataAccess
 
         public static LiteDatabase OpenDatabase()
         {
-            return new LiteDatabase(HttpContext.Current.Server.MapPath(DB_PATH), CreateMapper());
+            return new LiteDatabase(HttpContext.Current.Server.MapPath(DB_PATH), CreateMapper() );
         }
         
         public static BaseGenerator GetGenerator(Int32 id)
@@ -61,12 +61,12 @@ namespace TheRandomizer.WebApp.DataAccess
             }
         }
         
-        public static BaseGenerator PublishGenerator(Int32 id)
+        public static BaseGenerator SetPublished(Int32 id, bool published)
         {
             using (var db = OpenDatabase())
             {
                 var generator = GetGenerator(id);
-                generator.Published = true;
+                generator.Published = published;
                 db.GetCollection<BaseGenerator>(GENERATORS_COLLECTION).Update(generator);
                 return generator;
             }

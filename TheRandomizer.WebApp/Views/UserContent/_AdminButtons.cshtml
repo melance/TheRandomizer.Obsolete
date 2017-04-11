@@ -1,4 +1,5 @@
-﻿@model Int32?
+﻿@using TheRandomizer.Generators
+@model BaseGenerator
 
 <div class="modal fade bootstrap-dialog type-warning" id="confirmPublish" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog">
@@ -20,7 +21,35 @@
                 <div class="bootstrap-dialog-footer">
                     <div class="bootstrap-dialog-footer-buttons">
                         <button type="button" class="btn btn-default" data-dismiss="modal"><span class="bootstrap-dialog-button-icon glyphicon glyphicon-remove"></span> No</button>
-                        <a href="/admin/publish/@Model" class="btn btn-primary btn-ok"><span class="bootstrap-dialog-button-icon glyphicon glyphicon-ok"></span> Yes</a>
+                        <a href="/admin/publish/@Model.Id" class="btn btn-primary btn-ok"><span class="bootstrap-dialog-button-icon glyphicon glyphicon-ok"></span> Yes</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade bootstrap-dialog type-warning" id="confirmUnpublish" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="bootstrap-dialog-header">
+                    <div class="bootstrap-dialog-close-button"><button class="close">×</button></div>
+                    <div class="bootstrap-dialog-title">Confirm Unpublish</div>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div class="bootstrap-dialog-body">
+                    <div class="bootstrap-dialog-message">
+                        Are you sure you want to unpublish this genertor?
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="bootstrap-dialog-footer">
+                    <div class="bootstrap-dialog-footer-buttons">
+                        <button type="button" class="btn btn-default" data-dismiss="modal"><span class="bootstrap-dialog-button-icon glyphicon glyphicon-remove"></span> No</button>
+                        <a href="/admin/unpublish/@Model.Id" class="btn btn-primary btn-ok"><span class="bootstrap-dialog-button-icon glyphicon glyphicon-ok"></span> Yes</a>
                     </div>
                 </div>
             </div>
@@ -31,7 +60,14 @@
 <div class="form-group">
     <div class="col-md-12">
         <div class="btn-group pull-right">
-            <button type="button" class="btn btn-primary" title="Publish" data-toggle="modal" data-target="#confirmPublish">Publish</button>
+            @if (!Model.Published)
+            {
+                <button type="button" class="btn btn-primary" title="Publish" data-toggle="modal" data-target="#confirmPublish">Publish</button>
+            }
+            @if (Model.Published)
+            {
+                <button type="button" class="btn btn-primary" title="Unpublish" data-toggle="modal" data-target="#confirmUnpublish">Unpublish</button>
+            }
         </div>
     </div>
 </div>

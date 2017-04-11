@@ -123,3 +123,11 @@ input:invalid {
 	-moz-border-radius: 0px;
 	background-image: none;
 }
+
+.search-icon {
+    font-size: 1.5em;
+}
+
+span.search-icon {
+    cursor: pointer;
+}

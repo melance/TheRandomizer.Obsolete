@@ -7,6 +7,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using TheRandomizer.WebApp.Models;
 using static TheRandomizer.WebApp.HelperClasses.GlobalConstants;
+using TheRandomizer.WebApp.HelperClasses;
 
 namespace TheRandomizer.WebApp.Controllers
 {
@@ -18,13 +19,14 @@ namespace TheRandomizer.WebApp.Controllers
         public AdminController()
         {
             _context = new ApplicationDbContext();
+            
         }
 
         public ActionResult Index()
         {
             return View();
         }
-        
+
         // Publish
         public ActionResult UnPublished()
         {
@@ -34,8 +36,14 @@ namespace TheRandomizer.WebApp.Controllers
         
         public ActionResult Publish(Int32 id)
         {
-            var model = DataAccess.DataContext.PublishGenerator(id);
+            var model = DataAccess.DataContext.SetPublished(id, true);
             return View((object)model.Name);
+        }
+
+        public ActionResult Unpublish(Int32 id)
+        {
+            var model = DataAccess.DataContext.SetPublished(id, false);
+            return RedirectToAction("EditGenerator", "UserContent", new { id = id });
         }
 
         // Assign Owner
