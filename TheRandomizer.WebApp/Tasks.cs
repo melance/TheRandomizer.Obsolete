@@ -8,8 +8,6 @@ namespace TheRandomizer.WebApp
     //Todo: Administrative tools: data editor (CRUD), assign owner
 
     //Todo: Help Page
-
-    //Todo: Contact Page
-    
+        
     //Todo: Page Tours
 }
