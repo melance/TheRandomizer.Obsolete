@@ -65,6 +65,10 @@ namespace TheRandomizer.Generators
                 XDocument doc;
                 XElement root;
                 XAttribute type;
+                XElement category;
+                XElement system;
+                XElement genre;
+                XElement tags;
 
                 using (var reader = new StringReader(xml))
                 {
@@ -74,6 +78,11 @@ namespace TheRandomizer.Generators
                 // Change the name of the root from Grammar to generator
                 root = doc.Root;
                 root.Name = "generator";
+
+                // Add the version number
+                var version = root.Attribute(XName.Get("version"));
+                if (version == null) version = new XAttribute("version", 2);
+                version.Value = "2";
 
                 // Update the value of the @type attribute
                 type = root.Attribute(XName.Get("type", "http://www.w3.org/2001/XMLSchema-instance"));
@@ -86,6 +95,22 @@ namespace TheRandomizer.Generators
                     case "PhonotacticsGrammar": type.Value = "Phonotactics"; break;
                     case "TableGrammar": type.Value = "Table"; break;
                 }
+
+                // Move Cateogry, System, and genre to tags
+                category = root.XPathSelectElement("/generator/category");
+                system = root.XPathSelectElement("/generator/system");
+                genre = root.XPathSelectElement("/generator/genre");
+                tags = root.XPathSelectElement("/generator/tags");
+
+                if (tags == null)
+                {
+                    tags = new XElement(XName.Get("tags"));
+                    root.Add(tags);
+                }
+                
+                if (category != null) { tags.Add(new XElement(XName.Get("tag"), category.Value)); }
+                if (system != null) { tags.Add(new XElement(XName.Get("tag"), system.Value)); }
+                if (genre != null) { tags.Add(new XElement(XName.Get("tag"), genre.Value)); }
 
                 //Update table elements to the new names
                 if (type.Value == "Table")

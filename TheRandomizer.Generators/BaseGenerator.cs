@@ -2,24 +2,17 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.Serialization;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Serialization;
 using NCalc;
 using TheRandomizer.Generators.Parameter;
-using System.Xml.Xsl;
 using System.IO;
-using System.Xml.Linq;
-using System.Xml.XPath;
 using System.ComponentModel.DataAnnotations;
+using LiteDB;
 using TheRandomizer.Generators.Attributes;
 
 namespace TheRandomizer.Generators
 {
-
-
     /// <summary>
     /// This is the base class for all generator types.
     /// </summary>
@@ -83,7 +76,7 @@ namespace TheRandomizer.Generators
 
         #region Constants
         private const string GENERATE_FUNCTION = "Generate";
-        private const Int32 LATEST_VERSION = 2;
+        internal const Int32 LATEST_VERSION = 2;
         private const string TAG_DELIMITER = ", ";
         #endregion
 
@@ -102,10 +95,12 @@ namespace TheRandomizer.Generators
 
         #region Public Properties
         [XmlIgnore]
-        public Int32 Id { get; set; }
+        [BsonId(true)]
+        public Guid Id { get; set; }
         /// <summary>The name of the generator that is to be displayed to the user</summary>
         [XmlElement("name")]
         [Required]
+        [BsonIndex(true)]
         public string Name { get; set; }
         /// <summary>The identifying name of the author</summary>
         [XmlElement("author")]
@@ -114,7 +109,7 @@ namespace TheRandomizer.Generators
         [XmlElement("description")]
         [Required]
         public string Description { get; set; }
-        /// <summary>The version of the generator, provided for breaking changes</summary>
+        /// <summary>The version of the generator xml, provided for breaking changes</summary>
         [XmlAttribute("version")]
         public virtual Int32 Version { get; set; } = LATEST_VERSION;
         /// <summary>A URL that can be displayed to the user, such as the website of the author</summary>
@@ -148,13 +143,17 @@ namespace TheRandomizer.Generators
         [XmlElement("supportsMaxLength")]
         [Display(Name = "Supports Max Length")]
         public virtual bool SupportsMaxLength { get; set; }
+
         /// <summary>A list of parameters to provide to the generator</summary>
         [XmlArray("parameters")]
         [XmlArrayItem("parameter")]
-        public virtual ConfigurationList Parameters { get; } = new ConfigurationList();
+        public virtual ConfigurationList Parameters { get; set; } = new ConfigurationList();
 
         [XmlIgnore]
         public virtual bool IsDirty { get { return _cleanHash == GetHashCode(); } }
+
+        [XmlIgnore]
+        public virtual bool Published { get; set; } = false;
         #endregion
 
         #region Protected Properties
@@ -250,6 +249,7 @@ namespace TheRandomizer.Generators
         public GeneratorInfo AsGeneratorInfo()
         {
             var generator = new GeneratorInfo();
+            generator.Id = Id;
             generator.Name = Name;
             generator.Author = Author;
             generator.Description = Description;
@@ -258,6 +258,8 @@ namespace TheRandomizer.Generators
             generator.Tags.AddRange(Tags);
             generator.Url = Url;
             generator.Version = Version;
+            generator.Published = Published;
+            if (GetType() == typeof(Assignment.AssignmentGenerator)) generator.IsLibrary = ((Assignment.AssignmentGenerator)this).IsLibrary;
             return generator;
         }
         #endregion
@@ -326,7 +328,7 @@ namespace TheRandomizer.Generators
         /// <summary>
         /// Handles custom functions for the NCalc engine
         /// </summary>
-        private void OnEvaluateFunction(string name, FunctionArgs e)
+        protected void OnEvaluateFunction(string name, FunctionArgs e)
         {
             if (CustomNCalcFunctions.Functions.ContainsKey(name))
             {
@@ -342,8 +344,8 @@ namespace TheRandomizer.Generators
                         {
                             var arg = new RequestGeneratorEventArgs(parameters[0].ToString());
                             BaseGenerator generator;
-                            RequestGenerator(this, arg);
-                            generator = BaseGenerator.Deserialize(arg.Generator);
+                            OnRequestGenerator(arg);
+                            generator = arg.Generator;
                             if (parameters.Count() > 1)
                             {
                                 for (var i = 1; i < parameters.Count(); i += 2)
@@ -377,7 +379,7 @@ namespace TheRandomizer.Generators
         /// <summary>
         /// Handles custom parameters for the NCalc engine
         /// </summary>
-        private void OnEvaluateParameter(string name, ParameterArgs e)
+        protected void OnEvaluateParameter(string name, ParameterArgs e)
         {
             if (Variables != null && Variables.ContainsKey(name))
             {
@@ -387,6 +389,14 @@ namespace TheRandomizer.Generators
             {
                 EvaluateParameter(name, e);
             }
+        }
+
+        /// <summary>
+        /// Raises the Request Generator event
+        /// </summary>
+        protected void OnRequestGenerator(RequestGeneratorEventArgs e)
+        {
+            RequestGenerator(this, e);
         }
         #endregion
     }

@@ -1,0 +1,319 @@
+﻿
+@{
+    ViewBag.Title = "Calculations";
+    Layout = "~/Views/Help/_HelpLayout.cshtml";
+}
+
+<h3>Calculations</h3>
+
+<p>
+    Certain generator types allow for calculations within their generation including <a href="assignment">Assignment</a>, <a href="dice">Dice</a>, <a href="lua">Lua</a>, and <a href="table">Table</a> Generators.
+    The calculation engine is an extension of the <a href="https://ncalc.codeplex.com/" target="_blank">NCalc <span class="glyphicon glyphicon-new-window"></span></a> engine.  This <a href="https://ncalc.codeplex.com/" target="_blank">link <span class="glyphicon glyphicon-new-window"></span></a> contains the basic functions of the engine.
+    Below is a list of custom details that you can use to leverage the power of these calculations.
+</p>
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <div class="panel-title">
+            Variables
+        </div>
+    </div>
+    <div class="panel-body">
+        Any parameter passed in can be accessed using its name.  In addition, variable
+        values stored during processing the generator can be used.
+        <br />
+        For example, if the generator has a parameter called "Race", it can be accessed as such:
+        <br />.
+
+        <pre>if([Race]="Dwarf",true,false)</pre>
+    </div>
+</div>
+
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <div class="panel-title">
+            Functions
+        </div>
+    </div>
+    <div class="panel-body">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th class="col-md-3">Function</th>
+                    <th class="col-md-6">Description</th>
+                    <th class="col-md-3">Example</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>CBool (value)</td>
+                    <td>Converts a value to a boolean value.</td>
+                    <td><code>CBool("True") => true</code></td>
+                </tr>
+                <tr>
+                    <td>CDbl (value)</td>
+                    <td>Converts a value to a double (numeric value with decimal) value.</td>
+                    <td><code>CDbl("10.6") => 10.6</code></td>
+                </tr>
+                <tr>
+                    <td>CInt (value)</td>
+                    <td>Converts a value to an integer (whole number) value.</td>
+                    <td><code>CInt("10") => 10</code></td>
+                </tr>
+                <tr>
+                    <td>CLng (value)</td>
+                    <td>Converts a value to a long (large whole number) value.</td>
+                    <td><code>CLng("12") => 12</code></td>
+                </tr>
+                <tr>
+                    <td>Rnd ()</td>
+                    <td>Generates an integer between 0 and 2,147,483,647 inclusively.</td>
+                    <td><code>Rnd() => 42</code></td>
+                </tr>
+                <tr>
+                    <td>Rnd (max)</td>
+                    <td>Generates an integer between 0 and <var>max</var> inclusively.</td>
+                    <td><code>Rnd(20) => 20</code></td>
+                </tr>
+                <tr>
+                    <td>Rnd (min, max)</td>
+                    <td>Generates an integer between <var>min</var> and <var>max</var> inclusively.</td>
+                    <td><code>Rnd(3,18) => 6</code></td>
+                </tr>
+                <tr>
+                    <td>Roll (sides)</td>
+                    <td>Rolls 1 die having <var>sides</var>.</td>
+                    <td><code>Roll(20) => 18</code></td>
+                </tr>
+                <tr>
+                    <td>Roll (count, sides)</td>
+                    <td>Rolls <var>count</var> dice having <var>sides</var>.</td>
+                    <td><code>Roll(3,6) => 15</code></td>
+                </tr>
+                <tr>
+                    <td>Roll (count, sides, modifier)</td>
+                    <td>Rolls <var>count</var> dice having <var>sides</var> &plusmn; <var>modifier</var>.</td>
+                    <td><code>Roll(2,10,-2) => 1</code></td>
+                </tr>
+                <tr>
+                    <td>Roll (count, sides, modifier, options[])</td>
+                    <td>Rolls <var>count</var> dice having <var>sides</var> &plusmn; <var>modifier</var> using the provided <var><a href="#RollOptions">roll options</a></var> which are described in more detail below.</td>
+                    <td><code>Roll(3,10,0,'GT',6) => true</code></td>
+                </tr>
+                <tr>
+                    <td>LastRoll ()</td>
+                    <td>Gets the result of the last roll.</td>
+                    <td><code>LastRoll() => 12</code></td>
+                </tr>
+                <tr>
+                    <td>LastRoll (property)</td>
+                    <td>Gets the <var>property</var> of the last roll as described in the <a href="#LastRoll">Last Roll</a> section below.</td>
+                    <td><code>LastRoll('ResultList') => '3, 4, 2'</code></td>
+                </tr>
+                <tr>
+                    <td>Pick (items[])</td>
+                    <td>Selects a single item from the list of <var>items</var>.</td>
+                    <td><code>Pick('A','B','C') => 'B'</code></td>
+                </tr>
+                <tr>
+                    <td>UCase (string)</td>
+                    <td>Converts the <var>string</var> to upper case.</td>
+                    <td><code>UCase('foo') => 'FOO'</code></td>
+                </tr>
+                <tr>
+                    <td>LCase (string)</td>
+                    <td>Converts the <var>string</var> to lower case.</td>
+                    <td><code>LCase('Lance') => 'lance'</code></td>
+                </tr>
+                <tr>
+                    <td>TCase (string)</td>
+                    <td>Converts the <var>string</var> to title case.</td>
+                    <td><code>TCase('hello world') => 'Hello World'</code></td>
+                </tr>
+                <tr>
+                    <td>ToOrdinal (integer)</td>
+                    <td>Converts the <var>integer</var> to an ordinal.</td>
+                    <td><code>ToOrdinal(3) => '3rd'</code></td>
+                </tr>
+                <tr>
+                    <td>ToText (integer)</td>
+                    <td>Converts the <var>integer</var> to its text representation.</td>
+                    <td><code>ToText(100) => 'One Hundred'</code></td>
+                </tr>
+                <tr>
+                    <td>Format (string, objects[])</td>
+                    <td>Converts the value of objects to strings based on the formats specified and inserts them into another string.  More details can be found <a href="https://msdn.microsoft.com/en-us/library/system.string.format(v=vs.110).aspx" target="_blank">here <span class="glyphicon glyphicon-new-window"></span></a></td>
+                    <td><code>Format('He is {0}','bald') => 'He is bald'</code></td>
+                </tr>
+                <tr>
+                    <td>Generate (name, [parameters[]])</td>
+                    <td>Calls a generator. For details see the <a href="#Generate">Generate</a> section below.</td>
+                    <td><code>Generate('DwarfName','Gender','Male') => 'Gimli'</code></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+<div id="RollOptions">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <div class="panel-title">
+                Roll Options
+            </div>
+        </div>
+        <div class="panel-body">
+            <p>
+                Roll options are added to the end of the roll parameters after the modifier.  Each option is a separate parameter and most have
+                an additional value that must be included.  To roll 3d10 counting all rolls above 6 and using the rule of one would look like the following:
+                <pre>Roll(3,10,0,'GT',6,'R1')</pre>
+
+            </p>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Option</th>
+                        <th>Name</th>
+                        <th>Parameter</th>
+                        <th colspan="2">Example</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>DL</td>
+                        <td>Drop Lowest</td>
+                        <td>Number of dice to drop</td>
+                        <td>Roll 4d6 drop lowest result:</td>
+                        <td><code>Roll(4,6,0,'DL',1) => 18</code></td>
+                    </tr>
+                    <tr>
+                        <td>DH</td>
+                        <td>Drop Highest</td>
+                        <td>Number of dice to drop</td>
+                        <td>Roll 3d10 drop 2 highest results:</td>
+                        <td><code>Roll(3,10,0,'DH',2) => 8</code></td>
+                    </tr>
+                    <tr>
+                        <td>EX</td>
+                        <td>Explode</td>
+                        <td>&nbsp;</td>
+                        <td>Roll 1d8 reroll 8 on first roll:</td>
+                        <td><code>Roll(1,8,0,'EX') => 15</code></td>
+                    </tr>
+                    <tr>
+                        <td>CX</td>
+                        <td>Compound Explode</td>
+                        <td>&nbsp;</td>
+                        <td>Roll 1d10 reroll 10 on all rolls:</td>
+                        <td><code>Roll(1,10,0,'CX') => 25</code></td>
+                    </tr>
+                    <tr>
+                        <td>RB</td>
+                        <td>Reroll Below</td>
+                        <td>Target number to reroll</td>
+                        <td>Roll 1d12 reroll rolls below 2:</td>
+                        <td><code>Roll(1,12,0,'RB',2) => 6</code></td>
+                    </tr>
+                    <tr>
+                        <td>RA</td>
+                        <td>Reroll Above</td>
+                        <td>Target number to reroll</td>
+                        <td>Roll 1d20 reroll rolls above 16:</td>
+                        <td><code>Roll(1,20,0,'RA',16) => 12</code></td>
+                    </tr>
+                    <tr>
+                        <td>GT</td>
+                        <td>Greater Than</td>
+                        <td>Target Number</td>
+                        <td>Roll 3d10 counting rolls above 5:</td>
+                        <td><code>Roll(3,10,0,'GT',5) => true</code></td>
+                    </tr>
+                    <tr>
+                        <td>LT</td>
+                        <td>Less Than</td>
+                        <td>Target Number</td>
+                        <td>Roll 6d6 counting rolls below 3:</td>
+                        <td><code>Roll(6,6,0,'LT',3) => false</code></td>
+                    </tr>
+                    <tr>
+                        <td>R1</td>
+                        <td>Rule of One</td>
+                        <td>&nbsp;</td>
+                        <td>Roll 5d8 counting rolls above 4, subtracting 1s:</td>
+                        <td><code>Roll(5,8,0,'GT',4,'R1') => false</code></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<div id="LastRoll">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <div class="panel-title">
+                Last Roll
+            </div>
+        </div>
+        <div class="panel-body">
+            <p>
+                The LastRoll function returns details about the last Roll function that was executed.
+            </p>
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Parameter</th>
+                        <th>Description</th>
+                        <th>Example</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Result</td>
+                        <td>The last roll result.</td>
+                        <td><code>LastRoll('Result') => 10</code></td>
+                    </tr>
+                    <tr>
+                        <td>ResultList</td>
+                        <td>The individual rolls of the last roll</td>
+                        <td><code>LastRoll('ResultList') => '3, 5, 1'</code></td>
+                    </tr>
+                    <tr>
+                        <td>Successes</td>
+                        <td>The number of successes of the last target roll</td>
+                        <td><code>LastRoll('Successes') => 4</code></td>
+                    </tr>
+                    <tr>
+                        <td>Failures</td>
+                        <td>The number of failures of the last target roll</td>
+                        <td><code>LastRoll('Successes') => 2</code></td>
+                    </tr>
+                    <tr>
+                        <td>Botches</td>
+                        <td>The number of botches of the last target roll</td>
+                        <td><code>LastRoll('Successes') => 1</code></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+<div id="Generate">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <div class="panel-title">
+                Generate
+            </div>
+        </div>
+        <div class="panel-body">
+            Calling the Generate function allows one generator to call another.  
+            The simplest method is to call a generator with no parameters though parameters are supported.
+            To pass in parameters, include them after the name of the generator in the format of 'NameOfParameter','Value' as shown in the examples below.
+            For generators that support max length, this can be passed in in the same manner as other parameters.
+
+            <br /><br />
+            <b>Examples</b>
+            <pre>Generate('Name') => Brianna</pre>
+            <pre>Generate('Name','MaxLength',4) => Bria</pre>
+            <pre>Generate('Name','Gender','Male') => Brian</pre>
+        </div>
+    </div>
+</div>

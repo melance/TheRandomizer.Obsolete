@@ -19,14 +19,14 @@ namespace TheRandomizer.Generators.Dice
         #region Constants
         private const string ROLL_FUNCTION = "RollFunction";
         private const string ROLL_FUNCTION_DISPLAY = "Method";
-        private const char COMMENT_CHARACTER = '#';
+        private const string COMMENT_INDICATOR = "//";
         private const string VARIABLE_ASSIGNMENT = ":=";
         #endregion
 
         #region Public Properties
         /// <summary>A list of dice roll functions the user can select from using a RollFunction parameter</summary>
         [XmlElement("function")]
-        public List<RollFunction> Functions { get; } = new List<RollFunction>();
+        public List<RollFunction> Functions { get; set; } = new List<RollFunction>();
 
         /// <summary>A list of parameters to provide to the generator</summary>
         [XmlArray("parameters")]
@@ -40,7 +40,7 @@ namespace TheRandomizer.Generators.Dice
                     var parameter = base.Parameters[ROLL_FUNCTION];
                     if (parameter == null)
                     {
-                        parameter = new Configuration() { Name = ROLL_FUNCTION, DisplayName = ROLL_FUNCTION_DISPLAY, Type = Configuration.ParameterType.List };
+                        parameter = new Parameter.Configuration() { Name = ROLL_FUNCTION, DisplayName = ROLL_FUNCTION_DISPLAY, Type = Parameter.Configuration.ParameterType.List };
                         base.Parameters.Add(parameter);
                     }
                     foreach (var function in Functions)
@@ -88,7 +88,7 @@ namespace TheRandomizer.Generators.Dice
             {
                 var current = line.Trim();
 
-                if (!string.IsNullOrWhiteSpace(current) && current[0] != COMMENT_CHARACTER)
+                if (!string.IsNullOrWhiteSpace(current) && !current.StartsWith(COMMENT_INDICATOR))
                 {
                     var parts = current.Split(new string[] { VARIABLE_ASSIGNMENT }, StringSplitOptions.RemoveEmptyEntries);
                     if (parts.Count() == 1)

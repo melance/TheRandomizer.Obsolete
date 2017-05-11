@@ -20,6 +20,6 @@ namespace TheRandomizer.Generators
         /// <summary>
         /// The serialized generator object to import
         /// </summary>
-        public string Generator { get; set; }
+        public BaseGenerator Generator { get; set; }
     }
 }

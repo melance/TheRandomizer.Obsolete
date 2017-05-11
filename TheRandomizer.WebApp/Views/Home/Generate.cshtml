@@ -1,0 +1,143 @@
+﻿@using TheRandomizer.Generators.Parameter
+@model TheRandomizer.WebApp.Models.GenerateModel
+
+@{
+	Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="row">
+	<div class="col-md-12">
+		<h2>@ViewBag.Title <small>by @(string.IsNullOrWhiteSpace(Model.Author) ? "Unknown" : Model.Author)</small></h2>
+	</div>
+	<div class="col-md-8">
+		<h4>@Model.Description</h4>
+	</div>
+	<div class="form-group col-md-4">
+		<div class="btn-group pull-right">
+			@if (Request.IsAuthenticated)
+			{
+				<button type="button" class="btn btn-default"><span class="glyphicon @(Model.IsFavorite ? "glyphicon-star" : "glyphicon-star-empty")" name="ToggleFavorite" data-id="@Model.Id" data-is-favorite="@Model.IsFavorite" title="@(Model.IsFavorite ? "Click to remove this generator from your favorites." : "Click to add this generator from your favorites.")"></span></button>
+				<button type="button" name="CopyGenerator" class="btn btn-default" title="Make a copy of this generator."><span class="glyphicon glyphicon-copy"></span></button>
+				<a href="/UserContent/Export/@Model.Id" target="_blank" id="Export" class="btn btn-default" title="Download as Xml"><span class="glyphicon glyphicon-download-alt"></span></a>
+				if (Model.IsOwner)
+				{
+					<a href="/UserContent/EditGenerator/@Model.Id" class="btn btn-default" title="Edit this generator."><span class="glyphicon glyphicon-edit"></span></a>
+				}
+			}
+		</div>
+	</div>
+</div>
+@using (Html.BeginForm())
+{
+	<div class="row">
+		<div class="col-md-4">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<b class="panel-title">Parameters</b>
+					<div class="btn-group btn-group-xs pull-right">
+						<button id="Generate" type="submit" class="btn btn-primary">Generate</button>
+					</div>
+				</div>
+				<div class="panel-body">
+					@Html.ValidationSummary(true, "", new { @class = "text-danger" })
+					@Html.HiddenFor(model => model.Id)
+					@for (var i = 0; i < Model.Parameters.Count; i++)
+					{
+						var parameter = Model.Parameters[i];
+						var value = $"Parameters[{i}].Value";
+						<div class="form-group">
+							<label name="@($"Parameters[{i}].Name")" class="control-label" for="@value">@parameter.DisplayName</label>
+							<input hidden name="@($"Parameters[{i}].Name")" value="@parameter.Name" />
+							@switch (parameter.Type)
+							{
+								case Configuration.ParameterType.Text:
+									<input type="text" name="@value" class="form-control" value="@parameter.Value" />
+									break;
+								case Configuration.ParameterType.Integer:
+								case Configuration.ParameterType.Decimal:
+									<input type="number" name="@value" class="form-control" value="@parameter.Value" />
+									break;
+								case Configuration.ParameterType.Date:
+									<input type="date" name="@value" class="form-control" value="@parameter.Value" />
+									break;
+								case Configuration.ParameterType.List:
+									<select name="@value" class="form-control">
+										@foreach (var option in parameter.Options)
+										{
+											<option value="@option.Value" @(parameter.Value == option.Value ? "Selected" : "")>@option.DisplayName</option>
+										}
+									</select>
+									break;
+							}
+							<span class="field-validation-valid text-danger" data-valmsg-for="@value" data-valmsg-replace="true"></span>
+						</div>
+					}
+					<div class="form-group" style="@(Model.SupportsMaxLength ? "" : "display: none;")">
+						@Html.LabelFor(model => model.MaxLength, htmlAttributes: new { @class = "control-label" })
+						<input name="MaxLength" class="form-control" type="number" value="20" min="1" step="1" />
+						<span class="field-validation-valid text-danger" data-valmsg-for="MaxLength" data-valmsg-replace="true"></span>
+					</div>
+					<div class="form-group">
+						@Html.LabelFor(model => model.Repeat, htmlAttributes: new { @class = "control-label" })
+						<input name="Repeat" class="form-control" type="number" value="1" min="1" max="100" step="1" />
+						<span class="field-validation-valid text-danger" data-valmsg-for="Repeat" data-valmsg-replace="true"></span>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-8">
+			<div class="panel panel-default">
+				<div class="panel-heading">
+					<b class="panel-title">Results</b>
+				</div>
+				<div id="Results" style="min-height: 5em" class="panel-body">
+				</div>
+			</div>
+		</div>
+	</div>
+}
+
+<script>
+	$(document).ready(function () {
+	    $("#Generate").click(function () {
+			var data = $('form').serialize();
+
+			$.ajax({
+				url: "",
+				type: "POST",
+				data: data,
+				success: function (partialView) {
+					$("#Results").html(partialView);
+				}
+			})
+
+			return false;
+		})
+	})
+        
+	$("[name = 'ToggleFavorite']").click(function () {
+		var span = $(this);
+		var id = span.data("id");
+		var isFavorite = !Boolean(span.data("isFavorite"));
+		var data = { id: id, isFavorite: isFavorite };
+		$.ajax({
+			url: "/Home/SetFavorite",
+			data: data,
+			type: "POST",
+			success: function (result) {
+				span.data("isFavorite", result);
+				if (result) {
+					span.removeClass("glyphicon-star-empty");
+					span.addClass("glyphicon-star");
+					span.attr("title", "Click to remove this generator from your favorites.");
+				}
+				else {
+					span.removeClass("glyphicon-star");
+					span.addClass("glyphicon-star-empty");
+					span.attr("title", "Click to add this generator from your favorites.");
+				}
+			}
+		})
+		return false;
+	})
+</script>

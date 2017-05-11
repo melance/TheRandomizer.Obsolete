@@ -8,7 +8,8 @@ using TheRandomizer.Generators.Lexer;
 using TheRandomizer.Utility;
 using TheRandomizer.Generators.Exceptions;
 using TheRandomizer.Generators.Attributes;
-using System.ComponentModel.DataAnnotations;
+using System.Xml;
+using System.IO;
 
 namespace TheRandomizer.Generators.Assignment
 {
@@ -16,15 +17,36 @@ namespace TheRandomizer.Generators.Assignment
     [GeneratorDisplay("Assignment Generator", "A highly customizable and general purpose generator useful for most content.")]
     public class AssignmentGenerator : BaseGenerator
     {
-        #region Events
-        /// <summary>Requests the calling application provide the configured library</summary>
-        public event EventHandler<RequestImportEventArgs> RequestImport;
-        #endregion
-
         #region Constants
         private const string START_ITEM = "Start";
         private const Int32 MAX_RECURSION_DEPTH = 100;
         private const Int32 MAX_LOOP_COUNT = 1000000;
+        #endregion
+
+        #region Static Methods
+        public static AssignmentGenerator DeserializeLibrary(string xml)
+        {
+            var document = new XmlDocument();
+            var generator = new AssignmentGenerator();
+            using (var reader = new StringReader(xml))
+            {
+                document.Load(reader);
+            }
+
+            foreach (var item in document.GetElementsByTagName("item"))
+            {
+                var lineItem = new LineItem();
+                var element = (XmlElement)item;
+                lineItem.Name = element.GetAttribute("name");
+                lineItem.Next = element.GetAttribute("next");
+                lineItem.Variable = element.GetAttribute("variable");
+                lineItem.Weight = element.GetAttribute("weight") == string.Empty ? 1 : Convert.ToInt32(element.GetAttribute("weight"));
+                lineItem.Expression = element.InnerText;
+                generator.LineItems.Add(lineItem);
+            }
+            generator.IsLibrary = true;
+            return generator;
+        }
         #endregion
 
         #region Constructors
@@ -38,11 +60,18 @@ namespace TheRandomizer.Generators.Assignment
 
         #region Public Properties
         /// <summary>
+        /// Determines if this generator can be used as a library
+        /// </summary>
+        [XmlElement("isLibrary")]
+        public bool IsLibrary { get; set; } = false;
+
+        /// <summary>
         /// The list of line items used to generate the content
         /// </summary>
         [XmlArray("items")]
         [XmlArrayItem("item")]
-        public List<LineItem> Items { get; set; } = new List<LineItem>();
+        [RequireOneElement(ErrorMessage = "You must include at least one Line Item.")]
+        public List<LineItem> LineItems { get; set; } = new List<LineItem>();
 
         /// <summary>
         /// An optional list of libraries to import into the generator
@@ -97,15 +126,15 @@ namespace TheRandomizer.Generators.Assignment
         {
             foreach (var import in Imports)
             {
-                var e = new RequestImportEventArgs(import);
-                RequestImport(this, e);
-                if (e.Library == null)
+                var e = new RequestGeneratorEventArgs(import);
+                OnRequestGenerator(e);
+                if (e.Generator != null)
                 {
                     throw new Exceptions.LibraryNotFoundException(import);
                 }
                 else
                 {
-                    Items.AddRange(Library.Deserialize(e.Library).Items);
+                    LineItems.AddRange(((AssignmentGenerator)e.Generator).LineItems);
                 }
             }
         }
@@ -234,7 +263,7 @@ namespace TheRandomizer.Generators.Assignment
         private LineItem ChooseItemByName(string name)
         {
             // Verify that there are rules
-            if (Items != null && Items.Count() > 0)
+            if (LineItems != null && LineItems.Count() > 0)
             {
                 // names are allowed to include an or operator "|", determine which one to use randomly
                 var nameListOr = name.Split('|');
@@ -249,7 +278,7 @@ namespace TheRandomizer.Generators.Assignment
                     _rulesByName[name].Rules = new List<LineItem>();
                     foreach (var nameItem in nameListAnd)
                     {
-                        foreach (var item in Items.Where(li => li.Name.Equals(nameItem.Remove("[", "]"), StringComparison.CurrentCultureIgnoreCase)))
+                        foreach (var item in LineItems.Where(li => li.Name.Equals(nameItem.Remove("[", "]"), StringComparison.CurrentCultureIgnoreCase)))
                         {
                             _rulesByName[name].TotalWeight += item.Weight;
                             _rulesByName[name].Rules.Add(item);

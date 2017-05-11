@@ -1,6 +1,6 @@
 ﻿
 @model TheRandomizer.Generators.Parameter.Configuration
-<div class="form-group row" name="Parameter" data-item-row="true">
+<div class="form-group row" name="Parameter" data-item-row>
     <div class="col-md-2">
         @Html.TextBoxFor(model => model.Name, htmlAttributes: new { @class = "form-control", @title = "The name of the parameter used to reference the parameter in the generator." })
         @Html.ValidationMessageFor(model => model.Name, "", new { @class = "text-danger" })
@@ -17,8 +17,8 @@
         @Html.TextBoxFor(model => model.Value, htmlAttributes: new { @class = "form-control", @title = "The default value of this parameter." })
         @Html.ValidationMessageFor(model => model.Value, "", new { @class = "text-danger" })
     </div>
-    <div class="col-md-3">        
-        @Html.TextBoxFor(model => model.OptionList, htmlAttributes: new { @class = "form-control", @title = "A comma separated list of options for List type parameters.\n If desired, a bar can be placed between a Value and Display for the option such as 'HE|Half-Elf'"})
+    <div class="col-md-3">
+        @Html.TextBoxFor(model => model.OptionList, htmlAttributes: new { @class = "form-control", @title = "A comma separated list of options for List type parameters.\n If desired, a bar can be placed between a Value and Display for the option such as 'HE|Half-Elf'" })
         @Html.ValidationMessageFor(model => model.OptionList, "", new { @class = "text-danger" })
     </div>
     <div class="col-md-1">

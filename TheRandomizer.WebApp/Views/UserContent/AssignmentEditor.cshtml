@@ -3,32 +3,126 @@
 @{
     ViewBag.Title = "Assignment Editor";
     Layout = "~/Views/Shared/_Layout.cshtml";
-    
+
 }
 
-@section TRScripts { @Scripts.Render("~/Scripts/TheRandomizer.ItemListMaintenance.js") }
+@section TRScripts {
+    <script src="~/Scripts/bootstrap-tokenfield.js"></script>
+    <script src="~/Scripts/jquery-ui-1.12.1.js"></script>
+    <script src="~/Scripts/bootstrap-combobox.js"></script>
+    @Scripts.Render("~/Scripts/TheRandomizer.ItemListMaintenance.js")
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" charset="utf-8" src="https://cdn.datatables.net/1.10.15/js/dataTables.bootstrap.min.js"></script>
+    <script type="text/javascript" charset="utf-8" src="https://cdn.datatables.net/buttons/1.3.1/js/dataTables.buttons.min.js"></script>
+    <script type="text/javascript" charset="utf-8" src="https://cdn.datatables.net/responsive/2.1.1/js/dataTables.responsive.min.js"></script>
+    <script type="text/javascript" charset="utf-8" src="https://cdn.datatables.net/responsive/2.1.1/js/responsive.bootstrap.min.js"></script>
+}
 
-<h2>@ViewBag.Title</h2>
+@section TRStyles {
+    <link href="~/Content/bootstrap-tokenfield/bootstrap-tokenfield.css" rel="stylesheet" type="text/css" />
+    <link href="~/Content/bootstrap-combobox.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.15/css/dataTables.bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/buttons/1.3.1/css/buttons.bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/responsive/2.1.1/css/responsive.bootstrap.min.css">
+}
+
+<h2>@(string.IsNullOrWhiteSpace(Model.Name) ? "New Generator" : Model.Name) <small>@ViewBag.Title</small></h2>
 
 @using (Html.BeginForm("AssignmentEditor", "UserContent", FormMethod.Post))
 {
     @Html.AntiForgeryToken()
-    
+
+    <ul class="nav nav-tabs">
+        <li class="active"><a data-toggle="tab" href="#BaseGenerator">Info</a></li>
+        <li><a data-toggle="tab" href="#LineItemTab">Line Items</a></li>
+        <li><a data-toggle="tab" href="#ImportsTab">Imports</a></li>
+    </ul>
+
     <div class="form-horizontal">
-        <h4>@(string.IsNullOrWhiteSpace(Model.Name) ? "New Generator" : Model.Name)</h4>
-        <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        @Html.HiddenFor(model => model.Id)
 
-        @Html.EditorFor(bg => bg)
 
-        @*@Html.EditorFor(ag => ag.Items)*@
+        <div class="tab-content">
+            @Html.EditorFor(bg => bg)
 
-        @Html.Partial("_LineItemList", Model.Items)
 
-        <div class="form-group">
-            <div class="col-md-12">
-                <input type="submit" value="Save" class="btn btn-default" name="Submit"/>
+            <div id="LineItemTab" class="tab-pane fade">
+                @Html.ValidationMessageFor(model => model.LineItems, "", new { @class = "text-danger" })
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="panel panel-default">
+                            <div class="panel-heading clearfix">
+                                <b class="panel-title">Items</b>
+                                <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#ItemContainer" style="color:black"><span id="ItemCollapseIcon"></span></button>
+                                <div class="btn-group-sm pull-right">
+                                    <button id="ClearItems" type="button" class="btn btn-default" title="Clear all of the items"><span class="glyphicon glyphicon-remove"></span> Clear</button>
+                                    <div class="btn-group btn-group-sm">
+                                        <button id="AddItem" type="button" class="btn btn-default" title="Add a new items"><span class="glyphicon glyphicon-plus"></span> Add</button>
+                                        <button id="AddItems" class="btn btn-default dropdown-toggle" title="Add several items" data-toggle="dropdown">
+                                            <span class="caret"></span>
+                                            <span class="sr-only">Toggle Dropdown</span>
+                                        </button>
+                                        <ul class="dropdown-menu">
+                                            <li><a href="#" name="AddItems" data-count="5">5</a></li>
+                                            <li><a href="#" name="AddItems" data-count="10">10</a></li>
+                                            <li><a href="#" name="AddItems" data-count="15">15</a></li>
+                                            <li><a href="#" name="AddItems" data-count="20">20</a></li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel-body panel-collapse collapse in" id="ItemContainer">
+                                        <input type="hidden" id="ItemIndex" value="@Model.LineItems.Count" />
+                                <div class="table table-striped" id="LineItemTable">
+                                    <div>
+                                        <div class="col-md-2">@Html.Label("Name", htmlAttributes: new { @class = "control-label" })</div>
+                                        <div class="col-md-1">@Html.Label("Weight", htmlAttributes: new { @class = "control-label" })</div>
+                                        <div class="col-md-2">@Html.Label("Next", htmlAttributes: new { @class = "control-label" })</div>
+                                        <div class="col-md-2">@Html.Label("Variable", htmlAttributes: new { @class = "control-label" })</div>
+                                        <tddiv class="col-md-4">@Html.Label("Expression", htmlAttributes: new { @class = "control-label" }) </tddiv>
+                                        <div class="col-md-1">&nbsp;</div>
+                                    </div>
+                                    <div id="Items" class="itemListStriped" data-item-container style="max-height: 400px; overflow-y: scroll;">
+                                        @{
+                                            var rowsPerPage = ViewBag.LineItemsPerPage;
+                                        }
+                                        @for (var i = 0; i < Model.LineItems.Count; i++)
+                                        {
+                                            @Html.EditorFor(model => model.LineItems[i], new { Hidden = (i > rowsPerPage) })
+                                        }
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="ImportsTab" class="tab-pane fade">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="panel panel-default">
+                            <div class="panel-heading clearfix">
+                                <b class="panel-title">Imports</b>
+                                <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#ImportContainer" style="color:black"><span id="ImportCollapseIcon"></span></button>
+                                <div class="btn-group-sm pull-right">
+                                    <button id="ClearImports" type="button" class="btn btn-default" title="Clear all of the imports"><span class="glyphicon glyphicon-remove"></span> Clear</button>
+                                    <div class="btn-group btn-group-sm">
+                                        <button id="AddImport" type="button" class="btn btn-default" title="Add a new import"><span class="glyphicon glyphicon-plus"></span> Add</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="panel-body panel-collapse collapse in" id="ImportContainer">
+                                <div id="Imports" class="itemListStriped" data-item-container>
+                                    <input type="hidden" id="ImportIndex" value="@Model.Imports.Count" />
+                                    @for (var i = 0; i < Model.Imports.Count; i++)
+                                    {
+                                        @Html.Partial("_libraryImport", Model.Imports[i])
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -39,5 +133,59 @@
 </div>
 
 <script>
-    
+    $('document').ready(function () {
+        // Line Item Maintenance Methods
+        $('#Items').EnableDisableItemUpDowns();
+
+        $("#Items").on("click", "[data-toggle = 'DeleteItem']", function () {
+            $(this).parents("[data-item-row]").deleteItem();
+        })
+
+        $("#ClearItems").click(function () {
+            $('#Items').clearItems("Confirm", "Are you sure you want to clear all items?");
+        })
+
+        $("#AddItem").click(function () {
+            var index = $("#ItemIndex").val();
+            $("#ItemIndex").val(index + 1);
+            $("#Items").addItem("CreateLineItem", index);
+            return false;
+        })
+
+        $("[name = 'AddItems']").click(function () {
+            var count = parseInt($(this).attr("data-count"));
+            for (var i = 0; i < count; i++) {
+                $("#Items").addItem("CreateLineItem");
+            }
+        })
+
+        $("#Items").on("click", "[data-toggle = 'MoveItemUp']", function () {
+            var selected = $(this).parents('[data-item-row]');
+            selected.moveItemUp();
+        })
+
+        $("#Items").on("click", "[data-toggle = 'MoveItemDown']", function () {
+            var selected = $(this).parents('[data-item-row]');
+            selected.moveItemDown();
+        })
+
+        RegisterCollapseElement("#ItemContainer", "#ItemCollapseIcon");
+
+        // Import Maintenance Methods
+        $("#Items").on("click", "[data-toggle = 'DeleteItem']", function () {
+            $(this).parents("[data-item-row]").deleteItem();
+        })
+
+        $("#ClearImports").click(function () {
+            $("#Imports").clearItems("Confirm", "Are you sure you want to clear all imports?");
+        })
+
+        $("#AddImport").click(function () {
+            var index = $("#ImportIndex").val();
+            $("#ImportIndex").val(index + 1);
+            $("#Imports").addItem("CreateLibraryImport", index);
+        })
+
+        RegisterCollapseElement("#ImportContainer", "#ImportCollapseIcon");
+    });
 </script>

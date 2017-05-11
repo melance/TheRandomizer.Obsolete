@@ -6,6 +6,7 @@ using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.Google;
 using Owin;
 using TheRandomizer.WebApp.Models;
+using TheRandomizer.WebApp.HelperClasses;
 
 namespace TheRandomizer.WebApp
 {
@@ -46,9 +47,9 @@ namespace TheRandomizer.WebApp
             app.UseTwoFactorRememberBrowserCookie(DefaultAuthenticationTypes.TwoFactorRememberBrowserCookie);
 
             // Uncomment the following lines to enable logging in with third party login providers
-            //app.UseMicrosoftAccountAuthentication(
-            //    clientId: "",
-            //    clientSecret: "");
+            app.UseMicrosoftAccountAuthentication(
+                clientId: Settings.GetAuthentication("Microsoft").Id,
+                clientSecret: Settings.GetAuthentication("Microsoft").Secret);
 
             //app.UseTwitterAuthentication(
             //   consumerKey: "",
@@ -58,11 +59,11 @@ namespace TheRandomizer.WebApp
             //   appId: "",
             //   appSecret: "");
 
-            //app.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions()
-            //{
-            //    ClientId = "",
-            //    ClientSecret = ""
-            //});
+            app.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions()
+            {
+                ClientId = Settings.GetAuthentication("Google").Id,
+                ClientSecret = Settings.GetAuthentication("Google").Secret
+            });
         }
     }
 }

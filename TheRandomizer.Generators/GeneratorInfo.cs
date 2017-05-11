@@ -7,6 +7,7 @@ using System.Xml;
 using System.Xml.Schema;
 using System.Xml.Serialization;
 using System.IO;
+using TheRandomizer.Generators.Attributes;
 
 namespace TheRandomizer.Generators
 {
@@ -17,14 +18,18 @@ namespace TheRandomizer.Generators
     {
         public new static GeneratorInfo Deserialize(string xml)
         {
-            var generator = new GeneratorInfo();
+            var info = new GeneratorInfo();
+            BaseGenerator generator;
             xml = TransformXml.TransformToLatestVersion(xml);
             using (var writer = XmlReader.Create(new StringReader(xml)))
             {
-                generator.ReadXml(writer);
+                info.ReadXml(writer);
+                generator = BaseGenerator.Deserialize(writer);
             }
-            return generator;
+            return info;
         }
+
+        public bool IsLibrary { get; set; } = false;
         
         public XmlSchema GetSchema()
         {
@@ -35,14 +40,16 @@ namespace TheRandomizer.Generators
         {
             // Deserialize
             var generator = BaseGenerator.Deserialize(reader);
-            this.Name = generator.Name;
-            this.Author = generator.Author;
-            this.Description = generator.Description;
-            this.OutputFormat = generator.OutputFormat;
-            this.SupportsMaxLength = generator.SupportsMaxLength;
-            this.Tags.AddRange(generator.Tags);
-            this.Url = generator.Url;
-            this.Version = generator.Version;
+            Name = generator.Name;
+            Author = generator.Author;
+            Description = generator.Description;
+            OutputFormat = generator.OutputFormat;
+            SupportsMaxLength = generator.SupportsMaxLength;
+            Tags.AddRange(generator.Tags);
+            Url = generator.Url;
+            Version = generator.Version;
+            Published = generator.Published;
+            if (generator.GetType() == typeof(Assignment.AssignmentGenerator)) IsLibrary = ((Assignment.AssignmentGenerator)generator).IsLibrary;
         }
 
         public void WriteXml(XmlWriter writer)

@@ -141,12 +141,12 @@ namespace TheRandomizer.Generators.UnitTests
         [TestCategory(TEST_CATEGORY)]
         public void LibrarySerializationTest()
         {
-            var library = new Library();
-            library.Items.Add(new LineItem());
-            library.Items[0].Name = "Test";
-            library.Items[0].Expression = "Test Expression";
-            var xml = library.Serialize();
-            Debug.WriteLine(xml);
+            //var library = new Library();
+            //library.ItemList.Add(new LineItem());
+            //library.ItemList[0].Name = "Test";
+            //library.ItemList[0].Expression = "Test Expression";
+            //var xml = library.Serialize();
+            //Debug.WriteLine(xml);
         }
 
         [TestMethod]
@@ -160,9 +160,9 @@ namespace TheRandomizer.Generators.UnitTests
                             <import>Test</import>
                         </imports>";
             var generator = CreateGenerator(xml);
-            generator.RequestImport += RequestLibraryHandler;
+            generator.RequestGenerator += RequestGeneratorHandler;
             var value = generator.Generate();
-            generator.RequestImport -= RequestLibraryHandler;
+            generator.RequestGenerator -= RequestGeneratorHandler;
             Debug.WriteLine(value);
             Assert.AreEqual("Test", value);
         }
@@ -223,7 +223,7 @@ namespace TheRandomizer.Generators.UnitTests
                 var xml = @"<items>
                                 <item name='Start'>World</item>
                             </items>";
-                e.Generator = CreateGeneratorXml(xml);
+                e.Generator = BaseGenerator.Deserialize(CreateGeneratorXml(xml));
             }
         }
 

@@ -1,0 +1,132 @@
+﻿@model TheRandomizer.Generators.Table.TableGenerator
+
+@{
+    ViewBag.Title = "Table Editor";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    
+}
+
+<style>
+    #divSupportsMaxLength {
+        display: none;
+    }
+</style>
+
+@section TRScripts {
+    <script src="~/Scripts/bootstrap-tokenfield.js"></script>
+    <script src="~/Scripts/jquery-ui-1.12.1.js"></script>
+    @Scripts.Render("~/Scripts/TheRandomizer.ItemListMaintenance.js")
+}
+
+@section TRStyles {
+    <link href="~/Content/bootstrap-tokenfield/bootstrap-tokenfield.css" rel="stylesheet" type="text/css" />
+}
+<h2>@ViewBag.Title</h2>
+
+@using (Html.BeginForm("TableEditor", "UserContent", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="form-horizontal">
+        <h4>@(string.IsNullOrWhiteSpace(Model.Name) ? "New Generator" : Model.Name)</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.Id)
+
+        @Html.EditorFor(bg => bg)
+        
+        @Html.ValidationMessageFor(model => model.Tables, "", new { @class = "text-danger" })
+        <div class="row">
+            <div class="col-md-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading clearfix">
+                        <b class="panel-title">Tables</b>
+                        <button class="btn btn-link" type="button" data-toggle="collapse" data-target="#TableContainer" style="color:black"><span id="TableCollapseIcon"></span></button>
+                        <div class="btn-group-sm pull-right">
+                            <button id="ClearTables" type="button" class="btn btn-default" title="Clear all of the tables"><span class="glyphicon glyphicon-remove"></span> Clear</button>
+                            <div class="btn-group btn-group-sm">
+                                <button type="button" class="btn btn-default dropdown-toggle" title="Add a new table" data-toggle="dropdown">Add <b class="caret"></b></button>
+                                <ul class="dropdown-menu" id="GeneratorType">
+                                    <li><a href="#" id="AddRandomTable">Random Table</a></li>
+                                    <li><a href="#" id="AddLoopTable">Loop Table</a></li>
+                                    <li><a href="#" id="AddSelectTable">Select Table</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="panel-body panel-collapse collapse in" id="TableContainer">
+                        <div id="Tables" class="itemListStriped" data-item-container>
+                            <input type="hidden" id="TableIndex" value="@Model.Tables.Count" />
+                            @for (var i = 0; i < Model.Tables.Count; i++)
+                            {
+                                @Html.EditorFor(model => model.Tables[i])
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+<script>
+    $('document').ready(function () {
+        $('#Items').EnableDisableItemUpDowns();
+
+        $("#Tables").on("click", "[data-toggle = 'DeleteTable']", function () {
+            $(this).parents("[data-item-row]").deleteItem();
+        })
+
+        $("#ClearTables").click(function () {
+            $('#Tables').clearItems("Confirm", "Are you sure you want to clear all of the tables?");
+        })
+
+        $("#AddRandomTable").click(function () { 
+            var index = $("#TableIndex").val();
+            $("#TableIndex").val(index + 1);
+            $("#Tables").addItem("CreateRandomTable", index);
+            return false;
+        })
+
+        $("#AddLoopTable").click(function () { 
+            var index = $("#TableIndex").val();
+            $("#TableIndex").val(index + 1);
+            $("#Tables").addItem("CreateLoopTable", index);
+            return false;
+        })
+
+        $("#AddSelectTable").click(function () { 
+            var index = $("#TableIndex").val();
+            $("#TableIndex").val(index + 1);
+            $("#Tables").addItem("CreateSelectTable", index);
+            return false;
+        })
+
+        $("[name = 'AddTables']").click(function () {
+            var count = parseInt($(this).attr("data-count"));
+            for (var i = 0; i < count; i++) {
+                $("#Tables").AddTable("CreateTable");
+            }
+        })
+
+        $("#Tables").on("click", "[data-toggle = 'MoveItemUp']", function () {
+            var selected = $(this).parents('[data-item-row]');
+            selected.moveItemUp();
+        })
+
+        $("#Tables").on("click", "[data-toggle = 'MoveItemDown']", function () {
+            var selected = $(this).parents('[data-item-row]');
+            selected.moveItemDown();
+        })
+
+        RegisterCollapseElement("#TableContainer", "#TableCollapseIcon");
+
+        $(".dropdown-menu a").click(function () {
+            $(this).closest(".dropdown-menu").prev().dropdown("toggle");
+        });
+    })
+</script>

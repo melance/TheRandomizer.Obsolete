@@ -1,0 +1,20 @@
+﻿@using TheRandomizer.Generators
+@model BaseGenerator
+
+@Html.Partial("_ConfirmPublishDialog", Model.Id)
+@Html.Partial("_ConfirmUnpublishDialog", Model.Id)
+
+<div class="form-group">
+    <div class="col-md-12">
+        <div class="btn-group pull-right">
+            @if (!Model.Published)
+            {
+                <button type="button" class="btn btn-primary" title="Publish" data-toggle="modal" data-target="#confirmPublish@(Model.Id)">Publish</button>
+            }
+            @if (Model.Published)
+            {
+                <button type="button" class="btn btn-primary" title="Unpublish" data-toggle="modal" data-target="#confirmUnpublish@(Model.Id)">Unpublish</button>
+            }
+        </div>
+    </div>
+</div>

@@ -1,0 +1,117 @@
+﻿@using TheRandomizer.WebApp.HelperClasses
+
+<!DOCTYPE html>
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title</title>
+    <style>
+        .just-padding {
+          padding: 15px;
+        }
+
+        .list-group.list-group-root {
+          padding: 0;
+          overflow: hidden;
+        }
+
+        .list-group.list-group-root .list-group {
+          margin-bottom: 0;
+        }
+
+        .list-group.list-group-root .list-group-item {
+          border-radius: 0;
+          border-width: 1px 0 0 0;
+        }
+
+        .list-group.list-group-root > .list-group-item:first-child {
+          border-top-width: 0;
+        }
+
+        .list-group.list-group-root > .list-group > .list-group-item {
+          padding-left: 30px;
+        }
+
+        .list-group.list-group-root > .list-group > .list-group > .list-group-item {
+          padding-left: 45px;
+        }
+
+        .list-group-item .glyphicon {
+          margin-right: 5px;
+        }
+
+        .list-group-item > a {
+            text-decoration: none;
+        }
+
+        .panel-title {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h2>Help</h2>
+    <div id="HelpMenu" class="col-md-3">
+        <div class="just-padding">
+            <div class="list-group list-group-root well">
+                <a class="list-group-item" href="#" data-toggle="collapse" data-target="#General">
+                    <span class="glyphicon glyphicon-minus"></span>
+                    General
+                </a>
+                <div class="list-group collapse in" id="General">
+                    <a class="list-group-item @Html.IsSelected(actions: "Index")" href="index">Introduction</a>
+                    <a class="list-group-item @Html.IsSelected(actions: "License")" href="license">License</a>
+                    <a class="list-group-item @Html.IsSelected(actions: "Terminology")" href="terminology">Terminology</a>
+                </div>
+                <a class="list-group-item" href="#" data-toggle="collapse" data-target="#UserContent">
+                    <span class="glyphicon glyphicon-minus"></span>
+                    User Content
+                </a>
+                <div class="list-group collapse in" id="UserContent">
+                    <a class="list-group-item @Html.IsSelected(actions: "Generators")" href="generators">Generators</a>
+                    <a class="list-group-item @Html.IsSelected(actions: "Calculations")" href="calculations">Calculations</a>
+                    <a class="list-group-item" href="#" data-toggle="collapse" data-target="#GeneratorTypes">
+                        <span class="glyphicon glyphicon-minus"></span>
+                        Generator Types
+                    </a>
+                    <div class="list-group collapse in" id="GeneratorTypes">
+                        <a class="list-group-item @Html.IsSelected(actions: "Assignment")" href="assignment">Assigment Generator</a>
+                        <a class="list-group-item @Html.IsSelected(actions: "Dice")" href="dice">Dice Generator</a>
+                        <a class="list-group-item @Html.IsSelected(actions: "List")" href="list">List Generator</a>
+                        <a class="list-group-item @Html.IsSelected(actions: "Lua")" href="lua">Lua Generator</a>
+                        <a class="list-group-item @Html.IsSelected(actions: "Phonotactics")" href="phonotactics">Phonotactics Generator</a>
+                        <a class="list-group-item @Html.IsSelected(actions: "Table")" href="table">Table Generator</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-9">
+        @RenderBody()
+    </div>
+    <script>
+        $(function () {
+
+            $('.list-group-item').on('click', function () {
+                $('.glyphicon', this)
+                  .toggleClass('glyphicon-plus')
+                  .toggleClass('glyphicon-minus');
+            });
+        });
+
+        $("#HelpMenu").children("a").each(function () {
+            var current = @ViewContext.RouteData.Values["action"];
+            if (this.Attr("href").toLowerCase() == current.toLowerCase())
+            {
+                $(this).toggleClass("active");
+            }
+        });
+    </script>
+</body>
+
+</html>

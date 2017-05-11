@@ -1,0 +1,18 @@
+﻿
+@{
+    ViewBag.Title = "Assignment Generator";
+    Layout = "~/Views/Help/_HelpLayout.cshtml";
+}
+
+<h3>Assignment Generator</h3>
+
+<p>
+    A highly customizable and general purpose generator useful for most content.  Most generators will use
+    this type due to its flexibility.  The Assignment Generator supports all of the <a href="generators">common properties</a>.
+</p>
+<p>
+    Processing starts with the generator selecting a line item with the name <code>Start</code>.  
+    From there it processes the expression of that line item.  
+    If there is a bracketed item in the expression, it will be evaluated as outlined below.
+    After it is done processing the expression, it will go on to the line item referenced in the <code>Next</code> value.
+</p>

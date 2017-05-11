@@ -1,0 +1,72 @@
+﻿@model TheRandomizer.Generators.LUA.LUAGenerator
+
+@{
+    ViewBag.Title = "Lua Editor";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+}
+
+<style>
+    .CodeMirror {
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+
+    #divSupportsMaxLength {
+        display: none;
+    }
+</style>
+
+@section TRStyles {
+    <link href="~/Content/codemirror.css" type="text/css" rel="stylesheet" />
+    <link href="~/Content/CodeMirrorThemes/neat.css" type="text/css" rel="stylesheet" />
+    <link href="~/Content/bootstrap-tokenfield/bootstrap-tokenfield.css" rel="stylesheet" type="text/css" />
+}
+@section TRScripts {
+    <script src="~/Scripts/bootstrap-tokenfield.js"></script>
+    <script src="~/Scripts/jquery-ui-1.12.1.js"></script>
+    @Scripts.Render("~/Scripts/TheRandomizer.ItemListMaintenance.js")
+    @Scripts.Render("~/Scripts/codemirror.js")
+    @Scripts.Render("~/Scripts/CodeMirrorModes/lua.js")
+}
+
+<h2>@ViewBag.Title</h2>
+
+@using (Html.BeginForm("LuaEditor", "UserContent", FormMethod.Post))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <h4>@(string.IsNullOrWhiteSpace(Model.Name) ? "New Generator" : Model.Name)</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.Id)
+
+        @Html.EditorFor(bg => bg)
+
+        <div class="row">
+            <div class="col-md-12">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <b class="panel-title">Script</b>
+                    </div>
+                    <div class="panel-body">
+                        @Html.TextAreaFor(model => model.Script, new { @class = "form-control", @style = "max-width: 100%", @rows = 20 })
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+<script>
+    var luaArea = CodeMirror.fromTextArea(document.getElementById("Script"), {
+        lineNumbers: true,
+        matchBrackets: true,
+        theme: "neat"
+    });
+</script>

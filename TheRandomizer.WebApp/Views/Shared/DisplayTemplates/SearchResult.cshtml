@@ -1,0 +1,98 @@
+﻿@model TheRandomizer.WebApp.Models.SearchResult
+
+<div class="modal fade bootstrap-dialog type-primary" id="Info@(Model.Id)" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="bootstrap-dialog-header">
+                    <div class="bootstrap-dialog-close-button"><button class="close">×</button></div>
+                    <div class="bootstrap-dialog-title">@Model.Name</div>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div class="bootstrap-dialog-body">
+                    <div class="bootstrap-dialog-message">
+                        By: <i>@Model.Author</i><br />
+                        @Model.Description<br />
+                        <hr />
+                        <b>Tags: </b> @Model.TagList<br />
+                        <b>Is Library: </b> @Model.IsLibrary<br />
+                        <b>Output Format: </b> @Model.OutputFormat<br />
+                        <b>Is Published: </b> @Model.Published<br />
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="bootstrap-dialog-footer">
+                    <div class="bootstrap-dialog-footer-buttons">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Ok</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade bootstrap-dialog type-danger" id="Delete@(Model.Id)" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="bootstrap-dialog-header">
+                    <div class="bootstrap-dialog-close-button"><button class="close">×</button></div>
+                    <div class="bootstrap-dialog-title">Confirm Delete Generator</div>
+                </div>
+            </div>
+            <div class="modal-body">
+                <div class="bootstrap-dialog-body">
+                    <div class="bootstrap-dialog-message">
+                        Are you sure you want to delete the <b>@Model.Name</b> generator?  Once this is done, it cannot be undone.
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <div class="bootstrap-dialog-footer">
+                    <div class="bootstrap-dialog-footer-buttons">
+                        <button type="button" class="btn btn-default" data-dismiss="modal"><span class="bootstrap-dialog-button-icon glyphicon glyphicon-remove"></span> No</button>
+                        <a href="/usercontent/delete/@Model.Id" class="btn btn-danger btn-ok"><span class="bootstrap-dialog-button-icon glyphicon glyphicon-ok"></span> Yes</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<tr class="@(Model.Published == false ? "text-info" : "")">
+    @if (Model.IsLibrary)
+    {
+        <td>Model.Name</td>
+    }
+    else
+    {
+        <td>@Html.ActionLink(Model.Name, "Generate", new { Id = Model.Id }, new { name = "OpenGenerator" })</td>
+    }
+    <td>@Model.Description</td>
+    <td>@Model.TagList</td>
+    <td>
+        <div class="row pull-right">
+            <div class="col-md-12 ">
+                @if (Model.IsLibrary)
+                {
+                    <span class="glyphicon glyphicon-book"></span>
+                }
+                else
+                {
+                    <span>&nbsp;</span>
+                }
+                <span class="search-icon" data-toggle="modal" data-target="#Info@(Model.Id)" title="View more information about this generator."><span class="glyphicon glyphicon-info-sign"></span></span>
+                @if (Request.IsAuthenticated)
+                {
+                    <span class="search-icon glyphicon @(Model.IsFavorite ? "glyphicon-star" : "glyphicon-star-empty")" name="ToggleFavorite" data-id="@Model.Id" data-is-favorite="@Model.IsFavorite" title="@(Model.IsFavorite ? "Click to remove this generator from your favorites." : "Click to add this generator from your favorites.")"></span>
+                }
+                @if ((Request.IsAuthenticated && Model.IsOwner && !Model.Published) || (User != null && (User.IsInRole("Administrator") || User.IsInRole("Owner"))))
+                {
+                    <a class="search-icon" href="/UserContent/EditGenerator/@Model.Id" title="Edit this generator"><span class="glyphicon glyphicon-edit"></span></a>
+                }
+            </div>
+        </div>
+    </td>
+</tr>

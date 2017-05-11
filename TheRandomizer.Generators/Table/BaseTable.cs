@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
 using Microsoft.VisualBasic.FileIO;
+using System.ComponentModel.DataAnnotations;
 
 namespace TheRandomizer.Generators.Table
 {
@@ -30,18 +31,20 @@ namespace TheRandomizer.Generators.Table
         public string Repeat { get; set; }
         /// <summary>This string will be used to join together multiple results when the table processing is repeated</summary>
         [XmlAttribute("repeatJoin")]
-        public string RepeatJoin { get; set; } = " ";
+        [Display(Name = "Repeat Join")]
+        public string RepeatJoin { get; set; }
         /// <summary>The name of this table</summary>
         [XmlAttribute("name")]
         public string Name { get; set; }
         /// <summary>The string that delimits columns in the table</summary>
         [XmlAttribute("delimiter")]
-        public string Delimiter { get; set; }
+        public string Delimiter { get; set; } = "|";
         /// <summary>An expression that determines if this table should be skipped</summary>
         [XmlAttribute("skipTable")]
         public string SkipTable { get; set; }
         /// <summary>The table itself</summary>
         [XmlText]
+        [Display(Name = "Table")]
         public string Value { get; set; }
         #endregion
 
@@ -156,7 +159,7 @@ namespace TheRandomizer.Generators.Table
                 parser.Delimiters = new string[] { Delimiter };
                 parser.TextFieldType = FieldType.Delimited;
                 parser.CommentTokens = new string[] { COMMENT_TOKEN };
-                parser.HasFieldsEnclosedInQuotes = false;
+                parser.HasFieldsEnclosedInQuotes = true;
                 parser.TrimWhiteSpace = true;
                 Table = new DataTable();
                 Table.TableName = Name;

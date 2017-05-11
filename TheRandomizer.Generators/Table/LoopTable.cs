@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Data;
 using System.Linq;
 using System.Text;
@@ -7,6 +9,7 @@ using System.Threading.Tasks;
 
 namespace TheRandomizer.Generators.Table
 {
+    [DisplayName("Loop Table")]
     public class LoopTable : BaseTable
     {
         protected override Dictionary<string, object> ProcessTableInternal()

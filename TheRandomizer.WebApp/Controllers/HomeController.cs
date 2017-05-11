@@ -8,19 +8,39 @@ using TheRandomizer.Generators;
 
 namespace TheRandomizer.WebApp.Controllers
 {
+    [RequireHttps]
     public class HomeController : Controller
     {
+        private SearchModel _defaultCriteria;
+
+        public static List<SelectListItem> GetAuthors()
+        {
+            var authorList = new List<string>(DataAccess.DataContext.GetAuthors());
+            var items = new List<SelectListItem>() { new SelectListItem() { Text = "", Value = "" } };
+            foreach (var author in authorList)
+            {
+                items.Add(new SelectListItem() { Text = author, Value = author });
+            }
+            return items;
+        }
+
+        public static List<string> GetTags()
+        {
+            return new List<string>(DataAccess.DataContext.GetAllTags().Keys);
+        }
+
         private SearchModel CriteriaDefaults
         {
             get
             {
-                var criteria = new SearchModel();
-                // set the criteria defaults
-                criteria.Tags = new Dictionary<string, bool>(DataAccess.DataContext.GetAllTags());
-                criteria.Page = 1;
-                criteria.PageSize = 10;
-                criteria.FavoritesOnly = false;
-                return criteria;
+                if (_defaultCriteria == null)
+                {
+                    _defaultCriteria = new SearchModel();
+                    _defaultCriteria.Tags = new Dictionary<string, bool>(DataAccess.DataContext.GetAllTags());
+                    _defaultCriteria.FavoritesOnly = false;
+                    _defaultCriteria.IncludeLibraries = false;
+                }
+                return _defaultCriteria;
             }
         }
         
@@ -35,10 +55,7 @@ namespace TheRandomizer.WebApp.Controllers
         public ActionResult Index(SearchModel criteria)
         {
             criteria.Tags = new Dictionary<string, bool>(DataAccess.DataContext.GetAllTags());
-            criteria.Page = GetFormValue<Int32>("Page", 1);
-            criteria.PageSize = GetFormValue<Int32>("PageSize", 10);
-            criteria.FavoritesOnly = GetFormValue<bool>("FavoritesOnly", false);
-            criteria = DataAccess.DataContext.Search(criteria);
+            criteria.FavoritesOnly = GetFormValue<bool>("FavoritesOnly", CriteriaDefaults.FavoritesOnly);
             
             foreach (var tag in Request.Form.AllKeys.Where(k => k.StartsWith("tag")))
             {
@@ -48,12 +65,86 @@ namespace TheRandomizer.WebApp.Controllers
                     criteria.Tags[tagName] = true;
                 }
             }
+
+            criteria = DataAccess.DataContext.Search(criteria);
             return View(criteria);
+        }
+
+        public ActionResult Generate(Guid id)
+        {
+            var generator = DataAccess.DataContext.GetGenerator(id);
+            if (generator != null)
+            {
+                var user = DataAccess.DataContext.User;
+                var model = new GenerateModel()
+                {
+                    Id = id,
+                    Name = generator.Name,
+                    Author = generator.Author,
+                    Description = generator.Description,
+                    Parameters = generator.Parameters,
+                    SupportsMaxLength = generator.SupportsMaxLength,
+                    IsFavorite = user == null ? false : user.Favorites.Contains(id),
+                    IsOwner = user == null ? false : user.OwnerOfGenerator.Contains(id)
+                };
+                ViewBag.Title = generator.Name;
+                return View(model);
+            }
+            else
+            {
+                return new HttpNotFoundResult("Unable to find the requested generator");
+            }
+        }
+
+        [HttpPost]
+        public ActionResult Generate(GenerateModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    var generator = DataAccess.DataContext.GetGenerator(model.Id);
+                    ViewBag.Title = generator.Name;
+                    if (model.Parameters != null)
+                    {
+                        foreach (var parameter in model.Parameters)
+                        {
+                            generator.Parameters[parameter.Name].Value = parameter.Value;
+                        }
+                    }
+                    generator.RequestGenerator += RequestGenerator;
+                    var results = generator.Generate(model.Repeat, model.MaxLength);
+                    generator.RequestGenerator -= RequestGenerator;
+                    switch (generator.OutputFormat)
+                    {
+                        case (OutputFormat.Html): break;
+                        case (OutputFormat.Text): results = results.Select(r => HttpUtility.HtmlEncode(r)); break;
+                    }
+                    return PartialView("_Results", results);
+                }
+                catch (Exception ex)
+                {
+                    return Content($"An error occured trying to perform the generation. <br /> {ex.Message}", "text/html");
+                }
+            }
+            else
+            {
+                return Content("There was an error parsing the input.");
+            }
+        }
+
+        [Authorize]
+        [HttpPost]
+        public ActionResult SetFavorite()
+        {
+            var id = Guid.Parse(Request.Form["id"]);
+            var isFavorite = bool.Parse(Request.Form["isFavorite"]);
+            return Json(DataAccess.DataContext.SetFavorite(id, isFavorite));
         }
         
         public ActionResult About()
         {
-            ViewBag.Message = "The Randomizer is an always free and open source application designed with role-playing games and story tellers in mind. It is a customizable random thing generator able to generate nearly limitless things including and certainly not limited to names, plot hooks, and maps.";
+            ViewBag.Message = "The Randomizer is an always free and open source application designed with role-playing games and story tellers in mind. It is a customizable random thing generator able to generate nearly limitless content including and certainly not limited to names, plot hooks, and maps.";
 
             return View();
         }
@@ -86,6 +177,11 @@ namespace TheRandomizer.WebApp.Controllers
                 return (T)Convert.ChangeType(Request.Form[key], typeof(T));
             }
             return defaultValue;
+        }
+
+        private void RequestGenerator(object sender, RequestGeneratorEventArgs e)
+        {
+            e.Generator = DataAccess.DataContext.GetGenerator(e.Name);
         }
     }
 }

@@ -1,0 +1,24 @@
+﻿@using TheRandomizer.Generators
+@model BaseGenerator
+
+@{
+    ViewBag.Title = "Publish Request";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<br />
+<div class="panel panel-success">
+    <div class="panel-heading">
+        <div class="panel-title"><h2>Publish Request</h2></div>
+    </div>
+    <div class="panel-body">
+        Your request to publish the generator named @Model.Name has been submitted.  
+        Someone will review the request and you will receive an email regarding the results.  
+        You can still edit the generator until the request is approved but not after.
+        To cancel the request, please use the <a href="\home\contact">contact</a> page.
+    </div>
+    <div class="panel-footer">
+        <a href="\home\generate\@Model.Id" class="btn btn-default">Open Generator</a>
+        <a href="\home\index" class="btn btn-default">Search</a>
+    </div>
+</div>
