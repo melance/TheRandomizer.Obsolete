@@ -240,3 +240,4 @@ ModelManifest.xml
 
 # FAKE - F# Make
 .fake/
+TheRandomizer.WebApp/App_Data/Elmah.Errors/

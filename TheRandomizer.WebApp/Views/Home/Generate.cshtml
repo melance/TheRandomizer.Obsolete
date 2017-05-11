@@ -22,7 +22,6 @@
 				if (Model.IsOwner)
 				{
 					<a href="/UserContent/EditGenerator/@Model.Id" class="btn btn-default" title="Edit this generator."><span class="glyphicon glyphicon-edit"></span></a>
-					<button type="button" id="deleteGenerator" class="btn btn-danger" title="Delete this generator."><span class="glyphicon glyphicon-remove"></span></button>
 				}
 			}
 		</div>
@@ -100,7 +99,7 @@
 
 <script>
 	$(document).ready(function () {
-		$("#Generate").click(function () {
+	    $("#Generate").click(function () {
 			var data = $('form').serialize();
 
 			$.ajax({
@@ -114,20 +113,8 @@
 
 			return false;
 		})
-
-		$("#deleteGenerator").click(function () {
-			var name = "@ViewBag.Title";
-			var id = @Model.Id;
-		    DeleteGenerator(id, name, DeleteGeneratorCallback);
-		})
 	})
-
-    function DeleteGeneratorCallback()
-    {
-        var id = @Model.Id;
-        window.location = "@Url.Action("DeleteGenerator", "UserContent", new { id = Model.Id })"
-    }
-
+        
 	$("[name = 'ToggleFavorite']").click(function () {
 		var span = $(this);
 		var id = span.data("id");

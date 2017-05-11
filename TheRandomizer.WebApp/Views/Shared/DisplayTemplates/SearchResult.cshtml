@@ -68,15 +68,15 @@
     }
     else
     {
-        <td>@Html.ActionLink(Model.Name, "Generate", new { Id = Model.Id }, new { name = "OpenGenerator" } )</td>
+        <td>@Html.ActionLink(Model.Name, "Generate", new { Id = Model.Id }, new { name = "OpenGenerator" })</td>
     }
     <td>@Model.Description</td>
     <td>@Model.TagList</td>
-    <td> 
+    <td>
         <div class="row pull-right">
             <div class="col-md-12 ">
                 @if (Model.IsLibrary)
-            {
+                {
                     <span class="glyphicon glyphicon-book"></span>
                 }
                 else
@@ -85,18 +85,14 @@
                 }
                 <span class="search-icon" data-toggle="modal" data-target="#Info@(Model.Id)" title="View more information about this generator."><span class="glyphicon glyphicon-info-sign"></span></span>
                 @if (Request.IsAuthenticated)
-            {
+                {
                     <span class="search-icon glyphicon @(Model.IsFavorite ? "glyphicon-star" : "glyphicon-star-empty")" name="ToggleFavorite" data-id="@Model.Id" data-is-favorite="@Model.IsFavorite" title="@(Model.IsFavorite ? "Click to remove this generator from your favorites." : "Click to add this generator from your favorites.")"></span>
                 }
                 @if ((Request.IsAuthenticated && Model.IsOwner && !Model.Published) || (User != null && (User.IsInRole("Administrator") || User.IsInRole("Owner"))))
-            {
+                {
                     <a class="search-icon" href="/UserContent/EditGenerator/@Model.Id" title="Edit this generator"><span class="glyphicon glyphicon-edit"></span></a>
                 }
-                @if (User != null && (User.IsInRole("Administrator") || User.IsInRole("Owner")))
-            {
-                    <span class="search-icon glyphicon glyphicon-remove" data-toggle="modal" data-target="#Delete@(Model.Id)" title="Delete this generator."></span>
-                }
             </div>
-        </div>  
+        </div>
     </td>
 </tr>

@@ -96,7 +96,7 @@ namespace TheRandomizer.Generators
         #region Public Properties
         [XmlIgnore]
         [BsonId(true)]
-        public Int32 Id { get; set; }
+        public Guid Id { get; set; }
         /// <summary>The name of the generator that is to be displayed to the user</summary>
         [XmlElement("name")]
         [Required]

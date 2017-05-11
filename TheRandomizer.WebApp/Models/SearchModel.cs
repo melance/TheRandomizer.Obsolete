@@ -19,12 +19,7 @@ namespace TheRandomizer.WebApp.Models
 		public bool IncludeLibraries { get; set; }
 		[Display(Name = "Generators Open In")]
 		public bool OpenNewTab { get; set; }
-		[Display(Name = "Page Size")]
-		public Int32 PageSize { get; set; }
-		public Int32 Page { get; set; }
 		public List<SearchResult> Results { get; set; }
-		public Int32 TotalResults { get; set; }
-		public Int32 TotalPages { get; set; }
 		public Int32 First { get; set; }
 		public Int32 Last { get; set; }
 	}
