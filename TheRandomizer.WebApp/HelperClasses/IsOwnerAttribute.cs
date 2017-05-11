@@ -63,19 +63,19 @@ namespace TheRandomizer.WebApp.HelperClasses
             }
 
             var generatorRouteValue = httpContext.Request.RequestContext.RouteData.Values["id"];
-            Int32 generatorId;
+            Guid generatorId;
 
             if (generatorRouteValue == null)
             {
                 generatorRouteValue = httpContext.Request.Form["id"];
             }
             
-            if (generatorRouteValue == null || !Int32.TryParse((string)generatorRouteValue, out generatorId))
+            if (generatorRouteValue == null || !Guid.TryParse((string)generatorRouteValue, out generatorId))
             {
                 return false;
             }
 
-            return DataAccess.DataContext.User.OwnerOfGenerator.Contains(generatorId);
+            return (DataAccess.DataContext.User.OwnerOfGenerator.Contains(generatorId) || generatorId == Guid.Empty);
         }
 
         private static bool SkipAuthorization(HttpActionContext actionContext)

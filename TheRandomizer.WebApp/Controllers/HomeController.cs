@@ -37,9 +37,8 @@ namespace TheRandomizer.WebApp.Controllers
                 {
                     _defaultCriteria = new SearchModel();
                     _defaultCriteria.Tags = new Dictionary<string, bool>(DataAccess.DataContext.GetAllTags());
-                    _defaultCriteria.Page = 1;
-                    _defaultCriteria.PageSize = 10;
                     _defaultCriteria.FavoritesOnly = false;
+                    _defaultCriteria.IncludeLibraries = false;
                 }
                 return _defaultCriteria;
             }
@@ -56,15 +55,6 @@ namespace TheRandomizer.WebApp.Controllers
         public ActionResult Index(SearchModel criteria)
         {
             criteria.Tags = new Dictionary<string, bool>(DataAccess.DataContext.GetAllTags());
-            if (GetFormValue<Int32>("PageSize", criteria.PageSize) != criteria.PageSize)
-            {
-                criteria.Page = CriteriaDefaults.Page;
-            }
-            else
-            {
-                criteria.Page = GetFormValue<Int32>("Page", CriteriaDefaults.Page);
-            }
-            criteria.PageSize = GetFormValue<Int32>("PageSize", CriteriaDefaults.PageSize);
             criteria.FavoritesOnly = GetFormValue<bool>("FavoritesOnly", CriteriaDefaults.FavoritesOnly);
             
             foreach (var tag in Request.Form.AllKeys.Where(k => k.StartsWith("tag")))
@@ -80,7 +70,7 @@ namespace TheRandomizer.WebApp.Controllers
             return View(criteria);
         }
 
-        public ActionResult Generate(Int32 id)
+        public ActionResult Generate(Guid id)
         {
             var generator = DataAccess.DataContext.GetGenerator(id);
             if (generator != null)
@@ -147,7 +137,7 @@ namespace TheRandomizer.WebApp.Controllers
         [HttpPost]
         public ActionResult SetFavorite()
         {
-            var id = Int32.Parse(Request.Form["id"]);
+            var id = Guid.Parse(Request.Form["id"]);
             var isFavorite = bool.Parse(Request.Form["isFavorite"]);
             return Json(DataAccess.DataContext.SetFavorite(id, isFavorite));
         }

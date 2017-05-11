@@ -376,9 +376,6 @@
     <Content Include="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="DataAccess\TheRandomizer.db">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Compile Include="Models\SearchModel.cs" />
     <Content Include="fonts\glyphicons-halflings-regular.woff2" />
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
@@ -489,10 +486,11 @@
     <Content Include="Views\UserContent\Publish.cshtml" />
     <Content Include="Views\Admin\Publish.cshtml" />
     <Content Include="Views\Admin\Index.cshtml" />
+    <Content Include="Views\Shared\_ConfirmPublishDialog.cshtml" />
+    <Content Include="Views\Shared\_ConfirmUnpublishDialog.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Resources\" />
-    <Folder Include="Views\Elmah\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

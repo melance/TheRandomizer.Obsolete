@@ -43,7 +43,7 @@ namespace TheRandomizer.WebApp.DataAccess
             return new LiteDatabase(HttpContext.Current.Server.MapPath(DB_PATH), CreateMapper() );
         }
         
-        public static BaseGenerator GetGenerator(Int32 id)
+        public static BaseGenerator GetGenerator(Guid id)
         {
             using (var db = OpenDatabase())
             {
@@ -61,7 +61,7 @@ namespace TheRandomizer.WebApp.DataAccess
             }
         }
         
-        public static BaseGenerator SetPublished(Int32 id, bool published)
+        public static BaseGenerator SetPublished(Guid id, bool published)
         {
             using (var db = OpenDatabase())
             {
@@ -88,7 +88,7 @@ namespace TheRandomizer.WebApp.DataAccess
                     else
                     {
                         var id = collection.Insert(generator);
-                        user.OwnerOfGenerator.Add(id.AsInt32);
+                        user.OwnerOfGenerator.Add(id.AsGuid);
                         db.GetCollection<UserModel>(USER_COLLECTION).Upsert(user);
                     }
                     trans.Commit();
@@ -101,7 +101,7 @@ namespace TheRandomizer.WebApp.DataAccess
             }
         }
 
-        public static void DeleteGenerator(Int32 id)
+        public static void DeleteGenerator(Guid id)
         {
             using (var db = OpenDatabase())
             {
@@ -126,11 +126,7 @@ namespace TheRandomizer.WebApp.DataAccess
                                   && (criteria.IncludeLibraries || bg.IsLibrary == false)
                                   && (bg.Published || User.OwnerOfGenerator.Contains(bg.Id)));
 
-                criteria.TotalResults = collection.Count();
-                criteria.TotalPages = (Int32)Math.Ceiling((double)collection.Count() / criteria.PageSize);
-                criteria.Results = collection.Pagination(criteria.Page, criteria.PageSize).Select(gi => new Models.SearchResult(gi)).ToList();
-                criteria.First = criteria.Results.Count() == 0 ? 0 : ((criteria.Page - 1) * criteria.PageSize) + 1;
-                criteria.Last = criteria.Results.Count() == 0 ? 0 : criteria.First + criteria.Results.Count() - 1;
+                criteria.Results = collection.Select(gi => new Models.SearchResult(gi)).ToList();
             }
 
             return criteria;
@@ -151,7 +147,7 @@ namespace TheRandomizer.WebApp.DataAccess
             }
         }
 
-        public static bool SetFavorite(Int32 generatorId, bool isFavorite)
+        public static bool SetFavorite(Guid generatorId, bool isFavorite)
         {
             try
             {

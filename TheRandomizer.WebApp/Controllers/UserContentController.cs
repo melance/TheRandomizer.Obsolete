@@ -68,7 +68,7 @@ namespace TheRandomizer.WebApp.Controllers
         }
 
         [IsOwner(ADMINISTRATOR_ROLE)]
-        public ActionResult EditGenerator(Int32 Id)
+        public ActionResult EditGenerator(Guid Id)
         {
             var model = DataAccess.DataContext.GetGenerator(Id);
             var modelType = GeneratorTypes.Find(gtm => gtm.Type == model.GetType());
@@ -82,7 +82,7 @@ namespace TheRandomizer.WebApp.Controllers
         }
 
         [IsOwner]
-        public ActionResult Publish(Int32 id)
+        public ActionResult Publish(Guid id)
         {
             var url = Request.UrlReferrer.AbsoluteUri;
             var model = DataAccess.DataContext.GetGenerator(id);
@@ -149,7 +149,7 @@ namespace TheRandomizer.WebApp.Controllers
             return View(GeneratorTypes);
         }
 
-        public ActionResult Export(Int32 id)
+        public ActionResult Export(Guid id)
         {
             var generator = DataAccess.DataContext.GetGenerator(id);
             var model = generator.Serialize();
@@ -163,7 +163,7 @@ namespace TheRandomizer.WebApp.Controllers
         }
 
         [IsOwner(ADMINISTRATOR_ROLE)]
-        public ActionResult DeleteGenerator(Int32 id)
+        public ActionResult DeleteGenerator(Guid id)
         {
             try
             {
@@ -184,6 +184,7 @@ namespace TheRandomizer.WebApp.Controllers
         {
             var model = new AssignmentGenerator();
             model.LineItems.Add(new LineItem() { Name = "Start" });
+            Session["Generator"] = model;
             return View(model);
         }
 
@@ -327,6 +328,10 @@ namespace TheRandomizer.WebApp.Controllers
         private ActionResult SaveGenerator(BaseGenerator generator)
         {
             var model = generator;
+            if (model.GetType() == typeof(AssignmentGenerator))
+            {
+                ((AssignmentGenerator)model).IsLibrary = bool.Parse(Request.Form["assignment.IsLibrary"]);
+            }
             if (ModelState.IsValid)
             {
                 model = DataAccess.DataContext.UpsertGenerator(generator);

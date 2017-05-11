@@ -34,13 +34,13 @@ namespace TheRandomizer.WebApp.Controllers
             return View(model);
         }
         
-        public ActionResult Publish(Int32 id)
+        public ActionResult Publish(Guid id)
         {
             var model = DataAccess.DataContext.SetPublished(id, true);
             return View((object)model.Name);
         }
 
-        public ActionResult Unpublish(Int32 id)
+        public ActionResult Unpublish(Guid id)
         {
             var model = DataAccess.DataContext.SetPublished(id, false);
             return RedirectToAction("EditGenerator", "UserContent", new { id = id });
