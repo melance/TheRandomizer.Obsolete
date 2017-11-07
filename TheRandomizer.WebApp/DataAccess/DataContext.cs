@@ -9,6 +9,7 @@ using TheRandomizer.WebApp.Models;
 using System.Security.Principal;
 using Microsoft.AspNet.Identity;
 using TheRandomizer.Generators.Assignment;
+using System.IO;
 
 namespace TheRandomizer.WebApp.DataAccess
 {
@@ -40,7 +41,9 @@ namespace TheRandomizer.WebApp.DataAccess
 
         public static LiteDatabase OpenDatabase()
         {
-            return new LiteDatabase(HttpContext.Current.Server.MapPath(DB_PATH), CreateMapper() );
+            var dbPath = HttpContext.Current.Server.MapPath(DB_PATH);
+            if (!Directory.Exists(Path.GetDirectoryName(dbPath))) Directory.CreateDirectory(Path.GetDirectoryName(dbPath));
+            return new LiteDatabase(dbPath, CreateMapper());
         }
         
         public static BaseGenerator GetGenerator(Guid id)
@@ -78,7 +81,6 @@ namespace TheRandomizer.WebApp.DataAccess
             {
                 using (var db = OpenDatabase())
                 {
-                    var trans = db.BeginTrans();
                     var collection = db.GetCollection<BaseGenerator>(GENERATORS_COLLECTION);
                     var user = User;
                     if (collection.FindOne(bg => bg.Name == generator.Name) != null)
@@ -91,7 +93,6 @@ namespace TheRandomizer.WebApp.DataAccess
                         user.OwnerOfGenerator.Add(id.AsGuid);
                         db.GetCollection<UserModel>(USER_COLLECTION).Upsert(user);
                     }
-                    trans.Commit();
                     return collection.FindOne(bg => bg.Name == generator.Name);
                 }
             }

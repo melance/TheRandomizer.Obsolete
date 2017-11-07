@@ -1,0 +1,23 @@
+﻿<metro:MetroWindow x:Class="TheRandomizer.WinApp.Views.GeneratorTabHost"
+                         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                         xmlns:local="clr-namespace:TheRandomizer.WinApp.Views"
+                         xmlns:dragablz="clr-namespace:Dragablz;assembly=Dragablz"
+                         xmlns:dockablz="clr-namespace:Dragablz.Dockablz;assembly=Dragablz"
+                         xmlns:metro="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+                         mc:Ignorable="d"
+                         Title="GeneratorTabHost" 
+                         Height="300" 
+                         Width="300"
+                         WindowStartupLocation="CenterOwner" 
+                         Icon="/TheRandomizer.WinApp;component/TheRandomizer.ico">
+    <dockablz:Layout>
+        <dragablz:TabablzControl Name="tabContainer">
+            <dragablz:TabablzControl.InterTabController>
+                <dragablz:InterTabController />
+            </dragablz:TabablzControl.InterTabController>
+        </dragablz:TabablzControl>
+    </dockablz:Layout>
+</metro:MetroWindow>

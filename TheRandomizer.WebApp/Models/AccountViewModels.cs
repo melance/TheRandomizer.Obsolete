@@ -51,7 +51,6 @@ namespace TheRandomizer.WebApp.Models
     {
         [Required]
         [Display(Name = "User Name")]
-        [EmailAddress]
         public string UserName { get; set; }
 
         [Required]

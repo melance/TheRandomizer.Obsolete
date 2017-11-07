@@ -40,6 +40,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Collections\DisposableList.cs" />
+    <Compile Include="Collections\ObservableList.cs" />
     <Compile Include="Common.cs" />
     <Compile Include="IntegerExtensions.cs" />
     <Compile Include="LinqExtensions.cs" />

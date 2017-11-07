@@ -1,0 +1,220 @@
+﻿<UserControl x:Class="TheRandomizer.WinApp.Controls.GeneratorTabItem"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:TheRandomizer.WinApp.Controls"
+             xmlns:metro="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+             xmlns:viewModels="clr-namespace:TheRandomizer.WinApp.ViewModels"
+             xmlns:param="clr-namespace:TheRandomizer.Generators.Parameter;assembly=TheRandomizer.Generators"
+             xmlns:cmds="clr-namespace:TheRandomizer.WinApp.Commands"
+             HorizontalAlignment="Stretch"
+             VerticalAlignment="Stretch"
+             HorizontalContentAlignment="Stretch"
+             VerticalContentAlignment="Stretch"
+             mc:Ignorable="d" 
+             d:DesignHeight="400" 
+             d:DesignWidth="700">
+    <UserControl.DataContext>
+        <viewModels:GeneratorTabItemViewModel />
+    </UserControl.DataContext>
+    <UserControl.CommandBindings>
+        <CommandBinding Command="Copy" Executed="Copy" CanExecute="HasResults" />
+        <CommandBinding Command="Delete" Executed="Clear" CanExecute="HasResults" />
+        <CommandBinding Command="Print" Executed="Print" CanExecute="HasResults" />
+        <CommandBinding Command="Save" Executed="Save" CanExecute="HasResults" />
+        <CommandBinding Command="SelectAll" Executed="SelectAll" CanExecute="HasResults" />
+        <CommandBinding Command="{x:Static cmds:GeneratorTabItemCommands.Cancel}" Executed="Cancel" CanExecute="HasGenerator" />
+        <CommandBinding Command="{x:Static cmds:GeneratorTabItemCommands.Generate}" Executed="Generate" CanExecute="HasGenerator" />
+        <CommandBinding Command="{x:Static cmds:GeneratorTabItemCommands.SelectNone}" Executed="SelectNone" CanExecute="HasResults" />
+    </UserControl.CommandBindings>
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="30*" />
+            <ColumnDefinition Width="3" />
+            <ColumnDefinition Width="70*" />
+        </Grid.ColumnDefinitions>
+        <DockPanel Grid.Column="0" LastChildFill="True">
+            <DockPanel x:Name="pnlActions" DockPanel.Dock="Bottom" HorizontalAlignment="Stretch" LastChildFill="False">
+                <Button Command="{x:Static cmds:GeneratorTabItemCommands.Cancel}" Content="Cancel" Visibility="Collapsed" DockPanel.Dock="Left" Width="100" />
+                <Button Command="{x:Static cmds:GeneratorTabItemCommands.Generate}" DockPanel.Dock="Right" Width="100" Style="{DynamicResource AccentedSquareButtonStyle}">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock x:Name="txtGenerate">Generate</TextBlock>
+                        <Rectangle Width="{Binding ActualHeight, ElementName=txtGenerate}" Stretch="Uniform" Margin="6,0,0,0" Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
+                            <Rectangle.OpacityMask>
+                                <VisualBrush Visual="{StaticResource appbar_control_play}" Stretch="Fill" />
+                            </Rectangle.OpacityMask>
+                        </Rectangle>
+                    </StackPanel>
+                </Button>
+            </DockPanel>
+            <DockPanel x:Name="pnlRepeat" DockPanel.Dock="Bottom" HorizontalAlignment="Stretch" LastChildFill="True">
+                <Label Content="Repeat" DockPanel.Dock="Top" Style="{DynamicResource ResourceKey=SubTitleLabel}" />
+                <metro:NumericUpDown Value="{Binding Repeat}" Maximum="200" Minimum="1" Interval="1" Speedup="True" HorizontalContentAlignment="Right"/>
+            </DockPanel>
+            <DockPanel x:Name="pnlMaxLength" DockPanel.Dock="Bottom" HorizontalAlignment="Stretch" LastChildFill="True" Visibility="{Binding SupportsMaxLength, Converter={StaticResource ResourceKey=BooleanToVisibilityConverter} }">
+                <Label Content="Max Length" DockPanel.Dock="Top" Style="{DynamicResource ResourceKey=SubTitleLabel}" />
+                <metro:NumericUpDown Value="{Binding MaxLength}" Maximum="300" Minimum="3" Interval="1" Speedup="True" HorizontalContentAlignment="Right"/>
+            </DockPanel>
+            <Expander DockPanel.Dock="Top" HorizontalAlignment="Stretch" IsExpanded="False" >
+                <Expander.Header>
+                    <Label Content="{Binding Name}" Foreground="{DynamicResource IdealForegroundColorBrush}" />
+                </Expander.Header>
+                <DockPanel x:Name="pnlDetails" DockPanel.Dock="Bottom" HorizontalAlignment="Stretch" LastChildFill="True">
+                    <FlowDocumentScrollViewer Margin="3" BorderBrush="Black" BorderThickness="1">
+                        <FlowDocument IsOptimalParagraphEnabled="True" 
+                                      IsHyphenationEnabled="True"
+                                      FontSize="12" 
+                                      FontFamily="Verdana"
+                                      Foreground="{DynamicResource TextBrush}">
+                            <FlowDocument.Resources>
+                                <Style TargetType="{x:Type Paragraph}">
+                                    <Setter Property="Margin" Value="0" />
+                                    <Setter Property="Padding" Value="0" />
+                                </Style>
+                            </FlowDocument.Resources>
+                            <Section>
+                                <Paragraph>
+                                    <Run Text="{Binding Description, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
+                                    <Hyperlink NavigateUri="{Binding URL, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" Foreground="{DynamicResource AccentColorBrush}">
+                                        <Run Text="{Binding URL, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" ToolTip="{Binding Grammar.URL, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
+                                    </Hyperlink>
+                                </Paragraph>
+                                <Paragraph>
+                                    <Run Text="By:" FontWeight="Bold"/>
+                                    <Run Text="{Binding Author, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
+                                </Paragraph>
+                                <Paragraph IsHyphenationEnabled="False" TextAlignment="Left">
+                                    <Run Text="File:" FontWeight="Bold" />
+                                    <Hyperlink Foreground="{DynamicResource AccentColorBrush}">
+                                        <Run ToolTip="{Binding FilePath, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" Text="{Binding Grammar.FileName, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
+                                    </Hyperlink>
+                                </Paragraph>
+                            </Section>
+                            <Section>
+                                <Paragraph>
+                                    <Run Text="Tags:" FontWeight="Bold" BaselineAlignment="Top" />
+                                    <Hyperlink Name="lnkTags" Foreground="{DynamicResource AccentColorBrush}">[Edit]</Hyperlink>
+                                    <TextBlock Text="{Binding TagList, Mode=OneWay, UpdateSourceTrigger=PropertyChanged}" />
+                                </Paragraph>
+                            </Section>
+                        </FlowDocument>
+                    </FlowDocumentScrollViewer>
+                </DockPanel>
+            </Expander>
+            <DockPanel x:Name="pnlParameters" DockPanel.Dock="Bottom" ScrollViewer.HorizontalScrollBarVisibility="Auto" HorizontalAlignment="Stretch" LastChildFill="True" Visibility="{Binding HasParameters, Converter={StaticResource BooleanToVisibilityConverter}}">
+                <Label x:Name="lblParameters" Content="Parameters" DockPanel.Dock="Top" Style="{DynamicResource ResourceKey=SubTitleLabel}" />
+                <ItemsControl ItemsSource="{Binding Parameters}">
+                    <ItemsControl.Resources>
+                        <DataTemplate x:Key="Text" DataType="param:Configuration">
+                            <DockPanel LastChildFill="True">
+                                <TextBlock Text="{Binding Display}" DockPanel.Dock="Left"/>
+                                <TextBox Text="{Binding Value}" DockPanel.Dock="Right" />
+                            </DockPanel>
+                        </DataTemplate>
+                        <DataTemplate x:Key="Integer" DataType="param:Configuration">
+                            <DockPanel LastChildFill="True">
+                                <TextBlock Text="{Binding Display}" DockPanel.Dock="Left"/>
+                                <metro:NumericUpDown Value="{Binding Value}" HasDecimals="False" DockPanel.Dock="Right" HorizontalContentAlignment="Right" />
+                            </DockPanel>
+                        </DataTemplate>
+                        <DataTemplate x:Key="Decimal" DataType="param:Configuration">
+                            <DockPanel LastChildFill="True">
+                                <TextBlock Text="{Binding Display}" DockPanel.Dock="Left"/>
+                                <metro:NumericUpDown Value="{Binding Value}" HasDecimals="True" DockPanel.Dock="Right" HorizontalContentAlignment="Right" />
+                            </DockPanel>
+                        </DataTemplate>
+                        <DataTemplate x:Key="List" DataType="param:Configuration">
+                            <DockPanel LastChildFill="True">
+                                <TextBlock Text="{Binding Display}" DockPanel.Dock="Left"/>
+                                <ComboBox ItemsSource="{Binding OptionList}" SelectedValue="{Binding Value}" DockPanel.Dock="Right" />
+                            </DockPanel>
+                        </DataTemplate>
+                        <DataTemplate x:Key="Date" DataType="param:Configuration">
+                            <DockPanel LastChildFill="True">
+                                <TextBlock Text="{Binding Display}" DockPanel.Dock="Left" />
+                                <DatePicker SelectedDate="{Binding Value}" DockPanel.Dock="Right" />
+                            </DockPanel>
+                        </DataTemplate>
+                    </ItemsControl.Resources>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <ContentControl Content="{Binding .}">
+                                <ContentControl.Style>
+                                    <Style TargetType="ContentControl">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding Type}" Value="{x:Static param:Configuration+ParameterType.Text}">
+                                                <Setter Property="ContentTemplate" Value="{StaticResource Text}" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding Type}" Value="{x:Static param:Configuration+ParameterType.Integer}">
+                                                <Setter Property="ContentTemplate" Value="{StaticResource Integer}" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding Type}" Value="{x:Static param:Configuration+ParameterType.Decimal}">
+                                                <Setter Property="ContentTemplate" Value="{StaticResource Decimal}" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding Type}" Value="{x:Static param:Configuration+ParameterType.List}">
+                                                <Setter Property="ContentTemplate" Value="{StaticResource List}" />
+                                            </DataTrigger>
+                                            <DataTrigger Binding="{Binding Type}" Value="{x:Static param:Configuration+ParameterType.Date}">
+                                                <Setter Property="ContentTemplate" Value="{StaticResource Date}" />
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </ContentControl.Style>
+                            </ContentControl>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+                <DockPanel x:Name="pnlParameterList" HorizontalAlignment="Stretch" Margin="3" MaxHeight="200" ScrollViewer.HorizontalScrollBarVisibility="Auto" />
+            </DockPanel>
+        </DockPanel>
+        <GridSplitter Grid.Column="1" Width="3" ResizeBehavior="PreviousAndNext" />
+        <DockPanel Grid.Column="2" LastChildFill="True" HorizontalAlignment="Stretch">
+            <DockPanel x:Name="docResultActions" LastChildFill="False" DockPanel.Dock="Bottom">
+                <Button ToolTip="Save" Command="Save" DockPanel.Dock="Right" Padding="12" Margin="3" Style="{DynamicResource MetroCircleButtonStyle}">
+                    <Rectangle Width="12" Height="12" Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
+                        <Rectangle.OpacityMask>
+                            <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_save}" />
+                        </Rectangle.OpacityMask>
+                    </Rectangle>
+                </Button>
+                <Button ToolTip="Print" Command="Print" DockPanel.Dock="Right" Padding="12" Margin="3,3,0,3" Style="{DynamicResource MetroCircleButtonStyle}">
+                    <Rectangle Width="12" Height="12" Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
+                        <Rectangle.OpacityMask>
+                            <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_printer}" />
+                        </Rectangle.OpacityMask>
+                    </Rectangle>
+                </Button>
+                <Button ToolTip="Copy" Command="Copy" DockPanel.Dock="Right" Padding="12" Margin="3,3,0,3" Style="{DynamicResource MetroCircleButtonStyle}">
+                    <Rectangle Width="12" Height="12" Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
+                        <Rectangle.OpacityMask>
+                            <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_page_copy}" />
+                        </Rectangle.OpacityMask>
+                    </Rectangle>
+                </Button>
+                <Button ToolTip="Clear" Command="Delete" DockPanel.Dock="Right" Padding="12" Margin="3,3,0,3" Style="{DynamicResource MetroCircleButtonStyle}">
+                    <Rectangle Width="12" Height="12" Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
+                        <Rectangle.OpacityMask>
+                            <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_clear}" />
+                        </Rectangle.OpacityMask>
+                    </Rectangle>
+                </Button>
+                <Button ToolTip="Select None" Command="{x:Static cmds:GeneratorTabItemCommands.SelectNone}" DockPanel.Dock="Right" Padding="12" Margin="3,3,0,3" Style="{DynamicResource MetroCircleButtonStyle}">
+                    <Rectangle Width="12" Height="12" Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
+                        <Rectangle.OpacityMask>
+                            <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_checkmark_uncrossed}" />
+                        </Rectangle.OpacityMask>
+                    </Rectangle>
+                </Button>
+                <Button ToolTip="Select All" Command="SelectAll" DockPanel.Dock="Right" Padding="12" Margin="3,3,0,3" Style="{DynamicResource MetroCircleButtonStyle}">
+                    <Rectangle Width="12" Height="12" Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
+                        <Rectangle.OpacityMask>
+                            <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_checkmark}" />
+                        </Rectangle.OpacityMask>
+                    </Rectangle>
+                </Button>
+            </DockPanel>
+            <WebBrowser x:Name="webBrowser" Margin="3" AllowDrop="False" viewModels:GeneratorTabItemViewModel.Html="{Binding Results}" />
+        </DockPanel>
+    </Grid>
+</UserControl>
