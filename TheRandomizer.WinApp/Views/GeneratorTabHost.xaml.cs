@@ -12,6 +12,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
 using MahApps.Metro.Controls;
+using TheRandomizer.WinApp.Utility;
 
 namespace TheRandomizer.WinApp.Views
 {
@@ -23,6 +24,26 @@ namespace TheRandomizer.WinApp.Views
         public GeneratorTabHost()
         {
             InitializeComponent();
+        }
+
+        private InterTabClient _interTabClient;
+
+        public InterTabClient InterTabClientInstance
+        {
+            get
+            {
+                if (_interTabClient == null) _interTabClient = new InterTabClient();
+                return _interTabClient;
+            }
+            set
+            {
+                _interTabClient = value;
+            }
+        }
+
+        private void MetroWindow_Deactivated(object sender, EventArgs e)
+        {
+
         }
     }
 }

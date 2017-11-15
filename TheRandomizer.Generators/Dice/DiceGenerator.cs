@@ -45,7 +45,7 @@ namespace TheRandomizer.Generators.Dice
                     }
                     foreach (var function in Functions)
                     {
-                        if (parameter.Options.Find(o => o.Value == function.Name) == null)
+                        if (parameter.Options.ToList().Find(o => o.Value == function.Name) == null)
                         {
                             parameter.Options.Add(new Option() { Value = function.Name, DisplayName = string.IsNullOrWhiteSpace(function.DisplayName) ? function.DisplayName : function.Name });
                         }

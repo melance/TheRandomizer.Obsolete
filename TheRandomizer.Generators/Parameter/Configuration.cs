@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
+using TheRandomizer.Utility;
 
 namespace TheRandomizer.Generators.Parameter
 {
@@ -13,7 +14,7 @@ namespace TheRandomizer.Generators.Parameter
     /// This is the class used to provide parameter information to the generators as well as to any clients
     /// using this library
     /// </summary>
-    public class Configuration 
+    public class Configuration : ObservableBase
     {
         #region Enumerators
         /// <summary>
@@ -30,38 +31,30 @@ namespace TheRandomizer.Generators.Parameter
         #endregion
 
         #region Members
-        private string _displayName = null;
+        
         #endregion
 
         #region Public Properties
+                
         /// <summary>The name of the parameter, used to reference it</summary>
         [XmlAttribute("name")]
-        public string Name { get; set; }
+        public string Name { get { return GetProperty<string>(); } set { SetProperty(value); } }
 
         /// <summary>The value of the parameter</summary>
         [XmlAttribute("value")]
-        public string Value { get; set; }
+        public string Value { get { return GetProperty<string>(); } set { SetProperty(value); } }
 
         /// <summary>The friendly name to display to the user</summary>
         [XmlAttribute("display")]
-        public string DisplayName { 
-            get 
-            {
-                return string.IsNullOrWhiteSpace(_displayName) ? Name : _displayName;
-            }
-            set
-            {
-                _displayName = value;
-            }
-        }
+        public string DisplayName { get { return GetProperty(Name); } set { SetProperty(value); } }
 
         /// <summary>The type of this parameter</summary>
         [XmlAttribute("type")]
-        public ParameterType Type { get; set; }
+        public ParameterType Type { get { return GetProperty<ParameterType>(); } set { SetProperty(value); } }
         
         /// <summary>A list of possible options for List and Multiselect parameter types</summary>
         [XmlElement("option")]
-        public OptionList Options { get; set; } = new OptionList();
+        public OptionList Options { get { if (GetProperty<OptionList>() == null) SetProperty(new OptionList()); return GetProperty<OptionList>(); } set { SetProperty(value); } } 
 
         [XmlElement("optionList")]
         [Display(Name = "Options")]
@@ -69,17 +62,17 @@ namespace TheRandomizer.Generators.Parameter
         {
             get
             {
-                return Options.ToString();
+                return GetProperty<string>();
             }
             set
             {
                 if (value != null)
                 {
-                    Options = (OptionList)TypeDescriptor.GetConverter(this.Options.GetType()).ConvertFromString(value);
+                    SetProperty((OptionList)TypeDescriptor.GetConverter(Options.GetType()).ConvertFromString(value), "Options");
                 }
                 else
                 {
-                    Options = new OptionList();
+                    SetProperty(new OptionList(), "Options");
                 }
             }
         }

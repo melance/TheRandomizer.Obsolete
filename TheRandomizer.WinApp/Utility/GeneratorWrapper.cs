@@ -2,60 +2,26 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Web.UI;
-using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Input;
 using TheRandomizer.Generators;
 using TheRandomizer.Generators.Parameter;
+using TheRandomizer.Utility;
 using TheRandomizer.WinApp.Commands;
 
-namespace TheRandomizer.WinApp.ViewModels
+namespace TheRandomizer.WinApp.Utility
 {
-    public class GeneratorTabItemViewModel : ObservableBase
+    public class GeneratorWrapper : ObservableBase
     {
-        #region Static Properties
-        public static readonly DependencyProperty HtmlProperty = DependencyProperty.RegisterAttached("Html",
-                                                                                                      typeof(string),
-                                                                                                      typeof(GeneratorTabItemViewModel),
-                                                                                                      new FrameworkPropertyMetadata(OnHtmlChanged));
-
-        #endregion
-
-        #region Static Methods
-        [AttachedPropertyBrowsableForType(typeof(WebBrowser))]
-        public static string GetHtml(WebBrowser browser)
-        {
-            return (string)browser.GetValue(HtmlProperty);
-        }
-
-        public static void SetHtml(WebBrowser browser, string html)
-        {
-            browser.SetValue(HtmlProperty, html);
-        }
-
-        public static void OnHtmlChanged(DependencyObject dependencyObject, DependencyPropertyChangedEventArgs e)
-        {
-            WebBrowser browser = dependencyObject as WebBrowser;
-            if (browser != null)
-                browser.NavigateToString(e.NewValue as string ?? "No Results");
-        }
-        #endregion
-
+        
         #region Members
         private BaseGenerator _generator;
-        private string _results;
         #endregion
 
         #region Constructors
-        public GeneratorTabItemViewModel() { }
-
-        public GeneratorTabItemViewModel(BaseGenerator generator)
+        public GeneratorWrapper(BaseGenerator generator)
         {
             _generator = generator;
-            OnPropertyChanged(string.Empty);
         }
         #endregion
 
@@ -154,7 +120,11 @@ namespace TheRandomizer.WinApp.ViewModels
         {
             get
             {
-                return _results;
+                return GetProperty<string>();
+            }
+            set
+            {
+                SetProperty(value);
             }
         }
 
@@ -175,11 +145,11 @@ namespace TheRandomizer.WinApp.ViewModels
 
         public void Generate()
         {
-            _results = FormatResults(_generator?.Generate(Repeat, MaxLength));
+            Results = FormatResults(_generator?.Generate(Repeat, MaxLength));
             OnPropertyChanged("Results");
         }
         
-        private static string FormatResults(IEnumerable<string> results)
+        private string FormatResults(IEnumerable<string> results)
         {            
             using (StringWriter sWriter = new StringWriter())
             {
@@ -188,12 +158,17 @@ namespace TheRandomizer.WinApp.ViewModels
                     var odd = true;
                     writer.WriteFullBeginTag("head");
                     writer.WriteFullBeginTag("style");
+                    writer.WriteLine("body { font-family: Consolas, Courier New, Monospace; }");
                     writer.WriteLine("div.even { background-color: #F8F8F8; }");
                     writer.WriteLine("div.error { color: red; font-weight: bold; }");
+                    if (!string.IsNullOrWhiteSpace(_generator.CSS))
+                    {
+                        writer.WriteLine(_generator.CSS);
+                    }
                     writer.WriteEndTag("style");
                     writer.WriteEndTag("head");
                     writer.WriteFullBeginTag("body");
-                    if (results != null)
+                    if (results != null && results.ToList().Count > 0)
                     {
                         foreach (var item in results)
                         {
@@ -221,11 +196,7 @@ namespace TheRandomizer.WinApp.ViewModels
                 return sWriter.ToString();
             }
         }
-
-        public override string ToString()
-        {
-            return Name;
-        }
+        
         #endregion
     }
 }

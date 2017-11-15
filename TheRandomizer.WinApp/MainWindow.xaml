@@ -10,6 +10,7 @@
                     xmlns:dockablz="clr-namespace:Dragablz.Dockablz;assembly=Dragablz"
                     xmlns:controls="clr-namespace:TheRandomizer.WinApp.Controls"
                     xmlns:conv="clr-namespace:TheRandomizer.WinApp.Converters"
+                    xmlns:util="clr-namespace:TheRandomizer.WinApp.Utility"
                     mc:Ignorable="d"
                     Title="The Randomizer" 
                     Icon="TheRandomizer.ico"
@@ -21,6 +22,29 @@
     <Window.InputBindings>
         <KeyBinding Command="{Binding Help}" Key="F1" />
     </Window.InputBindings>
+    <Window.Resources>
+        <ResourceDictionary>
+            <VisualBrush x:Key="DonateIcon" Visual="{StaticResource appbar_paypal}" />
+        </ResourceDictionary>
+    </Window.Resources>
+    <metro:MetroWindow.RightWindowCommands>
+        <metro:WindowCommands>
+            <ToggleButton IsChecked="{Binding ElementName=flySettings, Path=IsOpen}">
+                <Rectangle Width="20" Height="20" Fill="{Binding RelativeSource={RelativeSource AncestorType=ToggleButton}, Path=Foreground}">
+                    <Rectangle.OpacityMask>
+                        <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_settings}" />
+                    </Rectangle.OpacityMask>
+                </Rectangle>
+            </ToggleButton>            
+        </metro:WindowCommands>
+    </metro:MetroWindow.RightWindowCommands>
+    <metro:MetroWindow.Flyouts>
+        <metro:FlyoutsControl>
+            <metro:Flyout Name="flySettings" Header="Settings" Theme="Inverse" Position="Right" IsModal="True">
+                <controls:Settings />
+            </metro:Flyout>
+        </metro:FlyoutsControl>
+    </metro:MetroWindow.Flyouts>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition x:Name="Menu" Height="Auto" />
@@ -28,19 +52,24 @@
             <RowDefinition />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="210"/>
             <ColumnDefinition Width="3" />
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
         <Menu IsMainMenu="true" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3">
             <MenuItem Header="_Tools">
-                <MenuItem Header="_Preferences" Command="{Binding Preferences}"/>
+                <MenuItem Name="mnuConvert" Header="_Convert Old Grammar..." ToolTip="Convert an old Grammar to the new format" Click="mnuConvert_Click" />
+                <MenuItem Header="_Refresh Generators" ToolTip="Refresh the list of generators" Command="{Binding RefreshGenerators}" />
             </MenuItem>
             <MenuItem Header="_Help">
-                <MenuItem Header="_Donate" Command="{Binding Donate}" />
-                <Separator />
                 <MenuItem Header="View _Help" Command="{Binding Help}" />
                 <MenuItem Header="_About" Command="{Binding About}" />
+                <Separator />
+                <MenuItem Header="Donate" Command="{x:Static util:BrowserBehavior.OpenURL}" CommandParameter="{util:ConfigurationBinding DonationURL}">
+                    <MenuItem.Icon>
+                        <Rectangle Width="18" Height="18" Fill="{StaticResource DonateIcon}" />
+                    </MenuItem.Icon>
+                </MenuItem>
             </MenuItem>
         </Menu>
         <Expander Margin="0" BorderBrush="Transparent" IsExpanded="True" ExpandDirection="Down" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" >
@@ -80,7 +109,11 @@
         </Expander>
         <DockPanel HorizontalAlignment="Stretch" Grid.Row="2" Grid.Column="0" LastChildFill="True">
             <Label Content="Generators" Style="{DynamicResource TitleLabel}" FontWeight="Bold" DockPanel.Dock="Top" />
-            <TextBlock Margin="3" DockPanel.Dock="Bottom" TextTrimming="CharacterEllipsis" ><Hyperlink Name="lnkGrammars" Command="{Binding GetMoreGenerators}" NavigateUri="https://www.reddit.com/r/TheRandomizer/wiki/grammars" Foreground="{DynamicResource AccentColorBrush}">Get More Grammars</Hyperlink></TextBlock>
+            <TextBlock Margin="3" DockPanel.Dock="Bottom" TextTrimming="CharacterEllipsis" ToolTip="{util:ConfigurationBinding GetMoreGeneratorsURL}">
+                <Hyperlink Name="lnkGrammars" Command="{x:Static util:BrowserBehavior.OpenURL}" CommandParameter="{util:ConfigurationBinding GetMoreGeneratorsURL}" Foreground="{DynamicResource AccentColorBrush}">
+                    Get More Grammars
+                </Hyperlink>
+            </TextBlock>
             <Grid>
                 <ListBox Margin="0" ItemsSource="{Binding FilteredGenerators}">
                     <ListBox.ItemTemplate>
@@ -93,7 +126,7 @@
                                     </StackPanel>                                    
                                 </TextBlock.ToolTip>
                                 <TextBlock.InputBindings>
-                                    <MouseBinding Gesture="LeftDoubleClick" Command="{Binding DataContext.SelectGenerator, RelativeSource={RelativeSource AncestorType=ListBox}}" CommandParameter="{Binding Id}" />
+                                    <MouseBinding Gesture="LeftDoubleClick" Command="{Binding DataContext.SelectGenerator, RelativeSource={RelativeSource AncestorType=ListBox}}" CommandParameter="{Binding FilePath}" />
                                 </TextBlock.InputBindings>
                             </TextBlock>
                         </DataTemplate>
@@ -105,10 +138,10 @@
         <DockPanel Grid.Row="2" Grid.Column="2" LastChildFill="True">
             <Label Content="" Style="{DynamicResource TitleLabel}" FontWeight="Bold" DockPanel.Dock="Top" />
             <dockablz:Layout>                
-                <dragablz:TabablzControl SelectedValue="{Binding SelectedGenerator}" ShowDefaultCloseButton="True" AddLocationHint="After" ItemsSource="{Binding LoadedGenerators}">
+                <dragablz:TabablzControl HeaderMemberPath="Name" SelectedValue="{Binding SelectedGenerator}" ShowDefaultCloseButton="True" AddLocationHint="After" ItemsSource="{Binding LoadedGenerators}">
                     <dragablz:TabablzControl.ContentTemplate>
-                        <DataTemplate DataType="{x:Type viewModels:GeneratorTabItemViewModel}">
-                            <controls:GeneratorTabItem />
+                        <DataTemplate DataType="{x:Type util:GeneratorWrapper}">
+                            <controls:GeneratorTabItem Generator="{Binding}" />
                         </DataTemplate>
                     </dragablz:TabablzControl.ContentTemplate>
                     <dragablz:TabablzControl.InterTabController>

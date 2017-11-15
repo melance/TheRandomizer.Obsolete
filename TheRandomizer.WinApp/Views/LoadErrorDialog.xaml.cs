@@ -12,24 +12,17 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-using TheRandomizer.WinApp.ViewModels;
 
-namespace TheRandomizer.WinApp
+namespace TheRandomizer.WinApp.Views
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for LoadErrorDialog.xaml
     /// </summary>
-    public partial class MainWindow : MetroWindow
+    public partial class LoadErrorDialog : MetroWindow
     {
-        public MainWindow()
+        public LoadErrorDialog()
         {
             InitializeComponent();
-        }
-        
-        private void mnuConvert_Click(object sender, RoutedEventArgs e)
-        {
-            var convert = new Views.ConvertGenerator();
-            convert.ShowDialog();
         }
     }
 }

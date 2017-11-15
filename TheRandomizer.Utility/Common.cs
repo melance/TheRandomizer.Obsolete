@@ -9,6 +9,11 @@ namespace TheRandomizer.Utility
 {
     public sealed class Common
     {
+        /// <summary>
+        /// Returns the name of the calling method
+        /// </summary>
+        /// <param name="caller">This should always be excluded from the call so that the name of the caller is returned.</param>
+        /// <returns>The <see cref="CallerMemberNameAttribute"/> value</returns>
         public static string GetCaller([CallerMemberName] string caller = null)
         {
             return caller;

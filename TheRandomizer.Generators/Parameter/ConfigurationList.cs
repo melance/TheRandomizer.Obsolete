@@ -1,17 +1,17 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Specialized;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using TheRandomizer.Utility.Collections;
 
 namespace TheRandomizer.Generators.Parameter
 {
-    public class ConfigurationList : List<Configuration>
+    public class ConfigurationList : ObservableList<Configuration>
     {
         public ConfigurationList() : base() { }
-
-        public ConfigurationList(int capacity) : base(capacity) { }
 
         public ConfigurationList(IEnumerable<Configuration> collection) : base(collection) { }
         
@@ -40,15 +40,20 @@ namespace TheRandomizer.Generators.Parameter
             {
                 if (!Contains(name))
                 {
-                    this.Add(value);                    
+                    Add(value);                    
                 }
                 else
                 {
-                    var index = this.FindIndex(p => p.Name == name);
-                    this[index] = value;
+                    this[name] = value;
                 }
             }
         }
-        
+
+        protected override void OnCollectionChanged(NotifyCollectionChangedEventArgs e)
+        {
+            OnPropertyChanged(new PropertyChangedEventArgs("Count"));
+            base.OnCollectionChanged(e);
+        }
+
     }
 }

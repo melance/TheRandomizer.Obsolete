@@ -34,5 +34,53 @@ namespace TheRandomizer.WinApp.Properties {
                 this["DefaultDetailWidth"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("%appdata%\\TheRandomizer\\")]
+        public string GeneratorDirectory {
+            get {
+                return ((string)(this["GeneratorDirectory"]));
+            }
+            set {
+                this["GeneratorDirectory"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("BaseLight")]
+        public string Theme {
+            get {
+                return ((string)(this["Theme"]));
+            }
+            set {
+                this["Theme"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("Blue")]
+        public string Accent {
+            get {
+                return ((string)(this["Accent"]));
+            }
+            set {
+                this["Accent"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool ShowGeneratorLoadErrors {
+            get {
+                return ((bool)(this["ShowGeneratorLoadErrors"]));
+            }
+            set {
+                this["ShowGeneratorLoadErrors"] = value;
+            }
+        }
     }
 }

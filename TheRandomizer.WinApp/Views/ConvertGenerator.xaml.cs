@@ -1,5 +1,4 @@
-﻿using MahApps.Metro.Controls;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -12,24 +11,18 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Shapes;
-using TheRandomizer.WinApp.ViewModels;
+using MahApps.Metro.Controls;
 
-namespace TheRandomizer.WinApp
+namespace TheRandomizer.WinApp.Views
 {
     /// <summary>
-    /// Interaction logic for MainWindow.xaml
+    /// Interaction logic for ConvertGenerator.xaml
     /// </summary>
-    public partial class MainWindow : MetroWindow
+    public partial class ConvertGenerator : MetroWindow
     {
-        public MainWindow()
+        public ConvertGenerator()
         {
             InitializeComponent();
-        }
-        
-        private void mnuConvert_Click(object sender, RoutedEventArgs e)
-        {
-            var convert = new Views.ConvertGenerator();
-            convert.ShowDialog();
         }
     }
 }

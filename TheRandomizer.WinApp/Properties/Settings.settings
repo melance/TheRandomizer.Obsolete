@@ -5,5 +5,17 @@
     <Setting Name="DefaultDetailWidth" Type="System.Int32" Scope="User">
       <Value Profile="(Default)">0</Value>
     </Setting>
+    <Setting Name="GeneratorDirectory" Type="System.String" Scope="User">
+      <Value Profile="(Default)">%appdata%\TheRandomizer\</Value>
+    </Setting>
+    <Setting Name="Theme" Type="System.String" Scope="User">
+      <Value Profile="(Default)">BaseLight</Value>
+    </Setting>
+    <Setting Name="Accent" Type="System.String" Scope="User">
+      <Value Profile="(Default)">Blue</Value>
+    </Setting>
+    <Setting Name="ShowGeneratorLoadErrors" Type="System.Boolean" Scope="User">
+      <Value Profile="(Default)">True</Value>
+    </Setting>
   </Settings>
 </SettingsFile>

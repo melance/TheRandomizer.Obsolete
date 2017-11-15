@@ -1,0 +1,72 @@
+﻿<metro:MetroWindow x:Class="TheRandomizer.WinApp.Views.About"
+                   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                   xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                   xmlns:local="clr-namespace:TheRandomizer.WinApp.Views"
+                   xmlns:metro="http://metro.mahapps.com/winfx/xaml/controls"
+                   xmlns:viewModels="clr-namespace:TheRandomizer.WinApp.ViewModels"
+                   xmlns:util="clr-namespace:TheRandomizer.WinApp.Utility"
+                   xmlns:views="clr-namespace:TheRandomizer.WinApp.Views"
+                   mc:Ignorable="d"
+                   Title="About" 
+                   Height="280" 
+                   ShowIconOnTitleBar="False"
+                   ShowMinButton="False"
+                   ShowMaxRestoreButton="False"
+                   Width="404">
+    <metro:MetroWindow.DataContext>
+        <viewModels:AboutViewModel />
+    </metro:MetroWindow.DataContext>
+    <metro:MetroWindow.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/Blue.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Accents/BaseLight.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+            <DataTemplate x:Key="DataList">
+                <DockPanel>
+                    <TextBlock Text="{Binding Description}" Width="100" FontWeight="Bold" />
+                    <TextBlock Text="{Binding Name}" Width="120" />
+                    <TextBlock>
+                                <Hyperlink Command="{x:Static util:BrowserBehavior.OpenURL}" CommandParameter="{Binding Url}">
+                                    <Run Text="{Binding UrlText}" />
+                                </Hyperlink>
+                    </TextBlock>
+                </DockPanel>
+            </DataTemplate>
+            <Style x:Key="SubHeader" TargetType="TextBlock">
+                <Style.Setters>
+                    <Setter Property="FontWeight" Value="Bold" />
+                    <Setter Property="Background" Value="{StaticResource AccentColorBrush}" />
+                    <Setter Property="Foreground" Value="{StaticResource IdealForegroundColorBrush}" />
+                    <Setter Property="Padding" Value="3,0,0,0" />
+                    <Setter Property="Margin" Value="0,3,0,0" />
+                </Style.Setters>
+            </Style>
+        </ResourceDictionary>
+        
+    </metro:MetroWindow.Resources>
+    <Canvas>
+        <Image Canvas.Right="20" Canvas.Top="20" x:Name="picIcon" Source="/TheRandomizer.WinApp;component/TheRandomizer.ico" Panel.ZIndex="-2" />
+        <Rectangle Canvas.Right="20" Canvas.Top="20" Height="{Binding ActualHeight, ElementName=picIcon}" Width="{Binding ActualWidth, ElementName=picIcon}" Panel.ZIndex="-1" Fill="White" Opacity="0.75" />
+        <DockPanel Panel.ZIndex="0" Margin="10" Height="230" Width="376" LastChildFill="True">
+            <DockPanel DockPanel.Dock="Top" LastChildFill="True" Background="{StaticResource AccentColorBrush}" >
+                <TextBlock DockPanel.Dock="Left" Text="{Binding Title}" FontSize="24" FontWeight="Black" FontFamily="Verdana" Foreground="{StaticResource IdealForegroundColorBrush}" Padding="3" />
+                <Label DockPanel.Dock="Left" HorizontalContentAlignment="Right" VerticalContentAlignment="Bottom" Content="{Binding Version, StringFormat=v. {0}}" Foreground="{StaticResource IdealForegroundColorBrush}" FontWeight="Bold" />                
+            </DockPanel>
+            <TextBlock DockPanel.Dock="Top" Text="{Binding Description}" />
+            <TextBlock DockPanel.Dock="Bottom" Margin="0,6,0,0">
+                <TextBlock Text="License:" FontWeight="Bold" />
+                <Hyperlink NavigateUri="{Binding LicenseUrl}">
+                    <Run Text="{Binding License, Mode=OneWay}" />
+                </Hyperlink>
+            </TextBlock>
+            <Separator DockPanel.Dock="Bottom" />
+            <TextBlock DockPanel.Dock="Top" Text="Contributors" Style="{StaticResource SubHeader}" />
+            <ItemsControl DockPanel.Dock="Top" ItemsSource="{Binding Contributors}" ItemTemplate="{StaticResource DataList}" />
+            <TextBlock DockPanel.Dock="Top" Text="Third Party Components" Style="{StaticResource SubHeader}" />
+            <ItemsControl DockPanel.Dock="Top" ItemsSource="{Binding ThirdPartyComponents}" ItemTemplate="{StaticResource DataList}" />            
+        </DockPanel>
+    </Canvas>
+</metro:MetroWindow>

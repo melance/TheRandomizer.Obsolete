@@ -10,7 +10,7 @@ namespace TheRandomizer.Generators.Assignment
 {
     public class LineItem
     {
-        private Int32 _weight = 1;
+        private int _weight = 1;
 
         [XmlAttribute("name")]
         [Required]
@@ -20,7 +20,7 @@ namespace TheRandomizer.Generators.Assignment
         [XmlAttribute("next")]
         public string Next { get; set; }
         [XmlAttribute("weight")]
-        public Int32 Weight { 
+        public int Weight { 
             get
             {
                 return _weight;
@@ -35,5 +35,7 @@ namespace TheRandomizer.Generators.Assignment
         }
         [XmlAttribute("variable")]
         public string Variable { get; set; }
+        [XmlAttribute("repeat")]
+        public string Repeat { get; set; } 
     }
 }

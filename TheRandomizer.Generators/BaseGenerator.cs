@@ -35,7 +35,6 @@ namespace TheRandomizer.Generators
             xml = TransformXml.TransformToLatestVersion(xml);
 
             // Perform the serialization
-            var serializer = new XmlSerializer(typeof(BaseGenerator), KnownTypes());
             using (var stream = XmlReader.Create(new StringReader(xml)))
             {
                 return Deserialize(stream);
@@ -150,6 +149,9 @@ namespace TheRandomizer.Generators
         [XmlArrayItem("parameter")]
         public virtual ConfigurationList Parameters { get; set; } = new ConfigurationList();
 
+        [XmlElement("css")]
+        public virtual string CSS { get; set; } = string.Empty;
+
         [XmlIgnore]
         public virtual bool IsDirty { get { return _cleanHash == GetHashCode(); } }
 
@@ -250,7 +252,9 @@ namespace TheRandomizer.Generators
             string value;
             using (var stream = new StringWriter())
             {
-                using (var xml = XmlWriter.Create(stream))
+                var settings = new XmlWriterSettings();
+                settings.Indent = true;
+                using (var xml = XmlWriter.Create(stream,settings))
                 {
                     Serialize(xml);
                 }

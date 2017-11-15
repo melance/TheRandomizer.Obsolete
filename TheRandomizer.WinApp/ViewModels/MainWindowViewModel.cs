@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,10 +13,14 @@ using TheRandomizer.Generators.List;
 using TheRandomizer.Utility.Collections;
 using System.ComponentModel;
 using TheRandomizer.WinApp.Commands;
+using TheRandomizer.WinApp.Utility;
+using TheRandomizer.Utility;
+using System.Windows;
+using TheRandomizer.WinApp.Models;
 
 namespace TheRandomizer.WinApp.ViewModels
 {
-    public class MainWindowViewModel : ObservableBase
+    class MainWindowViewModel : ObservableBase
     {
         #region Enumerators
         public enum ToggleType
@@ -27,7 +32,7 @@ namespace TheRandomizer.WinApp.ViewModels
         #endregion
 
         #region Constants
-        private const string MORE_GENERATORS_URL_KEY = "MoreGeneratorsURL";
+        
         #endregion
 
         #region Members
@@ -38,28 +43,21 @@ namespace TheRandomizer.WinApp.ViewModels
         public MainWindowViewModel()
         {
             Tags.ItemPropertyChanged += Tags_ItemPropertyChanged;
-            //TODO: Remove debug code
-            Tags.Add(new Tag("Hello"));
-            Tags.Add(new Tag("World"));
-            Generators.Add(new ListGenerator() { Name = "Test Generator 1", Id = Guid.NewGuid(), Description="Testing the description", Author="Lance the Boudreaux" });
-            Generators[0].Tags.Add("World");
-            Generators.Add(new ListGenerator() { Name = "Test Generator 2", Id = Guid.NewGuid(), Description="This is the best generator EVAR!", Author="Some Gal" });
-            Generators[1].Tags.Add("Hello");
-            Generators[0].Parameters.Add(new Generators.Parameter.Configuration() { Name = "Test", DisplayName = "Display", Type = TheRandomizer.Generators.Parameter.Configuration.ParameterType.Text });
+            LoadGenerators();
         }
 
         #endregion
 
         #region Properties
         public ObservableList<Tag> Tags { get; } = new ObservableList<Tag>();
-        public ObservableCollection<BaseGenerator> Generators { get; } = new ObservableCollection<BaseGenerator>();
-        public ObservableCollection<BaseGenerator> FilteredGenerators
+        public Models.GeneratorInfoCollection Generators { get; private set; }
+        public Models.GeneratorInfoCollection FilteredGenerators
         {
             get
             {
                 if (Tags.Count > 0)
                 {
-                    return new ObservableCollection<BaseGenerator>(Generators.Where(bg => bg.Tags == null || bg.Tags.Count() == 0 || bg.Tags.Intersect(SelectedTags).Count() > 0));
+                    return new Models.GeneratorInfoCollection(Generators.Where(bg => bg.Tags == null || bg.Tags.Count() == 0 || bg.Tags.Intersect(SelectedTags).Count() > 0));
                 }
                 else
                 {
@@ -75,11 +73,11 @@ namespace TheRandomizer.WinApp.ViewModels
             }
         }
 
-        public Utility.InterTabClient InterTabClientInstance
+        public InterTabClient InterTabClientInstance
         {
             get
             {
-                if (_interTabClient == null) _interTabClient = new Utility.InterTabClient();
+                if (_interTabClient == null) _interTabClient = new InterTabClient();
                 return _interTabClient;
             }
             set
@@ -88,11 +86,16 @@ namespace TheRandomizer.WinApp.ViewModels
             }
         }
 
-        public ObservableCollection<GeneratorTabItemViewModel> LoadedGenerators { get; } = new ObservableCollection<GeneratorTabItemViewModel>();
-        public GeneratorTabItemViewModel SelectedGenerator { get { return GetProperty<GeneratorTabItemViewModel>(); } set { SetProperty(value); } }
+        public ObservableCollection<GeneratorWrapper> LoadedGenerators { get; } = new ObservableCollection<GeneratorWrapper>();
+        public GeneratorWrapper SelectedGenerator { get { return GetProperty<GeneratorWrapper>(); } set { SetProperty(value); } }
         #endregion  
 
         #region Public Methods
+        public ICommand RefreshGenerators
+        {
+            get { return new DelegateCommand(RefreshGeneratorList); }
+        }
+
         public ICommand SelectAllTags
         {
             get { return new DelegateCommand<ToggleType>(ToggleTagSelction, ToggleType.All); }
@@ -108,11 +111,6 @@ namespace TheRandomizer.WinApp.ViewModels
             get { return new DelegateCommand<ToggleType>(ToggleTagSelction, ToggleType.Flip); }
         }
 
-        public ICommand GetMoreGenerators
-        {
-            get { return new DelegateCommand(GeneratorsLink); }
-        }
-
         public ICommand Help
         {
             get { return new DelegateCommand(ShowHelp); }
@@ -122,20 +120,10 @@ namespace TheRandomizer.WinApp.ViewModels
         {
             get { return new DelegateCommand(ShowAbout); }
         }
-
-        public ICommand Preferences
-        {
-            get { return new DelegateCommand(ShowPreferences); }
-        }
-
-        public ICommand Donate
-        {
-            get { return new DelegateCommand(ShowDonate); }
-        }
-
+        
         public ICommand SelectGenerator
         {
-            get { return new DelegateCommand<Guid>(LaunchGenerator); }
+            get { return new DelegateCommand<string>(LaunchGenerator); }
         }
         #endregion
 
@@ -156,41 +144,55 @@ namespace TheRandomizer.WinApp.ViewModels
             }
         }
 
-        private void GeneratorsLink()
+        private void RefreshGeneratorList()
         {
-            var url = ConfigurationManager.AppSettings.Get(MORE_GENERATORS_URL_KEY);
-            var info = new ProcessStartInfo(url);
-            Process.Start(info);
+            LoadGenerators();
         }
 
         private void ShowHelp()
         {
-            System.Windows.MessageBox.Show("You have been helped!");
+            MessageBox.Show("Coming Soon!");
         }
 
         private void ShowAbout()
         {
-            System.Windows.MessageBox.Show("This is what it is all about!");
+            var about = new Views.About();
+            about.ShowDialog();            
+        }
+        
+        private void LaunchGenerator(string filePath)
+        {
+            var xml = File.ReadAllText(filePath);
+            var generator = BaseGenerator.Deserialize(xml);
+            var model = new GeneratorWrapper(generator);
+            LoadedGenerators.Add(model);
+            SelectedGenerator = model;
         }
 
-        private void ShowPreferences()
+        public void LoadGenerators()
         {
-            System.Windows.MessageBox.Show("What would you prefer?");
-        }
-
-        private void ShowDonate()
-        {
-            System.Windows.MessageBox.Show("Thanks for the help yo!");
-        }
-
-        private void LaunchGenerator(Guid generatorId)
-        {
-            var generator = Generators.Where(g => g.Id == generatorId).FirstOrDefault();
-            if (generator != null)
+            if (Directory.Exists(GeneratorInfoCollection.GeneratorPath))
             {
-                var model = new GeneratorTabItemViewModel(generator);
-                LoadedGenerators.Add(model);
-                SelectedGenerator = model;
+                Generators = GeneratorInfoCollection.LoadGeneratorList();
+                OnPropertyChanged("FilteredGenerators");
+                Tags.Clear();
+                Tags.AddRange(Generators.GetTags());
+                if (Properties.Settings.Default.ShowGeneratorLoadErrors && GeneratorInfoCollection.GeneratorLoadErrors.Count > 0)
+                {
+                    if (!DesignerProperties.GetIsInDesignMode(Application.Current.MainWindow))
+                    {
+                        var loadErrors = new Views.LoadErrorDialog();
+                        loadErrors.DataContext = GeneratorInfoCollection.GeneratorLoadErrors;
+                        if (loadErrors.ShowDialog() == false)
+                        {
+                            Application.Current.Shutdown(0);
+                        }
+                    }
+                }
+            }
+            else
+            {
+                MessageBox.Show($"Unable to locate the Generator Directory: {GeneratorInfoCollection.GeneratorPath}", "Error", MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 

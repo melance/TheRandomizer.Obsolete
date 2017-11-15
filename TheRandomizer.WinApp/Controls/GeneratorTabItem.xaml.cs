@@ -14,6 +14,8 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using TheRandomizer.WinApp.ViewModels;
 using TheRandomizer.Generators;
+using System.IO;
+using TheRandomizer.WinApp.Utility;
 
 namespace TheRandomizer.WinApp.Controls
 {
@@ -26,7 +28,15 @@ namespace TheRandomizer.WinApp.Controls
         public GeneratorTabItem()
         {
             InitializeComponent();
+            LayoutRoot.DataContext = this;
         }
+        #endregion
+
+        #region Dependency Properties
+        public static DependencyProperty GeneratorProperty = DependencyProperty.Register("Generator",
+                                                                                         typeof(GeneratorWrapper),
+                                                                                         typeof(GeneratorTabItem),
+                                                                                         new PropertyMetadata(null));
         #endregion
 
         #region Properties
@@ -38,64 +48,85 @@ namespace TheRandomizer.WinApp.Controls
             }
         }
 
-        public GeneratorTabItemViewModel Generator
+        public GeneratorWrapper Generator
         {
             get
             {
-                return DataContext as GeneratorTabItemViewModel;
+                var value = GetValue(GeneratorProperty);
+                if (value == null) return null;
+                return (GeneratorWrapper)value;
+            }
+            set
+            {
+                SetValue(GeneratorProperty, value);
             }
         }
         #endregion
 
         #region Methods
+
         private void HasGenerator(object sender, CanExecuteRoutedEventArgs e)
         {
             e.CanExecute = Generator != null;
+
         }
 
         private void HasResults(object sender, CanExecuteRoutedEventArgs e)
         {
-            e.CanExecute = !string.IsNullOrEmpty(((GeneratorTabItemViewModel)DataContext).Results); ;
+            e.CanExecute = Generator != null && !string.IsNullOrEmpty(Generator.Results);
         }
         
-        private void Cancel(object sender, RoutedEventArgs e)
+        private void Cancel(object sender, ExecutedRoutedEventArgs e)
         {
             Generator?.Cancel();
         }
         
-        private void Clear(object sender, RoutedEventArgs e)
+        private void Clear(object sender, ExecutedRoutedEventArgs e)
         {
-            Document.clear();
+            Generator.Results = "<Html></Html>";
         }
 
-        private void Copy(object sender, RoutedEventArgs e)
+        private void Copy(object sender, ExecutedRoutedEventArgs e)
         {
-            Document.execCommand("Copy");
+            Document?.execCommand("SelectAll");
+            Document?.execCommand("Copy");
         }
 
-        private void Generate(object sender, RoutedEventArgs e)
+        private void EditTags(object sender, ExecutedRoutedEventArgs e)
         {
-            Generator?.Generate();
+            MessageBox.Show("Edit Tags");
+        }
+
+        private void Generate(object sender, ExecutedRoutedEventArgs e)
+        {
+            try
+            {
+                Generator?.Generate();
+            }
+            catch (Exception ex)
+            {
+                Generator.Results = $"An error occured during generations:<br />{ex.Message}";
+            }
+        }
+
+        private void Print(object sender, ExecutedRoutedEventArgs e)
+        {
+            Document?.execCommand("Print", true);
+        }
+
+        private void Save(object sender, ExecutedRoutedEventArgs e)
+        {
+            Document?.execCommand("Save", true);
         }
         
-        private void Print(object sender, RoutedEventArgs e)
+        private void SelectAll(object sender, ExecutedRoutedEventArgs e)
         {
-            Document.execCommand("Print", true);
+            Document?.execCommand("SelectAll");
         }
 
-        private void Save(object sender, RoutedEventArgs e)
+        private void SelectNone(object sender, ExecutedRoutedEventArgs e)
         {
-            Document.execCommand("Save", true);
-        }
-        
-        private void SelectAll(object sender, RoutedEventArgs e)
-        {
-            Document.execCommand("SelectAll");
-        }
-
-        private void SelectNone(object sender, RoutedEventArgs e)
-        {
-            Document.execCommand("Unselect");
+            Document?.execCommand("Unselect");
         }
         #endregion
     }

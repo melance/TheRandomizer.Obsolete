@@ -35,7 +35,7 @@ namespace TheRandomizer.WinApp.Commands
 
         public void Execute(object parameter)
         {
-            if (_parameter != null && parameter is T)
+            if (parameter != null && parameter is T)
             {
                 _action((T)parameter);
             }

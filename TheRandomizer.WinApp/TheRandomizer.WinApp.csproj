@@ -9,11 +9,12 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>TheRandomizer.WinApp</RootNamespace>
     <AssemblyName>TheRandomizer.WinApp</AssemblyName>
-    <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>AnyCPU</PlatformTarget>
@@ -49,10 +50,20 @@
     <Reference Include="Microsoft.mshtml, Version=7.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
+    <Reference Include="Microsoft.WindowsAPICodePack, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\WindowsAPICodePack-Core.1.1.1\lib\Microsoft.WindowsAPICodePack.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.WindowsAPICodePack.Shell, Version=1.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\WindowsAPICodePack-Shell.1.1.1\lib\Microsoft.WindowsAPICodePack.Shell.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.configuration" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Web" />
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\JetBrains.System.Windows.Interactivity.3.0.40218.0\lib\net45\System.Windows.Interactivity.dll</HintPath>
       <Private>True</Private>
@@ -75,27 +86,49 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="Commands\DialogCommands.cs" />
     <Compile Include="Controls\GeneratorTabItem.xaml.cs">
       <DependentUpon>GeneratorTabItem.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Commands\GeneratorTabItemCommands.cs" />
+    <Compile Include="Converters\IntegerToVisiblityConverter.cs" />
     <Compile Include="Converters\InvertBinaryConverter.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Models\GeneratorError.cs" />
+    <Compile Include="Tasks.cs" />
+    <Compile Include="Utility\BrowserBehavior.cs" />
+    <Compile Include="Utility\ConfigurationBinding.cs" />
+    <Compile Include="Models\GeneratorInfo.cs" />
+    <Compile Include="Models\GeneratorInfoCollection.cs" />
+    <Compile Include="Utility\Dialogs.cs" />
     <Compile Include="Utility\GeneratorInterTabClient.cs" />
     <Compile Include="Commands\DelegateCommand.cs" />
     <Compile Include="Commands\DelegateCommandT.cs" />
-    <Compile Include="ViewModels\GeneratorTabItemViewModel.cs" />
-    <Compile Include="ViewModels\ObservableBase.cs" />
+    <Compile Include="Utility\GeneratorWrapper.cs" />
+    <Compile Include="Utility\SettingsBinding.cs" />
+    <Compile Include="ViewModels\AboutViewModel.cs" />
+    <Compile Include="ViewModels\ConvertGeneratorViewModel.cs" />
     <Compile Include="ViewModels\MainWindowViewModel.cs" />
-    <Compile Include="ViewModels\Tag.cs" />
+    <Compile Include="Models\Tag.cs" />
     <Compile Include="App.xaml.cs">
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Views\About.xaml.cs">
+      <DependentUpon>About.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\ConvertGenerator.xaml.cs">
+      <DependentUpon>ConvertGenerator.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\GeneratorTabHost.xaml.cs">
       <DependentUpon>GeneratorTabHost.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Settings.xaml.cs">
+      <DependentUpon>Settings.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\LoadErrorDialog.xaml.cs">
+      <DependentUpon>LoadErrorDialog.xaml</DependentUpon>
     </Compile>
     <Page Include="Controls\GeneratorTabItem.xaml">
       <SubType>Designer</SubType>
@@ -113,7 +146,23 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
+    <Page Include="Views\About.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\ConvertGenerator.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\GeneratorTabHost.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Controls\Settings.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\LoadErrorDialog.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -157,7 +206,7 @@
     <Resource Include="TheRandomizer.ico" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Models\" />
+    <None Include="Resources\paypal-logo-online-payment-brand-326b7567694b2bd3-256x256.png" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\TheRandomizer.Generators\TheRandomizer.Generators.csproj">
@@ -168,6 +217,9 @@
       <Project>{dceff6e4-a559-4006-b5bf-80d84cc67d05}</Project>
       <Name>TheRandomizer.Utility</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\paypal.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
