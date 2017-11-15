@@ -9,9 +9,9 @@ namespace TheRandomizer.Utility
     public static class IntegerExtensions
     {        
         /// <summary>
-        /// Adds the ordinal suffix to an integer
+        /// Adds the ordinal suffix to an <see cref="int"/>
         /// </summary>
-        /// <param name="extended">The integer to add the suffix to</param>
+        /// <param name="extended">The <see cref="int"/> to add the suffix to</param>
         /// <returns>The orginal with it's appropriate suffix</returns>
         /// <remarks>Currently only supports English</remarks>
         public static string ToOrdinal(this Int32 extended)
@@ -44,10 +44,10 @@ namespace TheRandomizer.Utility
 
 
         /// <summary>
-        /// Converts an integer to its numeric word
+        /// Converts an <see cref="int"/> to its numeric word
         /// </summary>
-        /// <param name="extended">The integer to convert</param>
-        /// <returns>The numeric word for the integer</returns>
+        /// <param name="extended">The <see cref="int"/> to convert</param>
+        /// <returns>The numeric word for the <see cref="int"/></returns>
         /// <remarks>Currently only supports English</remarks>
         public static string ToText(this Int32 extended)
         {

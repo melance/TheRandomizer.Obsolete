@@ -35,7 +35,6 @@ namespace TheRandomizer.Generators
             xml = TransformXml.TransformToLatestVersion(xml);
 
             // Perform the serialization
-            var serializer = new XmlSerializer(typeof(BaseGenerator), KnownTypes());
             using (var stream = XmlReader.Create(new StringReader(xml)))
             {
                 return Deserialize(stream);
@@ -90,7 +89,9 @@ namespace TheRandomizer.Generators
         #region Members
         private Random _random;
         private static Expression _calculator;
-        private Int32 _cleanHash;
+        private int _cleanHash;
+        private bool _cancelling = false;
+        private bool _generating = false;
         #endregion
 
         #region Public Properties
@@ -100,7 +101,6 @@ namespace TheRandomizer.Generators
         /// <summary>The name of the generator that is to be displayed to the user</summary>
         [XmlElement("name")]
         [Required]
-        [BsonIndex(true)]
         public string Name { get; set; }
         /// <summary>The identifying name of the author</summary>
         [XmlElement("author")]
@@ -149,11 +149,31 @@ namespace TheRandomizer.Generators
         [XmlArrayItem("parameter")]
         public virtual ConfigurationList Parameters { get; set; } = new ConfigurationList();
 
+        [XmlElement("css")]
+        public virtual string CSS { get; set; } = string.Empty;
+
         [XmlIgnore]
         public virtual bool IsDirty { get { return _cleanHash == GetHashCode(); } }
 
         [XmlIgnore]
         public virtual bool Published { get; set; } = false;
+
+        [XmlIgnore]
+        public string GeneratorType
+        {
+            get
+            {
+                var attribute = (GeneratorDisplayAttribute)GetType().GetCustomAttribute(typeof(GeneratorDisplayAttribute), true);
+                if (attribute != null)
+                {
+                    return attribute.Name;
+                }
+                else
+                {
+                    return GetType().Name;
+                }
+            }
+        }
         #endregion
 
         #region Protected Properties
@@ -171,6 +191,14 @@ namespace TheRandomizer.Generators
         #endregion
 
         #region Public Methods
+        /// <summary>
+        /// Stops the generation process before it is complete
+        /// </summary>
+        public virtual void Cancel()
+        {
+            if (_generating) _cancelling = true;
+        }
+
         /// <summary>
         /// Calls the inheriting class' GenerateInteral one time with no parameters and no max length
         /// </summary>
@@ -200,16 +228,17 @@ namespace TheRandomizer.Generators
         public virtual IEnumerable<string> Generate(Int32 repeat, Int32? maxLength)
         {
             var values = new List<string>();
-
+            _generating = true;
             if (SupportsMaxLength && maxLength == 0) maxLength = Int32.MaxValue;
 
             AssignParameterValues();
 
-            for (var i=0; i < repeat; i++)
+            for (var i=0; i < repeat && !_cancelling; i++)
             {
                 values.Add(GenerateInternal(maxLength));
             }
-
+            _generating = false;
+            _cancelling = false;
             return values;
         }
 
@@ -223,7 +252,9 @@ namespace TheRandomizer.Generators
             string value;
             using (var stream = new StringWriter())
             {
-                using (var xml = XmlWriter.Create(stream))
+                var settings = new XmlWriterSettings();
+                settings.Indent = true;
+                using (var xml = XmlWriter.Create(stream,settings))
                 {
                     Serialize(xml);
                 }
@@ -298,7 +329,7 @@ namespace TheRandomizer.Generators
         /// <summary>
         /// Called when the base generator doesn't isn't aware of the parameter named
         /// </summary>
-        protected virtual void EvaluateParameter(string name, ParameterArgs e) { }
+        protected virtual void EvaluateParameter(string name, ParameterArgs e) { }        
         #endregion
 
         #region Private Methods

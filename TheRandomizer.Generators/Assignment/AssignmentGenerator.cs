@@ -105,7 +105,16 @@ namespace TheRandomizer.Generators.Assignment
                 item = ChooseItemByName(next);
                 if (item != null)
                 {
-                    value += Evaluate(item);
+                    var repeat = 1;
+                    if (!string.IsNullOrWhiteSpace(item.Repeat))
+                    {
+                        repeat = int.Parse(Calculate(item.Repeat));
+                    }
+                    for (var i = 0; i < repeat; i++)
+                    {
+                        value += Evaluate(item);
+                    }
+                    
                     next = item.Next;
                 }
                 else
@@ -210,7 +219,7 @@ namespace TheRandomizer.Generators.Assignment
             if (!string.IsNullOrEmpty(expression))
             {
                 // Parse the tokens found in the string
-                var tokens = new Lexer.AssignmentLexer(expression).Lex().ToList();
+                var tokens = new AssignmentLexer(expression).Lex().ToList();
                 var value = new StringBuilder();
                 foreach (var token in tokens)
                 {
@@ -221,8 +230,14 @@ namespace TheRandomizer.Generators.Assignment
                             value.Append(token.TokenValue);
                             break;
                         case TokenType.Item:
+                            string name = token.TokenValue;
+                            // Check the parameters for the name and replace if necessary
+                            if (Parameters.Contains(token.TokenValue))
+                            {
+                                name = Parameters[token.TokenValue].Value;
+                            }
                             // An item must be reevaluated to allow nested item names
-                            var name = Evaluate(token.TokenValue);
+                            name = Evaluate(name);
                             // Select a random item containing the name in the item
                             var item = ChooseItemByName(name);
                             // Add the evaluated value
@@ -301,7 +316,7 @@ namespace TheRandomizer.Generators.Assignment
                     // Select a random number that was not used previously
                     do
                     {
-                        index = base.Random.Next(0, _rulesByName[name].TotalWeight) + 1;
+                        index = Random.Next(0, _rulesByName[name].TotalWeight) + 1;
                     } while (_rulesByName[name].Rules.Count() > 1 && index == _rulesByName[name].LastSelect);
 
                     // Record this result so we don't use it next time

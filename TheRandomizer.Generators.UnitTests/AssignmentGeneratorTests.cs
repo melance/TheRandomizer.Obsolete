@@ -4,6 +4,7 @@ using TheRandomizer.Generators.Assignment;
 using TheRandomizer.Generators.Parameter;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Xml;
 
 namespace TheRandomizer.Generators.UnitTests
 {
@@ -11,6 +12,16 @@ namespace TheRandomizer.Generators.UnitTests
     public class AssignmentGeneratorTests
     {
         private const string TEST_CATEGORY = "Assignment";
+
+        [TestMethod]
+        [TestCategory(TEST_CATEGORY)]
+        public void SerializationTest()
+        {
+            var path = @"C: \Users\lboudreaux\AppData\Roaming\TheRandomizer\AssignmentTest.rnd.xml";
+            var xml = System.IO.File.ReadAllText(path);
+            var generator = BaseGenerator.Deserialize(xml);
+            
+        }
 
         [TestMethod]
         [TestCategory(TEST_CATEGORY)]

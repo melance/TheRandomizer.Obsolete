@@ -1,0 +1,154 @@
+﻿<metro:MetroWindow x:Class="TheRandomizer.WinApp.MainWindow"
+                    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                    xmlns:local="clr-namespace:TheRandomizer.WinApp"
+                    xmlns:viewModels="clr-namespace:TheRandomizer.WinApp.ViewModels"
+                    xmlns:metro="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+                    xmlns:dragablz="clr-namespace:Dragablz;assembly=Dragablz"
+                    xmlns:dockablz="clr-namespace:Dragablz.Dockablz;assembly=Dragablz"
+                    xmlns:controls="clr-namespace:TheRandomizer.WinApp.Controls"
+                    xmlns:conv="clr-namespace:TheRandomizer.WinApp.Converters"
+                    xmlns:util="clr-namespace:TheRandomizer.WinApp.Utility"
+                    mc:Ignorable="d"
+                    Title="The Randomizer" 
+                    Icon="TheRandomizer.ico"
+                    Height="600" 
+                    Width="800">
+    <Window.DataContext>
+        <viewModels:MainWindowViewModel />
+    </Window.DataContext>
+    <Window.InputBindings>
+        <KeyBinding Command="{Binding Help}" Key="F1" />
+    </Window.InputBindings>
+    <Window.Resources>
+        <ResourceDictionary>
+            <VisualBrush x:Key="DonateIcon" Visual="{StaticResource appbar_paypal}" />
+        </ResourceDictionary>
+    </Window.Resources>
+    <metro:MetroWindow.RightWindowCommands>
+        <metro:WindowCommands>
+            <ToggleButton IsChecked="{Binding ElementName=flySettings, Path=IsOpen}">
+                <Rectangle Width="20" Height="20" Fill="{Binding RelativeSource={RelativeSource AncestorType=ToggleButton}, Path=Foreground}">
+                    <Rectangle.OpacityMask>
+                        <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_settings}" />
+                    </Rectangle.OpacityMask>
+                </Rectangle>
+            </ToggleButton>            
+        </metro:WindowCommands>
+    </metro:MetroWindow.RightWindowCommands>
+    <metro:MetroWindow.Flyouts>
+        <metro:FlyoutsControl>
+            <metro:Flyout Name="flySettings" Header="Settings" Theme="Inverse" Position="Right" IsModal="True">
+                <controls:Settings />
+            </metro:Flyout>
+        </metro:FlyoutsControl>
+    </metro:MetroWindow.Flyouts>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition x:Name="Menu" Height="Auto" />
+            <RowDefinition x:Name="Filters" Height="Auto" />
+            <RowDefinition />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="210"/>
+            <ColumnDefinition Width="3" />
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <Menu IsMainMenu="true" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3">
+            <MenuItem Header="_Tools">
+                <MenuItem Name="mnuConvert" Header="_Convert Old Grammar..." ToolTip="Convert an old Grammar to the new format" Click="mnuConvert_Click" />
+                <MenuItem Header="_Refresh Generators" ToolTip="Refresh the list of generators" Command="{Binding RefreshGenerators}" />
+            </MenuItem>
+            <MenuItem Header="_Help">
+                <MenuItem Header="View _Help" Command="{Binding Help}" />
+                <MenuItem Header="_About" Command="{Binding About}" />
+                <Separator />
+                <MenuItem Header="Donate" Command="{x:Static util:BrowserBehavior.OpenURL}" CommandParameter="{util:ConfigurationBinding DonationURL}">
+                    <MenuItem.Icon>
+                        <Rectangle Width="18" Height="18" Fill="{StaticResource DonateIcon}" />
+                    </MenuItem.Icon>
+                </MenuItem>
+            </MenuItem>
+        </Menu>
+        <Expander Margin="0" BorderBrush="Transparent" IsExpanded="True" ExpandDirection="Down" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" >
+            <Expander.Header>
+                <DockPanel>
+                    <Button ToolTip="Unselect all tags" Style="{DynamicResource MetroCircleButtonStyle}" BorderThickness="0" Foreground="{DynamicResource IdealForegroundColorBrush}" DockPanel.Dock="Right" Command="{Binding UnselectAllTags}" Margin="3">
+                        <Rectangle Width="12" Height="12" Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
+                            <Rectangle.OpacityMask>
+                                <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_checkmark_uncrossed}" />
+                            </Rectangle.OpacityMask>
+                        </Rectangle>
+                    </Button>
+                    <Button ToolTip="Unselect all tags" Style="{DynamicResource MetroCircleButtonStyle}" BorderThickness="0" Foreground="{DynamicResource IdealForegroundColorBrush}" DockPanel.Dock="Right" Command="{Binding SelectAllTags}" Margin="3">
+                        <Rectangle Width="12" Height="12" Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
+                            <Rectangle.OpacityMask>
+                                <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_checkmark}" />
+                            </Rectangle.OpacityMask>
+                        </Rectangle>
+                    </Button>
+                    <Label Content="Tags" Foreground="{DynamicResource IdealForegroundColorBrush}" FontWeight="Bold"/>
+                </DockPanel>
+            </Expander.Header>
+            <ScrollViewer MaxHeight="52" HorizontalAlignment="Stretch" HorizontalScrollBarVisibility="Disabled" VerticalScrollBarVisibility="Auto" >
+                <ItemsControl MinHeight="12" HorizontalAlignment="Stretch" ItemsSource="{Binding Tags}">
+                    <ItemsControl.ItemsPanel>
+                        <ItemsPanelTemplate>
+                                <WrapPanel Orientation="Horizontal" />
+                        </ItemsPanelTemplate>
+                    </ItemsControl.ItemsPanel>
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <ToggleButton Content="{Binding Name}" IsChecked="{Binding Selected, Converter={conv:InvertBinaryConverter}}" Height="2" />
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+            </ScrollViewer>           
+        </Expander>
+        <DockPanel HorizontalAlignment="Stretch" Grid.Row="2" Grid.Column="0" LastChildFill="True">
+            <Label Content="Generators" Style="{DynamicResource TitleLabel}" FontWeight="Bold" DockPanel.Dock="Top" />
+            <TextBlock Margin="3" DockPanel.Dock="Bottom" TextTrimming="CharacterEllipsis" ToolTip="{util:ConfigurationBinding GetMoreGeneratorsURL}">
+                <Hyperlink Name="lnkGrammars" Command="{x:Static util:BrowserBehavior.OpenURL}" CommandParameter="{util:ConfigurationBinding GetMoreGeneratorsURL}" Foreground="{DynamicResource AccentColorBrush}">
+                    Get More Grammars
+                </Hyperlink>
+            </TextBlock>
+            <Grid>
+                <ListBox Margin="0" ItemsSource="{Binding FilteredGenerators}">
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Name}">
+                                <TextBlock.ToolTip>
+                                    <StackPanel>
+                                        <TextBlock Text="{Binding Description}" FontWeight="Bold" />
+                                        <TextBlock Text="{Binding Author, StringFormat={}By: {0}}" />
+                                    </StackPanel>                                    
+                                </TextBlock.ToolTip>
+                                <TextBlock.InputBindings>
+                                    <MouseBinding Gesture="LeftDoubleClick" Command="{Binding DataContext.SelectGenerator, RelativeSource={RelativeSource AncestorType=ListBox}}" CommandParameter="{Binding FilePath}" />
+                                </TextBlock.InputBindings>
+                            </TextBlock>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+            </Grid>
+        </DockPanel>
+        <GridSplitter Grid.Row="2" Grid.Column="1" Width="3" HorizontalAlignment="Stretch" ResizeDirection="Columns" ResizeBehavior="PreviousAndNext" Margin="0" />
+        <DockPanel Grid.Row="2" Grid.Column="2" LastChildFill="True">
+            <Label Content="" Style="{DynamicResource TitleLabel}" FontWeight="Bold" DockPanel.Dock="Top" />
+            <dockablz:Layout>                
+                <dragablz:TabablzControl HeaderMemberPath="Name" SelectedValue="{Binding SelectedGenerator}" ShowDefaultCloseButton="True" AddLocationHint="After" ItemsSource="{Binding LoadedGenerators}">
+                    <dragablz:TabablzControl.ContentTemplate>
+                        <DataTemplate DataType="{x:Type util:GeneratorWrapper}">
+                            <controls:GeneratorTabItem Generator="{Binding}" />
+                        </DataTemplate>
+                    </dragablz:TabablzControl.ContentTemplate>
+                    <dragablz:TabablzControl.InterTabController>
+                        <dragablz:InterTabController InterTabClient="{Binding InterTabClientInstance}" />
+                    </dragablz:TabablzControl.InterTabController>
+                </dragablz:TabablzControl>
+            </dockablz:Layout>
+        </DockPanel>
+    </Grid>
+</metro:MetroWindow>

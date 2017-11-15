@@ -1,0 +1,23 @@
+﻿<?xml version="1.0" encoding="utf-8" ?> 
+<CodeSnippets xmlns="http://schemas.microsoft.com/VisualStudio/2005/CodeSnippet">  
+  <CodeSnippet Format="1.0.0">  
+    <Header>  
+      <Title>Observable Property</Title>
+      <Author>Lance Boudreaux</Author>         
+      <Description>Generates a property for an ObservableBase</Description>
+      <Shortcut>OP</Shortcut>
+    </Header>  
+    <Snippet>  
+        <Declarations>
+          <Literal>
+            <ID>PropertyName</ID>
+            <ToolTip>Name of the property</ToolTip>
+            <Default>PropertyName</Default>
+          </Literal>
+        </Declarations>
+        <Code Language="CSharp" Kind="method decl">  
+            <![CDATA[public string $PropertyName$ { get { return GetProperty<string>(); } set { SetProperty(value); } }]]>  
+        </Code>  
+    </Snippet>
+  </CodeSnippet>  
+</CodeSnippets>  

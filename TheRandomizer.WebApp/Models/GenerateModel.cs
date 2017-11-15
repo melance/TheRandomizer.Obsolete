@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using TheRandomizer.Generators.Parameter;
+using TheRandomizer.Utility.Collections;
 
 namespace TheRandomizer.WebApp.Models
 {
@@ -18,6 +19,6 @@ namespace TheRandomizer.WebApp.Models
         public bool SupportsMaxLength { get; set; }
         public bool IsFavorite { get; set; }
         public bool IsOwner { get; set; }
-        public List<Configuration> Parameters { get; set; }
+        public ObservableList<Configuration> Parameters { get; set; }
     }
 }

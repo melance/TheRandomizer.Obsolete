@@ -8,7 +8,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>TheRandomizer.Generators.UnitTests</RootNamespace>
     <AssemblyName>TheRandomizer.Generators.UnitTests</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
@@ -16,6 +16,7 @@
     <ReferencePath>$(ProgramFiles)\Common Files\microsoft shared\VSTT\$(VisualStudioVersion)\UITestExtensionPackages</ReferencePath>
     <IsCodedUITest>False</IsCodedUITest>
     <TestProjectType>UnitTest</TestProjectType>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -71,6 +72,10 @@
     <ProjectReference Include="..\TheRandomizer.Generators\TheRandomizer.Generators.csproj">
       <Project>{ebfb306f-121d-4c80-84c3-f7c334ba6c91}</Project>
       <Name>TheRandomizer.Generators</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\TheRandomizer.Utility\TheRandomizer.Utility.csproj">
+      <Project>{DCEFF6E4-A559-4006-B5BF-80D84CC67D05}</Project>
+      <Name>TheRandomizer.Utility</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
