@@ -15,7 +15,7 @@ namespace TheRandomizer.WinApp.Models
         #region Constants
         private const string GENERATOR_LIST_FILE_NAME = "Generators.lst";
         private const string GENERATOR_FILE_FILTER = "*.rgen";
-        private const string GRAMMAR_FILE_FILTER = "*.rgen";
+        private const string GRAMMAR_FILE_FILTER = "*.rnd.xml";
         #endregion
 
         #region Constructors
