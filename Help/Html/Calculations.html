@@ -1,0 +1,465 @@
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="generator" content="HelpNDoc Personal Edition 5.4.1.404">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" href="favicon.ico"/>
+
+  <title>Calculations</title>
+  <meta name="description" content="" /> 
+  <meta name="keywords" content="Calculation">
+
+
+
+  <!-- Twitter Card data -->
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Calculations">
+  <meta name="twitter:description" content="">
+
+  <!-- Open Graph data -->
+  <meta property="og:title" content="Calculations" />
+  <meta property="og:type" content="article" />
+  <meta property="og:description" content="" />
+  <meta property="og:site_name" content="The Randomizer Generators" /> 
+
+  <!-- Bootstrap core CSS -->
+  <link href="vendors/bootstrap-3.3.6/css/bootstrap.min.css" rel="stylesheet"/>
+
+  <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+  <link href="vendors/bootstrap-3.3.6/css/ie10-viewport-bug-workaround.css" rel="stylesheet"/>
+
+  <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+  <!--[if lt IE 9]>
+      <script src="vendors/html5shiv-3.7.2/html5shiv.min.js"></script>
+      <script src="vendors/respond-1.4.2/respond.min.js"></script>
+    <![endif]-->
+
+  <!-- JsTree styles -->
+  <link href="vendors/jstree-3.3.2/themes/default/style.min.css" rel="stylesheet"/>
+
+  <!-- Hnd styles -->
+  <link href="css/layout.min.css" rel="stylesheet" />
+  <link href="css/effects.min.css" rel="stylesheet" />
+  <link href="css/theme-light-blue.min.css" rel="stylesheet" />
+  <link href="css/print.min.css" rel="stylesheet" media="print" />
+  <style type="text/css">nav { width: 350px} @media screen and (min-width:769px) { body.md-nav-expanded div#main { margin-left: 350px} body.md-nav-expanded header { padding-left: 364px} }</style>
+
+  <!-- Content style -->
+  <link href="css/hnd.content.css" rel="stylesheet" />
+
+  
+
+
+
+</head>
+
+<body class="md-nav-expanded">
+
+
+
+  <div id="skip-link">
+    <a href="#main-content" class="element-invisible">Skip to main content</a>
+  </div>
+
+  <header class="headroom">
+    <button class="hnd-toggle btn btn-default">
+      <span class="sr-only">Toggle navigation</span>
+      <span class="icon-bar"></span><span class="icon-bar"></span><span class="icon-bar"></span>        
+    </button>
+    <h1>The Randomizer Generators</h1>
+    
+  </header>
+
+  <nav class="md-nav-expanded">
+    <!-- Nav tabs -->
+    <ul class="tab-tabs nav nav-tabs" role="tablist">
+      <li id="nav-close"> 
+        <button class="hnd-toggle btn btn-default">
+          <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+        </button>
+      </li>
+      
+	  
+        <li role="presentation" class="tab active">
+            <a href="#contents" id="tab-contents" aria-controls="contents" role="tab" data-toggle="tab">
+                <i class="glyphicon glyphicon-list"></i>
+                Contents
+            </a>
+        </li>
+      
+        <li role="presentation" class="tab">
+            <a href="#index" id="tab-index" aria-controls="index" role="tab" data-toggle="tab">
+                <i class="glyphicon glyphicon-asterisk"></i>
+                Index
+            </a>
+        </li>
+      
+        <li role="presentation" class="tab">
+            <a href="#search" id="tab-search" aria-controls="search" role="tab" data-toggle="tab">
+                <i class="glyphicon glyphicon-search"></i>
+                Search
+            </a>
+        </li>
+      
+    </ul>  <!-- /Nav tabs -->
+
+    <!-- Tab panes -->
+    <div class="tab-content">
+	  
+      <div role="tabpanel" class="tab-pane active" id="contents">
+        <div id="toc" class="tree-container unselectable"
+            data-url="_toc.json"
+            data-openlvl="1"
+        >
+            
+        </div>
+      </div>  <!-- /contents-->
+      
+      <div role="tabpanel" class="tab-pane" id="index">
+        <div id="keywords" class="tree-container unselectable"
+            data-url="_keywords.json"
+            data-openlvl="1"
+        >
+            
+        </div>
+      </div>  <!-- /index-->
+      
+      <div role="tabpanel" class="tab-pane" id="search">
+        <div class="search-content">
+          <div class="search-input">
+            <form id="search-form">
+              <div class="form-group">
+                <div class="input-group">
+                  <input type="text" class="form-control" id="input-search" name="input-search" placeholder="Search..." />
+                  <span class="input-group-btn">
+                    <button class="btn btn-default" type="submit">
+                      <span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+                    </button>
+                  </span>
+                </div>
+              </div>
+            </form>
+          </div>  <!-- /search-input -->
+          <div class="search-result">
+            <div id="search-info"></div>
+            <div class="tree-container unselectable" id="search-tree"></div>
+          </div>  <!-- /search-result -->
+        </div>  <!-- /search-content -->
+      </div>  <!-- /search-->
+      
+    </div>  <!-- /Tab panes -->
+
+  </nav>
+
+  <div id="main">
+
+    <article>
+        <div id="topic-content" class="container-fluid" 
+		  data-hnd-id="Calculations"
+		  data-hnd-context="7"
+		  data-hnd-title="Calculations"
+		>
+            
+                <div class="navigation">
+                    <ol class="breadcrumb">
+                        <li><a href="Generators.html">Generators</a></li>
+                    </ol>
+                    <div class="nav-arrows">
+                        <div class="btn-group btn-group-xs" role="group"><a class="btn btn-default" href="Generators.html" title="Generators" role="button"><span class="glyphicon glyphicon-menu-up" aria-hidden="true"></span></a><a class="btn btn-default" href="Example5.html" title="Example" role="button"><span class="glyphicon glyphicon-menu-left" aria-hidden="true"></span></a></div>
+                    </div>
+                </div> 
+            
+
+            <a id="main-content"></a>
+
+            <h2>Calculations</h2>
+
+            <div class="main-content">
+                
+<p></p>
+<p class="rvps2"><span class="rvts6">One of the most important features of the generators is the ability to run calculations. &nbsp;This functionality is provided by the </span><a class="rvts17" href="https://github.com/sheetsync/NCalc" target="_blank">NCalc</a><span class="rvts6"> calculation engine which is extended in the randomizer generators with the following:</span></p>
+<p class="rvps2"><span class="rvts6"><br/></span></p>
+<h1 class="rvps6"><span class="rvts0"><span class="rvts15">Parameters</span></span></h1>
+<p class="rvps2"><span class="rvts6">Parameters defined for the generator are available in the calculations and can be referenced by their parameter name.</span></p>
+<p class="rvps2"><span class="rvts6"><br/></span></p>
+<h1 class="rvps6"><span class="rvts0"><span class="rvts15">Functions</span></span></h1>
+<p class="rvps2"><span class="rvts6">In addition to the standard functionality offered by NCalc, the following functions are available</span></p>
+<p class="rvps2"><span class="rvts6"><br/></span></p>
+<div class="rvps2"><table width="100%" border="1" cellpadding="3" cellspacing="0" style="border-color: #000000; border-style: solid; border-spacing: 0px;">
+<tr valign="top">
+<td width="184" valign="top" style="border-color : #000000 #000000 #000000 #000000; border-style: solid; padding: 0px 6px; background-color: #c0c0c0;"><p class="rvps7"><span class="rvts20">Function</span></p>
+</td>
+<td width="650" valign="top" style="border-color : #000000 #000000 #000000 #000000; border-style: solid; padding: 0px 6px; background-color: #c0c0c0;"><p class="rvps7"><span class="rvts20">Description</span></p>
+</td>
+<td width="446" valign="top" style="border-color : #000000 #000000 #000000 #000000; border-style: solid; padding: 0px 6px; background-color: #c0c0c0;"><p class="rvps7"><span class="rvts20">Example</span></p>
+</td>
+</tr>
+<tr valign="top">
+<td width="184" valign="top" style="border-color : #000000 #000000 #000000 #000000; border-style: solid; padding: 0px 6px;"><p class="rvps7"><span class="rvts19">CBool (value)</span></p>
+</td>
+<td width="650" valign="top" style="border-color : #000000 #000000 #000000 #000000; border-style: solid; padding: 0px 6px;"><p class="rvps7"><span class="rvts6">Converts the provided </span><span class="rvts61">value</span><span class="rvts6"> to a boolean.</span></p>
+</td>
+<td width="446" valign="top" style="border-color : #000000 #000000 #000000 #000000; border-style: solid; padding: 0px 6px;"><p class="rvps7"><span class="rvts62">CBool(1) Converts 1 to True</span></p>
+</td>
+</tr>
+<tr valign="top">
+<td width="184" valign="top" style="border-color : #000000 #000000 #000000 #000000; border-style: solid; padding: 0px 6px;"><p class="rvps7"><span class="rvts19">CDbl (value)</span></p>
+</td>
+<td width="650" valign="top" style="border-color : #000000 #000000 #000000 #000000; border-style: solid; padding: 0px 6px;"><p class="rvps7"><span class="rvts6">Converts the provided </span><span class="rvts61">value</span><span class="rvts6"> to a double.</span></p>
+</td>
+<td width="446" valign="top" style="border-color : #000000 #000000 #000000 #000000; border-style: solid; padding: 0px 6px;"><p class="rvps7"><span class="rvts62">CDbl("0.1") Converts "0.1" to 0.1</span></p>
+</td>
+</tr>
+<tr valign="top">
+<td width="184" valign="top" style="border-color : #000000 #000000 #000000 #000000; border-style: solid; padding: 0px 6px;"><p class="rvps7"><span class="rvts19">CInt (value)</span></p>
+</td>
+<td width="650" valign="top" style="border-color : #000000 #000000 #000000 #000000; border-style: solid; padding: 0px 6px;"><p class="rvps7"><span class="rvts6">Converts the provided </span><span class="rvts61">value</span><span class="rvts6"> to a 32-bit integer.</span></p>
+</td>
+<td width="446" valign="top" style="border-color : #000000 #000000 #000000 #000000; border-style: solid; padding: 0px 6px;"><p class="rvps7"><span class="rvts62">CInt("22") Converts "22" to 22</span></p>
+</td>
+</tr>
+<tr valign="top">
+<td width="184" valign="top" style="border-color : #000000 #000000 #000000 #000000; border-style: solid; padding: 0px 6px;"><p class="rvps7"><span class="rvts19">CLng (value)</span></p>
+</td>
+<td width="650" valign="top" style="border-color : #000000 #000000 #000000 #000000; border-style: solid; padding: 0px 6px;"><p class="rvps7"><span class="rvts6">Converts the provided </span><span class="rvts61">value</span><span class="rvts6"> to a 64-bit integer.</span></p>
+</td>
+<td width="446" valign="top" style="border-color : #000000 #000000 #000000 #000000; border-style: solid; padding: 0px 6px;"><p class="rvps7"><span class="rvts62">CLng("1218189") Converts "1218189" to 1218189</span></p>
+</td>
+</tr>
+<tr valign="top">
+<td width="184" valign="top" style="border-color : #000000 #000000 #000000 #000000; border-style: solid; padding: 0px 6px;"><p class="rvps7"><span class="rvts19">Rnd ()</span></p>
+</td>
+<td width="650" valign="top" style="border-color : #000000 #000000 #000000 #000000; border-style: solid; padding: 0px 6px;"><p class="rvps7"><span class="rvts6">Generates a random non-negative integer.</span></p>
+</td>
+<td width="446" valign="top" style="border-color : #000000 #000000 #000000 #000000; border-style: solid; padding: 0px 6px;"><p class="rvps7"><span class="rvts62">Rnd() Generates a non-negative random integer</span></p>
+</td>
+</tr>
+<tr valign="top">
+<td width="184" valign="top" style="border-color : #000000 #000000 #000000 #000000; border-style: solid; padding: 0px 6px;"><p class="rvps7"><span class="rvts19">Rnd (max)</span></p>
+</td>
+<td width="650" valign="top" style="border-color : #000000 #000000 #000000 #000000; border-style: solid; padding: 0px 6px;"><p class="rvps7"><span class="rvts6">Generates a random non-negative integer that is less than or equal to </span><span class="rvts61">max</span><span class="rvts6">.</span></p>
+</td>
+<td width="446" valign="top" style="border-color : #000000 #000000 #000000 #000000; border-style: solid; padding: 0px 6px;"><p class="rvps7"><span class="rvts62">Rnd(42) Generates a number between 0 and 42 inclusive</span></p>
+</td>
+</tr>
+<tr valign="top">
+<td width="184" valign="top" style="border-color : #000000 #000000 #000000 #000000; border-style: solid; padding: 0px 6px;"><p class="rvps7"><span class="rvts19">Rnd (min, max)</span></p>
+</td>
+<td width="650" valign="top" style="border-color : #000000 #000000 #000000 #000000; border-style: solid; padding: 0px 6px;"><p class="rvps7"><span class="rvts6">Generates a random integer greater than </span><span class="rvts61">min</span><span class="rvts6"> and less than or equal to </span><span class="rvts61">max</span><span class="rvts6">.</span></p>
+</td>
+<td width="446" valign="top" style="border-color : #000000 #000000 #000000 #000000; border-style: solid; padding: 0px 6px;"><p class="rvps7"><span class="rvts62">Rnd(1,6) Generates a number between 1 and 6 inclusive</span></p>
+</td>
+</tr>
+<tr valign="top">
+<td width="184" valign="top" style="border-color : #000000 #000000 #000000 #000000; border-style: solid; padding: 0px 6px;"><p class="rvps7"><span class="rvts19">Roll (sides)</span></p>
+</td>
+<td width="650" valign="top" style="border-color : #000000 #000000 #000000 #000000; border-style: solid; padding: 0px 6px;"><p class="rvps7"><span class="rvts6">Rolls one die with the number of </span><span class="rvts61">sides </span><span class="rvts6">provided.</span></p>
+</td>
+<td width="446" valign="top" style="border-color : #000000 #000000 #000000 #000000; border-style: solid; padding: 0px 6px;"><p class="rvps7"><span class="rvts62">Roll(20) Rolls 1d20</span></p>
+</td>
+</tr>
+<tr valign="top">
+<td width="184" valign="top" style="border-color : #000000 #000000 #000000 #000000; border-style: solid; padding: 0px 6px;"><p class="rvps7"><span class="rvts19">Roll (count, sides)</span></p>
+</td>
+<td width="650" valign="top" style="border-color : #000000 #000000 #000000 #000000; border-style: solid; padding: 0px 6px;"><p class="rvps7"><span class="rvts6">Rolls </span><span class="rvts61">count </span><span class="rvts6">dice with the number of </span><span class="rvts61">sides </span><span class="rvts6">provided.</span></p>
+</td>
+<td width="446" valign="top" style="border-color : #000000 #000000 #000000 #000000; border-style: solid; padding: 0px 6px;"><p class="rvps7"><span class="rvts62">Roll(3,6) Rolls 3d6</span></p>
+</td>
+</tr>
+<tr valign="top">
+<td width="184" valign="top" style="border-color : #000000 #000000 #000000 #000000; border-style: solid; padding: 0px 6px;"><p class="rvps7"><span class="rvts19">Roll (count, sides, modifier)</span></p>
+</td>
+<td width="650" valign="top" style="border-color : #000000 #000000 #000000 #000000; border-style: solid; padding: 0px 6px;"><p class="rvps7"><span class="rvts6">Rolls </span><span class="rvts61">count </span><span class="rvts6">dice with the number of </span><span class="rvts61">sides </span><span class="rvts6">provided and alters the result by the amount of the modifier.</span></p>
+</td>
+<td width="446" valign="top" style="border-color : #000000 #000000 #000000 #000000; border-style: solid; padding: 0px 6px;"><p class="rvps7"><span class="rvts62">Roll(3,6,-1) Rolls 3d6-1</span></p>
+</td>
+</tr>
+<tr valign="top">
+<td width="184" valign="top" style="border-color : #000000 #000000 #000000 #000000; border-style: solid; padding: 0px 6px;"><p class="rvps7"><span class="rvts19">Roll (count, sides, options[])</span></p>
+</td>
+<td width="650" valign="top" style="border-color : #000000 #000000 #000000 #000000; border-style: solid; padding: 0px 6px;"><p class="rvps7"><span class="rvts6">Rolls </span><span class="rvts61">count </span><span class="rvts6">dice with the number of </span><span class="rvts61">sides </span><span class="rvts6">provided using the </span><span class="rvts61">options</span><span class="rvts6"> provided. &nbsp;Options are detailed below.</span></p>
+</td>
+<td width="446" valign="top" style="border-color : #000000 #000000 #000000 #000000; border-style: solid; padding: 0px 6px;"><p class="rvps7"><span class="rvts62">Roll(4,6,"DL") Rolls 4d6 and drops the lowest</span></p>
+</td>
+</tr>
+<tr valign="top">
+<td width="184" valign="top" style="border-color : #000000 #000000 #000000 #000000; border-style: solid; padding: 0px 6px;"><p class="rvps7"><span class="rvts19">Roll (count, sides, modifier, options[])</span></p>
+</td>
+<td width="650" valign="top" style="border-color : #000000 #000000 #000000 #000000; border-style: solid; padding: 0px 6px;"><p class="rvps7"><span class="rvts6">Rolls </span><span class="rvts61">count </span><span class="rvts6">dice with the number of </span><span class="rvts61">sides </span><span class="rvts6">provided using the </span><span class="rvts61">options </span><span class="rvts6">provided and alters the result by the amount of the modifier.</span></p>
+</td>
+<td width="446" valign="top" style="border-color : #000000 #000000 #000000 #000000; border-style: solid; padding: 0px 6px;"><p class="rvps7"><span class="rvts62">Roll(2,20,+3,"DL") Rolls 2d20, drops the lowest, and adds 3</span></p>
+</td>
+</tr>
+<tr valign="top">
+<td width="184" valign="top" style="border-color : #000000 #000000 #000000 #000000; border-style: solid; padding: 0px 6px;"><p class="rvps7"><span class="rvts19">LastRoll ()</span></p>
+</td>
+<td width="650" valign="top" style="border-color : #000000 #000000 #000000 #000000; border-style: solid; padding: 0px 6px;"><p class="rvps7"><span class="rvts6">Returns the result of the last roll.</span></p>
+</td>
+<td width="446" valign="top" style="border-color : #000000 #000000 #000000 #000000; border-style: solid; padding: 0px 6px;"><p class="rvps7"><span class="rvts62">LastRoll() Returns the result of the last roll</span></p>
+</td>
+</tr>
+<tr valign="top">
+<td width="184" valign="top" style="border-color : #000000 #000000 #000000 #000000; border-style: solid; padding: 0px 6px;"><p class="rvps7"><span class="rvts19">LastRoll (detail)</span></p>
+</td>
+<td width="650" valign="top" style="border-color : #000000 #000000 #000000 #000000; border-style: solid; padding: 0px 6px;"><p class="rvps7"><span class="rvts6">Returns the </span><span class="rvts61">detail </span><span class="rvts6">of the last roll. &nbsp;Detail is a string that can be: Result, ResultList, Successes, Failures, or Botches.</span></p>
+</td>
+<td width="446" valign="top" style="border-color : #000000 #000000 #000000 #000000; border-style: solid; padding: 0px 6px;"><p class="rvps7"><span class="rvts62">LastRoll("ResultList") Returns all die rolls from the last roll separated by commas</span></p>
+</td>
+</tr>
+<tr valign="top">
+<td width="184" valign="top" style="border-color : #000000 #000000 #000000 #000000; border-style: solid; padding: 0px 6px;"><p class="rvps7"><span class="rvts19">Pick (values[])</span></p>
+</td>
+<td width="650" valign="top" style="border-color : #000000 #000000 #000000 #000000; border-style: solid; padding: 0px 6px;"><p class="rvps7"><span class="rvts6">Selects one item from </span><span class="rvts61">values </span><span class="rvts6">at random.</span></p>
+</td>
+<td width="446" valign="top" style="border-color : #000000 #000000 #000000 #000000; border-style: solid; padding: 0px 6px;"><p class="rvps7"><span class="rvts62">Pick("Red","Green","Blue") Picks either "Red","Green", or "Blue"</span></p>
+</td>
+</tr>
+<tr valign="top">
+<td width="184" valign="top" style="border-color : #000000 #000000 #000000 #000000; border-style: solid; padding: 0px 6px;"><p class="rvps7"><span class="rvts19">UCase (value)</span></p>
+</td>
+<td width="650" valign="top" style="border-color : #000000 #000000 #000000 #000000; border-style: solid; padding: 0px 6px;"><p class="rvps7"><span class="rvts6">Converts </span><span class="rvts61">value </span><span class="rvts6">to uppercase</span></p>
+</td>
+<td width="446" valign="top" style="border-color : #000000 #000000 #000000 #000000; border-style: solid; padding: 0px 6px;"><p class="rvps7"><span class="rvts62">UCase("dog") Returns "DOG"</span></p>
+</td>
+</tr>
+<tr valign="top">
+<td width="184" valign="top" style="border-color : #000000 #000000 #000000 #000000; border-style: solid; padding: 0px 6px;"><p class="rvps7"><span class="rvts19">LCase (value)</span></p>
+</td>
+<td width="650" valign="top" style="border-color : #000000 #000000 #000000 #000000; border-style: solid; padding: 0px 6px;"><p class="rvps7"><span class="rvts6">Converts </span><span class="rvts61">value </span><span class="rvts6">to lowercase</span></p>
+</td>
+<td width="446" valign="top" style="border-color : #000000 #000000 #000000 #000000; border-style: solid; padding: 0px 6px;"><p class="rvps7"><span class="rvts62">LCase("DOG") Returns "dog"</span></p>
+</td>
+</tr>
+<tr valign="top">
+<td width="184" valign="top" style="border-color : #000000 #000000 #000000 #000000; border-style: solid; padding: 0px 6px;"><p class="rvps7"><span class="rvts19">TCase (value)</span></p>
+</td>
+<td width="650" valign="top" style="border-color : #000000 #000000 #000000 #000000; border-style: solid; padding: 0px 6px;"><p class="rvps7"><span class="rvts6">Converts </span><span class="rvts61">value </span><span class="rvts6">to titlecase</span></p>
+</td>
+<td width="446" valign="top" style="border-color : #000000 #000000 #000000 #000000; border-style: solid; padding: 0px 6px;"><p class="rvps7"><span class="rvts62">TCase("big RED dog") Returns "Big Red Dog"</span></p>
+</td>
+</tr>
+<tr valign="top">
+<td width="184" valign="top" style="border-color : #000000 #000000 #000000 #000000; border-style: solid; padding: 0px 6px;"><p class="rvps7"><span class="rvts19">ToOrdinal (number)</span></p>
+</td>
+<td width="650" valign="top" style="border-color : #000000 #000000 #000000 #000000; border-style: solid; padding: 0px 6px;"><p class="rvps7"><span class="rvts6">Returns the ordinal value of the provided </span><span class="rvts61">number.</span></p>
+</td>
+<td width="446" valign="top" style="border-color : #000000 #000000 #000000 #000000; border-style: solid; padding: 0px 6px;"><p class="rvps7"><span class="rvts62">ToOrdinal(34) Returns "34th"</span></p>
+</td>
+</tr>
+<tr valign="top">
+<td width="184" valign="top" style="border-color : #000000 #000000 #000000 #000000; border-style: solid; padding: 0px 6px;"><p class="rvps7"><span class="rvts19">ToText (number)</span></p>
+</td>
+<td width="650" valign="top" style="border-color : #000000 #000000 #000000 #000000; border-style: solid; padding: 0px 6px;"><p class="rvps7"><span class="rvts6">Returns the word for the provided </span><span class="rvts61">number.</span></p>
+</td>
+<td width="446" valign="top" style="border-color : #000000 #000000 #000000 #000000; border-style: solid; padding: 0px 6px;"><p class="rvps7"><span class="rvts62">ToText(123) Returns "One Hundred Twenty Three"</span></p>
+</td>
+</tr>
+<tr valign="top">
+<td width="184" valign="top" style="border-color : #000000 #000000 #000000 #000000; border-style: solid; padding: 0px 6px;"><p class="rvps7"><span class="rvts19">Format (string, values[])</span></p>
+</td>
+<td width="650" valign="top" style="border-color : #000000 #000000 #000000 #000000; border-style: solid; padding: 0px 6px;"><p class="rvps7"><span class="rvts6">Inserts the </span><span class="rvts61">values </span><span class="rvts6">into the </span><span class="rvts61">string </span><span class="rvts6">based on their index.</span></p>
+</td>
+<td width="446" valign="top" style="border-color : #000000 #000000 #000000 #000000; border-style: solid; padding: 0px 6px;"><p class="rvps7"><span class="rvts62">Format("The {0} is {1}", "Rose", "Red") Returns "The Rose is Red"</span></p>
+</td>
+</tr>
+<tr valign="top">
+<td width="184" valign="top" style="border-color : #000000 #000000 #000000 #000000; border-style: solid; padding: 0px 6px;"><p class="rvps7"><span class="rvts19">Generate (string)</span></p>
+</td>
+<td width="650" valign="top" style="border-color : #000000 #000000 #000000 #000000; border-style: solid; padding: 0px 6px;"><p class="rvps7"><span class="rvts6">Calls a generator with the name provided by </span><span class="rvts61">string</span><span class="rvts6">.</span></p>
+</td>
+<td width="446" valign="top" style="border-color : #000000 #000000 #000000 #000000; border-style: solid; padding: 0px 6px;"><p class="rvps7"><span class="rvts62">Generate("ElfName") Calls a generator called "ElfName"</span></p>
+</td>
+</tr>
+<tr valign="top">
+<td width="184" valign="top" style="border-color : #000000 #000000 #000000 #000000; border-style: solid; padding: 0px 6px;"><p class="rvps7"><span class="rvts19">Generate(string, &lt;string, value&gt;[])</span></p>
+</td>
+<td width="650" valign="top" style="border-color : #000000 #000000 #000000 #000000; border-style: solid; padding: 0px 6px;"><p class="rvps7"><span class="rvts6">Calls a generator with the name provided by </span><span class="rvts61">string </span><span class="rvts6">and provides the list of parameters in the array provided. &nbsp;MaxLength can be included as a parameter in this list.</span></p>
+</td>
+<td width="446" valign="top" style="border-color : #000000 #000000 #000000 #000000; border-style: solid; padding: 0px 6px;"><p class="rvps7"><span class="rvts62">Generate("ElfName","MaxLength",20,"Gender","Male") Calls the generator called "ElfName" and passes in a Max Length of 20 and a parameter called "Gender" with the value "Male"</span></p>
+</td>
+</tr>
+</table>
+</div>
+<p class="rvps2"><span class="rvts16"><br/></span></p>
+<p></p>
+<p class="rvps5" style="clear: both;"><span class="rvts13">Created with the Personal Edition of HelpNDoc: </span><a class="rvts14" href="https://www.helpndoc.com/feature-tour">Easily create PDF Help documents</a></p>
+
+            </div>
+            
+            <div id="topic_footer"><div id="topic_footer_content">Copyright &copy; 2015-2017  by Lance Boudreaux. All Rights Reserved.</div></div>
+        </div>  <!-- /#topic-content -->
+    </article>
+
+    <footer></footer>
+
+  </div>  <!-- /#main -->
+
+  <div class="mask" data-toggle="sm-nav-expanded"></div>
+  
+  <!-- Modal -->
+  <div class="modal fade" id="hndModal" tabindex="-1" role="dialog" aria-labelledby="hndModalLabel">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title" id="hndModalLabel"></h4>
+        </div>
+        <div class="modal-body">
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary modal-btn-close" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts -->
+  <script src="vendors/jquery-1.11.3/jquery.min.js"></script>
+  <script src="vendors/bootstrap-3.3.6/js/bootstrap.min.js"></script>
+  <script src="vendors/fastclick-1.0.6/fastclick.min.js"></script>
+  <script src="vendors/markjs-8.8.3/jquery.mark.min.js"></script>
+  <script src="vendors/uri-1.18.9/uri.min.js"></script>
+  <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
+  <script src="vendors/bootstrap-3.3.6/js/ie10-viewport-bug-workaround.js"></script>
+  
+  <!-- Headroom -->
+  <script src="vendors/headroom-0.9.3/headroom.min.js"></script>
+  <script src="vendors/headroom-0.9.3/jquery.headroom.min.js"></script>
+
+  <!-- JsTree -->
+  <script src="vendors/jstree-3.3.2/jstree.min.js"></script>
+
+  <!-- HelpNDoc scripts -->
+  <script src="_translations.js"></script>
+  <script src="js/hndsd.min.js"></script>
+  <script src="js/hndse.min.js"></script>
+  <script src="js/app.min.js"></script>
+
+  <!-- Scripts -->
+  <script>
+    $(function() {
+      // Instanciate FastClick
+      Origami.fastclick(document.body);
+      // Create the app
+      var app = new Hnd.App();
+      // Update translations
+      hnd_ut(app);
+	  // Custom JS
+	  
+      // Boot the app
+      app.Boot();
+    });
+  </script>
+
+
+
+</body>
+
+</html>
+

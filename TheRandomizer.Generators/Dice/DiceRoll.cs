@@ -10,18 +10,18 @@ namespace TheRandomizer.Generators.Dice
     {
 
         #region Constants
-        private static readonly Dictionary<string, Func<string, DiceRollOption>> OPTION_LIST =
-            new Dictionary<string, Func<string, DiceRollOption>>()
+        private static readonly Dictionary<string, Func<DiceRollOption>> OPTION_LIST =
+            new Dictionary<string, Func<DiceRollOption>>()
             {
-                { "DL", value => new DiceRollOption() { Option = DiceRollOptions.DropLowest, Variable = Int32.Parse(value) } },
-                { "DH", value => new DiceRollOption() { Option = DiceRollOptions.DropHighest, Variable = Int32.Parse(value) } },
-                { "EX", value => new DiceRollOption() { Option = DiceRollOptions.Explode, VariableIsRequired = false } },
-                { "CX", value => new DiceRollOption() { Option = DiceRollOptions.CompoundExplode, VariableIsRequired = false } },
-                { "RB", value => new DiceRollOption() { Option = DiceRollOptions.RerollBelow, Variable = Int32.Parse(value) } },
-                { "RA", value => new DiceRollOption() { Option = DiceRollOptions.RerollAbove, Variable = Int32.Parse(value) } },
-                { "GT", value => new DiceRollOption() { Option = DiceRollOptions.GreaterThan, Variable = Int32.Parse(value) } },
-                { "LT", value => new DiceRollOption() { Option = DiceRollOptions.LessThan, Variable = Int32.Parse(value) } },
-                { "R1", value => new DiceRollOption() { Option = DiceRollOptions.RuleOfOne, VariableIsRequired = false } }
+                { "DL", () => new DiceRollOption() { Option = DiceRollOptions.DropLowest, HasVariable = true, DefaultValue = 1 } },
+                { "DH", () => new DiceRollOption() { Option = DiceRollOptions.DropHighest, DefaultValue = 1 } },
+                { "EX", () => new DiceRollOption() { Option = DiceRollOptions.Explode, HasVariable = false } },
+                { "CX", () => new DiceRollOption() { Option = DiceRollOptions.CompoundExplode, HasVariable = false } },
+                { "RB", () => new DiceRollOption() { Option = DiceRollOptions.RerollBelow, VariableIsRequired = true } },
+                { "RA", () => new DiceRollOption() { Option = DiceRollOptions.RerollAbove, VariableIsRequired = true } },
+                { "GT", () => new DiceRollOption() { Option = DiceRollOptions.GreaterThan, VariableIsRequired = true } },
+                { "LT", () => new DiceRollOption() { Option = DiceRollOptions.LessThan, VariableIsRequired = true } },
+                { "R1", () => new DiceRollOption() { Option = DiceRollOptions.RuleOfOne, HasVariable = false } }
             };
         #endregion
 
@@ -68,11 +68,24 @@ namespace TheRandomizer.Generators.Dice
             {
                 if (OPTION_LIST.ContainsKey(options[index]))
                 {
-                    var newOption = OPTION_LIST[options[index]].Invoke("0");
+                    var newOption = OPTION_LIST[options[index]].Invoke();
                     index++;
-                    if (newOption.VariableIsRequired)
+                    if (newOption.HasVariable)
                     {
-                        newOption.Variable = Int32.Parse(options[index]);
+                        int value;
+                        if (index >= options.Count() || !int.TryParse(options[index], out value))
+                        {
+                            if (newOption.VariableIsRequired)
+                            {
+                                throw new ArgumentException($"DiceRoll Option {newOption.Option} requires a variable.");
+                            }
+                            else
+                            {
+                                value = (int)newOption.DefaultValue;
+                            }
+                        }
+                        
+                        newOption.Variable = value;
                         index++;
                     }
                     optionList.Add(newOption);
@@ -95,7 +108,7 @@ namespace TheRandomizer.Generators.Dice
         #endregion
 
         #region Members
-        private Random _random;
+        private static Random _random;
         #endregion
 
         #region Public Properties
@@ -137,7 +150,7 @@ namespace TheRandomizer.Generators.Dice
         /// <summary>
         /// A random number generator.  This is initialized only once to keep it as random as possible.
         /// </summary>
-        protected Random Random
+        protected static Random Random
         {
             get
             {

@@ -166,10 +166,8 @@ namespace TheRandomizer.Generators.UnitTests
         {
             var xml = @"<items>
                             <item name='Start'>[Test]</item>
-                        </items>
-                        <imports>
                             <import>Test</import>
-                        </imports>";
+                        </items>";
             var generator = CreateGenerator(xml);
             generator.RequestGenerator += RequestGeneratorHandler;
             var value = generator.Generate();

@@ -61,6 +61,30 @@ namespace TheRandomizer.WinApp.Properties {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to &lt;?xml version=&quot;1.0&quot;?&gt;
+        ///&lt;SyntaxDefinition name=&quot;Custom Highlighting&quot; xmlns=&quot;http://icsharpcode.net/sharpdevelop/syntaxdefinition/2008&quot;&gt;
+        ///  &lt;Color name=&quot;Comment&quot; foreground=&quot;Green&quot; /&gt;
+        ///  &lt;Color name=&quot;String&quot; foreground=&quot;Brown&quot; /&gt;
+        ///
+        ///  &lt;!-- This is the main ruleset. --&gt;
+        ///  &lt;RuleSet&gt;
+        ///    &lt;Span color=&quot;Comment&quot; begin=&quot;--&quot; /&gt;
+        ///
+        ///    &lt;Span color=&quot;String&quot;&gt;
+        ///      &lt;Begin&gt;&quot;&lt;/Begin&gt;
+        ///      &lt;End&gt;&quot;&lt;/End&gt;
+        ///      &lt;RuleSet&gt;
+        ///        &lt;!-- nested span for escape sequences --&gt;
+        ///        &lt;Span begin=&quot;\\&quot; end=&quot;.&quot; /&gt;
+        ///      &lt;/Rul [rest of string was truncated]&quot;;.
+        /// </summary>
+        internal static string LuaColor {
+            get {
+                return ResourceManager.GetString("LuaColor", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
         internal static System.Drawing.Bitmap paypal {

@@ -93,7 +93,7 @@
                     </ScrollViewer>
                 </DockPanel>
             </Expander>
-            <DockPanel x:Name="pnlParameters" DockPanel.Dock="Bottom" ScrollViewer.HorizontalScrollBarVisibility="Auto" HorizontalAlignment="Stretch" LastChildFill="True" Visibility="{Binding HasParameters, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <DockPanel x:Name="pnlParameters" DockPanel.Dock="Bottom" ScrollViewer.HorizontalScrollBarVisibility="Auto" HorizontalAlignment="Stretch" LastChildFill="True" Visibility="{Binding Generator.HasParameters, Converter={StaticResource BooleanToVisibilityConverter}}">
                 <Label x:Name="lblParameters" Content="Parameters" DockPanel.Dock="Top" Style="{DynamicResource ResourceKey=SubTitleLabel}" />
                 <ScrollViewer VerticalScrollBarVisibility="Auto">
                     <ItemsControl ItemsSource="{Binding Generator.Parameters}" HorizontalAlignment="Stretch">

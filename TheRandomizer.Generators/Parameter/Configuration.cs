@@ -30,12 +30,20 @@ namespace TheRandomizer.Generators.Parameter
         }
         #endregion
 
+        #region Constructors
+        public Configuration() : base()
+        {
+            Options = new Parameter.OptionList();
+            Options.CollectionChanged += OptionsChanged;
+        }
+        #endregion
+
         #region Members
-        
+
         #endregion
 
         #region Public Properties
-                
+
         /// <summary>The name of the parameter, used to reference it</summary>
         [XmlAttribute("name")]
         public string Name { get { return GetProperty<string>(); } set { SetProperty(value); } }
@@ -78,5 +86,13 @@ namespace TheRandomizer.Generators.Parameter
         }
 
         #endregion
+
+        private void OptionsChanged(object sender, EventArgs e)
+        {
+            if (Options != null && Options.Count > 0)
+            {
+                Value = Options[0].Value;
+            }
+        }
     }
 }

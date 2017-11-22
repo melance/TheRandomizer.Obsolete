@@ -33,9 +33,13 @@ namespace TheRandomizer.Generators.Table
         /// </summary>
         [XmlIgnore]
         private Dictionary<string, object> Values { get; } = new Dictionary<string, object>();
-        
+
+        [XmlIgnore]
+        private new bool SupportsMaxLength { get; }
+
         protected override string GenerateInternal(int? maxLength)
         {
+            Values.Clear();
             foreach (var table in Tables)
             {
                 table.Evaluate += Evaluate;

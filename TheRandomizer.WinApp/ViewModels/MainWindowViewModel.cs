@@ -50,14 +50,14 @@ namespace TheRandomizer.WinApp.ViewModels
 
         #region Properties
         public ObservableList<Tag> Tags { get; } = new ObservableList<Tag>();
-        public Models.GeneratorInfoCollection Generators { get; private set; }
-        public Models.GeneratorInfoCollection FilteredGenerators
+        public GeneratorInfoCollection Generators { get; private set; }
+        public GeneratorInfoCollection FilteredGenerators
         {
             get
             {
                 if (Tags.Count > 0)
                 {
-                    return new Models.GeneratorInfoCollection(Generators.Where(bg => bg.Tags == null || bg.Tags.Count() == 0 || bg.Tags.Intersect(SelectedTags).Count() > 0));
+                    return new GeneratorInfoCollection(Generators.Where(bg => bg.Tags == null || bg.Tags.Count() == 0 || bg.Tags.Intersect(SelectedTags).Count() > 0));
                 }
                 else
                 {

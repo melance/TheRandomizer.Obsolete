@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<generator xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="Assignment" version="2">
+  <name>Assignment Sample</name>
+  <author>Lance Boudreaux</author>
+  <description>A sample Assignment Generator</description>
+  <tags>
+    <tag>Table</tag>
+  </tags>
+  <supportsMaxLength>false</supportsMaxLength>
+  <parameters>
+    <parameter name="Color" display="Color" type="List">
+      <option display="Any">AnyColor</option>
+      <option display="Blue">Blue</option>
+      <option display="Red">Red</option>
+      <option display="Green">Green</option>
+    </parameter>
+  </parameters>
+  <css />
+  <isLibrary>false</isLibrary>
+  <items>
+    <item name="Start">[=Roll(1,6)] [Color] [Table] table(s)</item>
+    <item name="AnyColor" weight="50">Blue</item>
+    <item name="AnyColor" weight="25">Red</item>
+    <item name="AnyColor" weight="10">Green</item>
+    <item name="Blue">Blue</item>
+    <item name="Red">Red</item>
+    <item name="Green">Green</item>
+    <item name="Table">Poker</item>
+    <item name="Table">Dining</item>
+    <item name="Table">Folding</item>
+    <item name="Table">Picnic</item>
+    <item name="Table">End</item>
+  </items>
+  <imports />
+</generator>
