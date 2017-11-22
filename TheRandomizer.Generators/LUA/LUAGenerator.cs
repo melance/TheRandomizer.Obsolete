@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Xml.Serialization;
 using NLua;
 using TheRandomizer.Generators.Attributes;
+using NLua.Exceptions;
 
 namespace TheRandomizer.Generators.LUA
 {
@@ -26,25 +27,31 @@ namespace TheRandomizer.Generators.LUA
 
         protected override string GenerateInternal(int? maxLength)
         {
-            _lua = new Lua();
-
-            foreach (var parameter in Parameters)
+            try
             {
-                _lua[parameter.Name] = parameter.Value;
+                _lua = new Lua();
+                Result.Clear();
+                foreach (var parameter in Parameters)
+                {
+                    _lua[parameter.Name] = parameter.Value;
+                }
+
+                // Add all methods tagged with Lua Global
+                LuaRegistrationHelper.TaggedInstanceMethods(_lua, this);
+
+                // Prevent imports to sandbox the script
+                _lua.DoString("import = function () end");
+
+                // Run the script
+                _lua.DoString(Script, Name);
+
+                // Return the values printed to the Results
+                return Result.ToString().Trim();
             }
-            
-            
-            // Add all methods tagged with Lua Global
-            LuaRegistrationHelper.TaggedInstanceMethods(_lua, this);
-
-            // Prevent imports to sandbox the script
-            _lua.DoString("import = function () end");
-
-            // Run the script
-            _lua.DoString(Script, Name);
-
-            // Return the values printed to the Results
-            return Result.ToString().Trim();
+            catch (LuaScriptException ex)
+            {
+                throw new Exception($"Error encountered in the Lua script:<br /> {ex.Source}<br /> {ex.Message}");
+            }
         }
 
         /// <summary>
@@ -101,7 +108,6 @@ namespace TheRandomizer.Generators.LUA
             Result.Append(value.ToString());
         }
 
-
         /// <summary>
         /// Prints a text to the Results if <paramref name="Condition"/> is true.
         /// </summary>
@@ -141,6 +147,25 @@ namespace TheRandomizer.Generators.LUA
         public string NCalc(string expression)
         {
             return Calculate(expression);
+        }
+
+        /// <summary>
+        /// Selects one item from the provided table
+        /// </summary>
+        /// <param name="table">The table to select from, must have an integer index</param>
+        [LuaGlobal(Name = "selectFromTable", Description = "Selects a single item from the provided table.")]
+        public string SelectFromTable(LuaTable table)
+        {
+            var selected = Random.Next(1, table.Keys.Count);
+            foreach (KeyValuePair<object,object> value in table)
+            {
+                var index = value.Key as double?;
+                if (index != null && selected <= index)
+                {
+                    return value.Value.ToString();
+                }                
+            }
+            return string.Empty;
         }
     }
 }

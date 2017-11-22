@@ -14,11 +14,28 @@ namespace TheRandomizer.WinApp.ViewModels
 {
     class ConvertGeneratorViewModel : ObservableBase
     {
-        public string SourceFile { get { return GetProperty<string>(); } set { SetProperty(value); } }
+        public string SourceFile
+        {
+            get { return GetProperty<string>(); }
+            set
+            {
+                SetProperty(value);
+                if (string.IsNullOrWhiteSpace(TargetFile) && !string.IsNullOrWhiteSpace(value))
+                {
+                    TargetFile = value;
+                    do
+                    {
+                        TargetFile = Path.GetFileNameWithoutExtension(TargetFile);
+                    } while (Path.HasExtension(TargetFile));
+                    TargetFile += ".rgen";
+                }
+            }
+        }
+
         public string TargetFile { get { return GetProperty<string>(); } set { SetProperty(value); } }
 
         public ICommand GetSourceFile { get { return new DelegateCommand( () => { SourceFile = Utility.Dialogs.OpenGeneratorFileDialog(SourceFile); }); } }
-        public ICommand GetTargetFile { get { return new DelegateCommand(() => { TargetFile = Utility.Dialogs.CreatGeneratorFileDialog(TargetFile); }); } }
+        public ICommand GetTargetFile { get { return new DelegateCommand(() => { TargetFile = Utility.Dialogs.CreateGeneratorFileDialog(TargetFile); }); } }
 
         public ICommand Ok { get { return new DelegateCommand<Window>(Convert); } }
 
@@ -26,11 +43,6 @@ namespace TheRandomizer.WinApp.ViewModels
         {
             var generator = BaseGenerator.Deserialize(File.ReadAllText(SourceFile));
             Directory.CreateDirectory(Path.GetDirectoryName(TargetFile));
-            var option = new Generators.Parameter.Option();
-            option.DisplayName = "Any";
-            option.Value = "Any";
-
-            generator.Parameters[0].Options.Add(option);
             File.WriteAllText(TargetFile, generator.Serialize());
             window.Close();            
         }        

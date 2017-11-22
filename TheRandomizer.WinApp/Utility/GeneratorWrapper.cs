@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Web.UI;
+using System.Windows;
 using System.Windows.Input;
 using TheRandomizer.Generators;
 using TheRandomizer.Generators.Parameter;
 using TheRandomizer.Utility;
 using TheRandomizer.WinApp.Commands;
+using TheRandomizer.WinApp.Models;
 
 namespace TheRandomizer.WinApp.Utility
 {
@@ -21,7 +23,9 @@ namespace TheRandomizer.WinApp.Utility
         #region Constructors
         public GeneratorWrapper(BaseGenerator generator)
         {
+            if (_generator != null) _generator.RequestGenerator -= RequestGenerator;
             _generator = generator;
+            if (_generator != null) _generator.RequestGenerator += RequestGenerator;            
         }
         #endregion
 
@@ -104,7 +108,7 @@ namespace TheRandomizer.WinApp.Utility
         {
             get
             {
-                return _generator != null ? _generator.Parameters.Count > 0 : false;
+                return _generator != null && _generator.Parameters.Count > 0;
             }
         }
 
@@ -196,7 +200,19 @@ namespace TheRandomizer.WinApp.Utility
                 return sWriter.ToString();
             }
         }
-        
+
+        #endregion
+
+        #region Event Handlers
+        public void RequestGenerator(object sender, RequestGeneratorEventArgs e)
+        {
+            var generatorList = Application.Current.MainWindow?.DataContext as GeneratorInfoCollection;
+            if (generatorList != null)
+            {
+                var generatorInfo = generatorList.First(gi => gi.Name.Equals(e.Name, StringComparison.InvariantCultureIgnoreCase));
+                e.Generator = BaseGenerator.Deserialize(File.ReadAllText(generatorInfo.FilePath));
+            }   
+        }
         #endregion
     }
 }

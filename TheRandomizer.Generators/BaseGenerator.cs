@@ -124,7 +124,7 @@ namespace TheRandomizer.Generators
         [XmlArray("tags")]
         [XmlArrayItem("tag")]
         public List<string> Tags { get; } = new List<string>();
-        [XmlElement("tagList")]
+        [XmlIgnore]
         [Required]
         [Display(Name = "Tags")]
         public string TagList

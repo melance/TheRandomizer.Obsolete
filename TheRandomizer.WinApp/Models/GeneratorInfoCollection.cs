@@ -110,7 +110,7 @@ namespace TheRandomizer.WinApp.Models
                 }
             }
             values.SaveGeneratorList();
-            return values;
+            return new GeneratorInfoCollection(values.OrderBy(gi => gi.Name ));
         }
         #endregion
           
@@ -128,11 +128,15 @@ namespace TheRandomizer.WinApp.Models
 
         public void SaveGeneratorList()
         {
-            var serializer = new BinaryFormatter();
-            using (var file = new FileStream(GeneratorListPath, FileMode.Create, FileAccess.Write, FileShare.None))
+            try
             {
-                serializer.Serialize(file, this);
+                var serializer = new BinaryFormatter();
+                using (var file = new FileStream(GeneratorListPath, FileMode.Create, FileAccess.Write, FileShare.None))
+                {
+                    serializer.Serialize(file, this);
+                }
             }
+            catch { }
         }
         #endregion 
 

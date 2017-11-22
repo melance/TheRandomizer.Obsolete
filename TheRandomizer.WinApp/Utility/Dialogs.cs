@@ -10,8 +10,8 @@ namespace TheRandomizer.WinApp.Utility
 {
     class Dialogs
     {
-        private const string GRAMMAR_EXTENSION = ".xml";
-        private const string GENERATOR_EXTENSION = ".rgen";
+        private const string GRAMMAR_EXTENSION = "xml";
+        private const string GENERATOR_EXTENSION = "rgen";
         private const string RANDOMIZER_EXTENSION_FILTER = "Randomizer Generators (*.rgen)|*.rgen|All Files (*.*)|*.*";
         private static readonly CommonFileDialogFilter[] Extensions = { new CommonFileDialogFilter("The Randomizer Generators (*.rgen)","*.rgen"),
                                                                         new CommonFileDialogFilter("Extensible Markup Language File (*.xml)", "*.xml"),
@@ -22,15 +22,18 @@ namespace TheRandomizer.WinApp.Utility
             return OpenFolder(defaultDirectory, true, true, string.Empty);
         }
 
-        public static string OpenGeneratorFileDialog(string defaultPath)
+        public static string OpenGrammarFileDialog(string defaultPath)
         {
-            //return OpenFile(defaultPath, true, RANDOMIZER_EXTENSION_FILTER);
             return OpenFolder(defaultPath, false, true, GRAMMAR_EXTENSION, Extensions);
         }
 
-        public static string CreatGeneratorFileDialog(string defaultPath)
+        public static string OpenGeneratorFileDialog(string defaultPath)
         {
-            //return OpenFile(defaultPath, false, RANDOMIZER_EXTENSION_FILTER);
+            return OpenFolder(defaultPath, false, true, GENERATOR_EXTENSION, Extensions);
+        }
+
+        public static string CreateGeneratorFileDialog(string defaultPath)
+        {
             return OpenFolder(defaultPath, false, true, GENERATOR_EXTENSION , Extensions);
         }
 
@@ -50,10 +53,10 @@ namespace TheRandomizer.WinApp.Utility
         }
 
         private static string OpenFolder(string defaultPath,
-                                                     bool isFolderPicker,
-                                                     bool ensureExists,
-                                                     string defaultExtension,
-                                                     params CommonFileDialogFilter[] filters)
+                                         bool isFolderPicker,
+                                         bool ensureExists,
+                                         string defaultExtension,
+                                         params CommonFileDialogFilter[] filters)
         {
             if (CommonFileDialog.IsPlatformSupported)
             {
@@ -67,6 +70,7 @@ namespace TheRandomizer.WinApp.Utility
                 dialog.EnsurePathExists = ensureExists;
                 dialog.DefaultDirectory = defaultPath;
                 dialog.InitialDirectory = defaultPath;
+                dialog.DefaultFileName = defaultPath;
                 CommonFileDialogResult result = dialog.ShowDialog();
                 if (result == CommonFileDialogResult.Ok)
                 {

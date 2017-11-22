@@ -148,16 +148,26 @@ namespace TheRandomizer.Generators
         [CustomNCalcFunction]
         public static void Roll(FunctionArgs e)
         {
+            string[] options = null;
+            var mod = 0;
             var parameters = e.EvaluateParameters();
+            
             Dice.DiceRoll roller;
+            
             switch  (parameters.Count())
             {
                 case 1: roller = new Dice.DiceRoll(Convert.ToInt32(parameters[0])); break;
                 case 2: roller = new Dice.DiceRoll(Convert.ToInt32(parameters[0]), Convert.ToInt32(parameters[1])); break;
-                case 3: roller = new Dice.DiceRoll(Convert.ToInt32(parameters[0]), Convert.ToInt32(parameters[1]), Convert.ToInt32(parameters[2])); break;
                 default:
-                    var options = Array.ConvertAll(parameters.Skip(3).ToArray(), i => i.ToString());
-                    roller = new Dice.DiceRoll(Convert.ToInt32(parameters[0]), Convert.ToInt32(parameters[1]), Convert.ToInt32(parameters[2]), options);
+                    if (int.TryParse(parameters[2].ToString(), out mod))
+                    {
+                        options = Array.ConvertAll(parameters.Skip(3).ToArray(), i => i.ToString());
+                    }
+                    else
+                    {
+                        options = Array.ConvertAll(parameters.Skip(2).ToArray(), i => i.ToString());
+                    }
+                    roller = new Dice.DiceRoll(Convert.ToInt32(parameters[0]), Convert.ToInt32(parameters[1]), mod, options);
                     break;
             }
             if (roller != null)
@@ -339,6 +349,5 @@ namespace TheRandomizer.Generators
                 throw new EvaluationException($"{Common.GetCaller()} requires at least one parameter, zero provided.");
             }
         }
-
     }
 }

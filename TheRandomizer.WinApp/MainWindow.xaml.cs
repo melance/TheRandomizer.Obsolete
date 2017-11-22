@@ -29,6 +29,7 @@ namespace TheRandomizer.WinApp
         private void mnuConvert_Click(object sender, RoutedEventArgs e)
         {
             var convert = new Views.ConvertGenerator();
+            convert.Owner = this;
             convert.ShowDialog();
         }
     }

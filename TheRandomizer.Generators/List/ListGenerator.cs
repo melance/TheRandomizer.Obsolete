@@ -7,6 +7,7 @@ using System.Xml.Serialization;
 using TheRandomizer.Utility;
 using TheRandomizer.Generators.Attributes;
 using System.ComponentModel.DataAnnotations;
+using TheRandomizer.Generators.Parameter;
 
 namespace TheRandomizer.Generators.List
 {
@@ -27,6 +28,12 @@ namespace TheRandomizer.Generators.List
         [XmlElement("keepWhitespace")]
         [Display(Name = "Keep Whitespace")]
         public bool KeepWhitespace { get; set; } = false;
+
+        [XmlIgnore]
+        private new bool SupportsMaxLength { get; }
+
+        [XmlIgnore]
+        public new ConfigurationList Parameters { get; }
 
         /// <summary>
         /// Generates content by selecting a single item from the list

@@ -40,14 +40,14 @@ namespace TheRandomizer.Generators.Dice
                     var parameter = base.Parameters[ROLL_FUNCTION];
                     if (parameter == null)
                     {
-                        parameter = new Parameter.Configuration() { Name = ROLL_FUNCTION, DisplayName = ROLL_FUNCTION_DISPLAY, Type = Parameter.Configuration.ParameterType.List };
+                        parameter = new Configuration() { Name = ROLL_FUNCTION, DisplayName = ROLL_FUNCTION_DISPLAY, Type = Parameter.Configuration.ParameterType.List };
                         base.Parameters.Add(parameter);
                     }
                     foreach (var function in Functions)
                     {
                         if (parameter.Options.ToList().Find(o => o.Value == function.Name) == null)
                         {
-                            parameter.Options.Add(new Option() { Value = function.Name, DisplayName = string.IsNullOrWhiteSpace(function.DisplayName) ? function.DisplayName : function.Name });
+                            parameter.Options.Add(new Option() { Value = function.Name, DisplayName = !string.IsNullOrWhiteSpace(function.DisplayName) ? function.DisplayName : function.Name });
                         }
                     }
                 }
@@ -110,7 +110,7 @@ namespace TheRandomizer.Generators.Dice
 
             }
 
-            return string.Join(Environment.NewLine, results.ToArray());
+            return string.Join($"{Environment.NewLine}<br />", results.ToArray());
 
         }
         #endregion

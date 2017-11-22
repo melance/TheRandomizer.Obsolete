@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<generator xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xsi:type="Lua" version="2">
+  <name>Lua Sample Generator</name>
+  <author>Lance Boudreaux</author>
+  <description>Demonstrates the Lua generator type</description>
+  <tags>
+    <tag>Test</tag>
+  </tags>
+  <parameters>
+	<parameter name="name" display="Name" type="Text" />
+  </parameters>
+  <script><![CDATA[
+  
+  local greeting = selectFromTable({"Hello","Bonjour","Aloha","Hola","S'up","Aang","Ciao"})
+  printFormat("{0} {1}", greeting, name)
+  
+  ]]></script>
+</generator>
