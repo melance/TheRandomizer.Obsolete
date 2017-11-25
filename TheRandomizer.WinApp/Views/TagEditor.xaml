@@ -1,0 +1,60 @@
+﻿<metro:MetroWindow x:Class="TheRandomizer.WinApp.Views.TagEditor"
+                   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                   xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                   xmlns:local="clr-namespace:TheRandomizer.WinApp.Views"
+                   xmlns:util="clr-namespace:TheRandomizer.WinApp.Utility"
+                   xmlns:metro="http://metro.mahapps.com/winfx/xaml/controls"
+                   mc:Ignorable="d"
+                   ShowMaxRestoreButton="False"
+                   ShowMinButton="False"
+                   Title="Tags" 
+                   Name="winTagEditor"
+                   Height="300" 
+                   Width="200">
+    <Window.DataContext>
+        <util:GeneratorWrapper />
+    </Window.DataContext>
+    <DockPanel>
+        <DockPanel DockPanel.Dock="Bottom" LastChildFill="False">
+            <Button Command="{Binding AddTag}" DockPanel.Dock="Left">
+                <Rectangle Height="12" Width="{Binding ActualHeight, RelativeSource={RelativeSource Self}}" Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
+                    <Rectangle.OpacityMask>
+                        <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_add}" />
+                    </Rectangle.OpacityMask>
+                </Rectangle>
+            </Button>
+            <Button Command="{Binding Save}" CommandParameter="{Binding ElementName=winTagEditor}" DockPanel.Dock="Right">
+                <Rectangle Height="12" Width="{Binding ActualHeight, RelativeSource={RelativeSource Self}}" Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
+                    <Rectangle.OpacityMask>
+                        <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_check}" />
+                    </Rectangle.OpacityMask>
+                </Rectangle>
+            </Button>
+            <Button Command="{x:Static util:Dialogs.Cancel}" CommandParameter="{Binding ElementName=winTagEditor}" DockPanel.Dock="Right">
+                <Rectangle Height="12" Width="{Binding ActualHeight, RelativeSource={RelativeSource Self}}" Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
+                    <Rectangle.OpacityMask>
+                        <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_close}" />
+                    </Rectangle.OpacityMask>
+                </Rectangle>
+            </Button>
+        </DockPanel>
+        <ListBox x:Name="lstTags" ItemsSource="{Binding Tags}" Margin="0,3,0,0" BorderThickness="0">
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <DockPanel>
+                        <Button DockPanel.Dock="Right" Command="{Binding ElementName=lstTags, Path=DataContext.RemoveTag}" CommandParameter="{Binding .}">
+                            <Rectangle Height="12" Width="{Binding ActualHeight, RelativeSource={RelativeSource Self}}" Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
+                                <Rectangle.OpacityMask>
+                                    <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_delete}" />
+                                </Rectangle.OpacityMask>
+                            </Rectangle>
+                        </Button>
+                        <TextBox DockPanel.Dock="Left" Text="{Binding ., UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Stretch" TextChanged="TextBox_TextChanged" />
+                    </DockPanel>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+    </DockPanel>
+</metro:MetroWindow>

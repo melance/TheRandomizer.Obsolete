@@ -10,6 +10,7 @@ using System.IO;
 using System.ComponentModel.DataAnnotations;
 using LiteDB;
 using TheRandomizer.Generators.Attributes;
+using System.Collections.ObjectModel;
 
 namespace TheRandomizer.Generators
 {
@@ -123,7 +124,7 @@ namespace TheRandomizer.Generators
         /// <summary>A list of tags used to categorize the generator</summary>
         [XmlArray("tags")]
         [XmlArrayItem("tag")]
-        public List<string> Tags { get; } = new List<string>();
+        public ObservableCollection<string> Tags { get; } = new ObservableCollection<string>();
         [XmlIgnore]
         [Required]
         [Display(Name = "Tags")]
@@ -136,7 +137,10 @@ namespace TheRandomizer.Generators
             set
             {
                 if (value == null) { value = string.Empty; }
-                Tags.AddRange(value.Split(new string[] { TAG_DELIMITER }, StringSplitOptions.RemoveEmptyEntries).Select<string, string>(t => t.Trim()));
+                foreach (var tag in value.Split(new string[] { TAG_DELIMITER }, StringSplitOptions.RemoveEmptyEntries).Select(t => t.Trim()))
+                {
+                    Tags.Add(tag);
+                }
             }
         }
         /// <summary>A boolean that determines if the generator supports limiting the length of the generated value</summary>
@@ -286,7 +290,10 @@ namespace TheRandomizer.Generators
             generator.Description = Description;
             generator.OutputFormat = OutputFormat;
             generator.SupportsMaxLength = SupportsMaxLength;
-            generator.Tags.AddRange(Tags);
+            foreach (var tag in Tags)
+            {
+                generator.Tags.Add(tag);
+            }
             generator.Url = Url;
             generator.Version = Version;
             generator.Published = Published;

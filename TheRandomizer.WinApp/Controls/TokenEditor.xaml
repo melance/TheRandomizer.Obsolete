@@ -1,0 +1,37 @@
+﻿<UserControl x:Class="TheRandomizer.WinApp.Controls.TokenEditor"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:TheRandomizer.WinApp.Controls"
+             mc:Ignorable="d" 
+             d:DesignHeight="26" 
+             d:DesignWidth="300">
+    <d:DesignerProperties.DesignStyle>
+        <Style TargetType="UserControl">
+            <Setter Property="Background" Value="White" />
+        </Style>
+    </d:DesignerProperties.DesignStyle>
+    <WrapPanel Orientation="Horizontal">
+        <ItemsControl ItemsSource="{Binding Tags}">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <StackPanel Orientation="Horizontal" />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
+            <ItemsControl.ItemTemplate>
+                <DataTemplate>
+                    <local:TagControl Command="{Binding DeleteTag}" Text="{Binding }" />
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>            
+        </ItemsControl>
+        <Button x:Name="btnAddTag" MinHeight="0" MinWidth="0" Width="{Binding ActualHeight, RelativeSource={RelativeSource Self}}" Margin="3" Click="btnAddTag_Click">
+            <Rectangle Width="12" Height="12" Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
+                <Rectangle.OpacityMask>
+                    <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_add}" />
+                </Rectangle.OpacityMask>
+            </Rectangle>
+        </Button>
+        <TextBox Name="txtNewTag" HorizontalAlignment="Stretch" MinWidth="80" MaxWidth="120" Visibility="Collapsed" />
+    </WrapPanel>
+</UserControl>

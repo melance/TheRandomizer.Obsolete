@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using TheRandomizer.Generators;
 using TheRandomizer.Utility.Collections;
+using TheRandomizer.WinApp.Commands;
 
 namespace TheRandomizer.WinApp.Models
 {

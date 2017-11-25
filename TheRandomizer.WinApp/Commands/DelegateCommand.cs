@@ -14,17 +14,30 @@ namespace TheRandomizer.WinApp.Commands
 #pragma warning restore 67
 
         private readonly Action _action;
-
-
+        private readonly Func<bool> _canExecute;
 
         public DelegateCommand(Action action)
         {
             _action = action;
         }
 
+        public DelegateCommand(Action action, Func<bool> canExecute)
+        {
+            _action = action;
+            _canExecute = canExecute;
+        }
+
+        public void RaiseCanExecuteChanged()
+        {
+            CanExecuteChanged?.Invoke(this, EventArgs.Empty);
+        }
+
         public bool CanExecute(object parameter)
         {
-            return true;
+            if (_canExecute != null)
+                return _canExecute();
+            else
+                return true;
         }
 
         public void Execute(object parameter)

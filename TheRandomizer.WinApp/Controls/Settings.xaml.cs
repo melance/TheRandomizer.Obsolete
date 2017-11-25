@@ -64,6 +64,22 @@ namespace TheRandomizer.WinApp.Controls
             }
         }
 
+        public ICommand SaveSettings
+        {
+            get
+            {
+                return new DelegateCommand(() => Properties.Settings.Default.Save());
+            }
+        }
+
+        public ICommand Cancel
+        {
+            get
+            {
+                return new DelegateCommand(() => Properties.Settings.Default.Reload());
+            }
+        }
+
         public List<ColorView> Themes
         {
             get

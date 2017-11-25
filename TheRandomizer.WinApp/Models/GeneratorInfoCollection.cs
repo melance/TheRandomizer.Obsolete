@@ -11,7 +11,7 @@ namespace TheRandomizer.WinApp.Models
 {
     [Serializable]
     class GeneratorInfoCollection : ObservableCollection<GeneratorInfo>
-    {
+    {        
         #region Constants
         private const string GENERATOR_LIST_FILE_NAME = "Generators.lst";
         private const string GENERATOR_FILE_FILTER = "*.rgen";
@@ -47,7 +47,7 @@ namespace TheRandomizer.WinApp.Models
         #endregion
         
         #region Public Static Methods
-        public static GeneratorInfoCollection LoadGeneratorList()
+        public static GeneratorInfoCollection LoadGeneratorList(Action<string> progressCallback)
         {
             GeneratorLoadErrors.Clear();
             GeneratorInfoCollection values;
@@ -88,6 +88,7 @@ namespace TheRandomizer.WinApp.Models
             files.AddRange(Directory.GetFiles(GeneratorPath, GRAMMAR_FILE_FILTER));
             foreach (string filePath in files)
             {
+                progressCallback?.Invoke(Path.GetFileNameWithoutExtension(filePath));
                 try
                 {
                     var found = values.Where(gi => gi.FilePath.Equals(filePath, StringComparison.InvariantCultureIgnoreCase));

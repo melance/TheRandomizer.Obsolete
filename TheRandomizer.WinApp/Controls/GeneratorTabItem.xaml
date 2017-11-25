@@ -79,7 +79,7 @@
                                 <TextBlock Text="{Binding Generator.Author}" Height="auto" />
                             </DockPanel>
                             <DockPanel LastChildFill="True">
-                                <TextBlock FontWeight="Bold"><Hyperlink Name="lnkEditTags"><Run Text="Tags: "></Run></Hyperlink></TextBlock>
+                                <TextBlock FontWeight="Bold"><Hyperlink Name="lnkEditTags" Command="{Binding Generator.EditTags}" ><Run Text="Tags: "></Run></Hyperlink></TextBlock>
                                 <TextBlock Text="{Binding Generator.TagList}" Height="auto" TextWrapping="Wrap" />
                             </DockPanel>
                             <DockPanel LastChildFill="True">

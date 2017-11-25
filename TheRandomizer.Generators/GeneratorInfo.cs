@@ -45,7 +45,10 @@ namespace TheRandomizer.Generators
             Description = generator.Description;
             OutputFormat = generator.OutputFormat;
             SupportsMaxLength = generator.SupportsMaxLength;
-            Tags.AddRange(generator.Tags);
+            foreach (var tag in generator.Tags)
+            {
+                Tags.Add(tag);
+            }
             Url = generator.Url;
             Version = generator.Version;
             Published = generator.Published;

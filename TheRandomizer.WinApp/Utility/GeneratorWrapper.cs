@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
 using System.Web.UI;
@@ -8,6 +9,7 @@ using System.Windows.Input;
 using TheRandomizer.Generators;
 using TheRandomizer.Generators.Parameter;
 using TheRandomizer.Utility;
+using TheRandomizer.Utility.Collections;
 using TheRandomizer.WinApp.Commands;
 using TheRandomizer.WinApp.Models;
 
@@ -21,8 +23,11 @@ namespace TheRandomizer.WinApp.Utility
         #endregion
 
         #region Constructors
-        public GeneratorWrapper(BaseGenerator generator)
+        public GeneratorWrapper() {}
+
+        public GeneratorWrapper(BaseGenerator generator, string filePath)
         {
+            FilePath = filePath;
             if (_generator != null) _generator.RequestGenerator -= RequestGenerator;
             _generator = generator;
             if (_generator != null) _generator.RequestGenerator += RequestGenerator;            
@@ -47,6 +52,8 @@ namespace TheRandomizer.WinApp.Utility
                 return _generator?.Name;
             }
         }
+
+        public string FilePath { get; set; }
 
         public string Description
         {
@@ -88,11 +95,23 @@ namespace TheRandomizer.WinApp.Utility
             }
         }
 
+        public ObservableCollection<string> Tags
+        {
+            get
+            {
+                return _generator?.Tags;
+            }
+        }
+        
         public string TagList
         {
             get
             {
                 return _generator?.TagList;
+            }
+            set
+            {
+                _generator.TagList = value;
             }
         }
 
@@ -137,6 +156,52 @@ namespace TheRandomizer.WinApp.Utility
             get
             {
                 return new DelegateCommand(Generate);
+            }
+        }
+
+        public ICommand EditTags
+        {
+            get
+            {
+                return new DelegateCommand(() =>
+                                            {
+                                                var tagEditor = new Views.TagEditor();
+                                                tagEditor.DataContext = this;
+                                                if (tagEditor.ShowDialog() == true)
+                                                {
+                                                    OnPropertyChanged("TagList");
+                                                }
+                                            });
+            }
+        }
+
+        public ICommand Save
+        {
+            get
+            {
+                return new DelegateCommand<Window>(w => 
+                                                   {
+                                                       Tags.RemoveAll(s => string.IsNullOrWhiteSpace(s));
+                                                       File.WriteAllText(FilePath, _generator.Serialize());
+                                                       w.DialogResult = true;
+                                                       w.Close();
+                                                   });
+            }
+        }
+
+        public ICommand AddTag
+        {
+            get
+            {
+                return new DelegateCommand(() => Tags.Add(string.Empty));
+            }
+        }
+
+        public ICommand RemoveTag
+        {
+            get
+            {
+                return new DelegateCommand<string>(s => Tags.Remove(s));
             }
         }
         #endregion

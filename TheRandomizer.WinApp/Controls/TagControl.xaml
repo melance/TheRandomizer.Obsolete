@@ -1,0 +1,27 @@
+﻿<UserControl x:Class="TheRandomizer.WinApp.Controls.TagControl"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:TheRandomizer.WinApp.Controls"
+             mc:Ignorable="d" 
+             Width="auto"
+             Margin="3"
+             Height="24"
+             Background="{DynamicResource AccentColorBrush}">
+    <d:DesignerProperties.DesignStyle>
+        <Style TargetType="UserControl">
+            <Setter Property="Background" Value="White" />
+        </Style>
+    </d:DesignerProperties.DesignStyle>    
+    <DockPanel>
+        <Button x:Name="btnDelete" Margin="3" MinHeight="0" MinWidth="0" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" Width="{Binding ActualHeight, RelativeSource={RelativeSource Self}}" Click="btnDelete_Click" IsEnabled="{Binding Command.CanExecute}" Style="{DynamicResource SquareButtonStyle}">
+            <Rectangle Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
+                <Rectangle.OpacityMask>
+                    <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_close}" />
+                </Rectangle.OpacityMask>
+            </Rectangle>
+        </Button>
+        <Label Content="{Binding Text}" VerticalAlignment="Center" HorizontalContentAlignment="Center" Foreground="{DynamicResource IdealForegroundColorBrush}" />
+    </DockPanel>
+</UserControl>
