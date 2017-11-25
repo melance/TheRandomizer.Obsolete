@@ -11,17 +11,18 @@
                     xmlns:controls="clr-namespace:TheRandomizer.WinApp.Controls"
                     xmlns:conv="clr-namespace:TheRandomizer.WinApp.Converters"
                     xmlns:util="clr-namespace:TheRandomizer.WinApp.Utility"
+                    xmlns:dialog="clr-namespace:MahApps.Metro.Controls.Dialogs;assembly=MahApps.Metro"
                     mc:Ignorable="d"
                     Title="The Randomizer" 
                     Icon="TheRandomizer.ico"
                     Height="600" 
-                    Width="800">
+                    Width="800"
+                    Cursor="{Binding Cursor}"
+                    Loaded="MetroWindow_Loaded"
+                    Closed="MetroWindow_Closed">
     <Window.DataContext>
         <viewModels:MainWindowViewModel />
     </Window.DataContext>
-    <Window.InputBindings>
-        <KeyBinding Command="{Binding Help}" Key="F1" />
-    </Window.InputBindings>
     <Window.Resources>
         <ResourceDictionary>
             <VisualBrush x:Key="DonateIcon" Visual="{StaticResource appbar_paypal}" />
@@ -59,10 +60,9 @@
         <Menu IsMainMenu="true" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3">
             <MenuItem Header="_Tools">
                 <MenuItem Name="mnuConvert" Header="_Convert Old Grammar..." ToolTip="Convert an old Grammar to the new format" Click="mnuConvert_Click" />
-                <MenuItem Header="_Refresh Generators" ToolTip="Refresh the list of generators" Command="{Binding RefreshGenerators}" />
             </MenuItem>
             <MenuItem Header="_Help">
-                <MenuItem Header="View _Help" Command="{Binding Help}" />
+                <MenuItem Header="_Generators Help" Command="{Binding GeneratorsHelp}" />
                 <MenuItem Header="_About" Command="{Binding About}" />
                 <Separator />
                 <MenuItem Header="Donate" Command="{x:Static util:BrowserBehavior.OpenURL}" CommandParameter="{util:ConfigurationBinding DonationURL}">
@@ -96,7 +96,7 @@
                 <ItemsControl MinHeight="12" HorizontalAlignment="Stretch" ItemsSource="{Binding Tags}">
                     <ItemsControl.ItemsPanel>
                         <ItemsPanelTemplate>
-                                <WrapPanel Orientation="Horizontal" />
+                            <WrapPanel Orientation="Horizontal" />
                         </ItemsPanelTemplate>
                     </ItemsControl.ItemsPanel>
                     <ItemsControl.ItemTemplate>
@@ -105,15 +105,26 @@
                         </DataTemplate>
                     </ItemsControl.ItemTemplate>
                 </ItemsControl>
-            </ScrollViewer>           
+            </ScrollViewer>
         </Expander>
         <DockPanel HorizontalAlignment="Stretch" Grid.Row="2" Grid.Column="0" LastChildFill="True">
             <Label Content="Generators" Style="{DynamicResource TitleLabel}" FontWeight="Bold" DockPanel.Dock="Top" />
-            <TextBlock Margin="3" DockPanel.Dock="Bottom" TextTrimming="CharacterEllipsis" ToolTip="{util:ConfigurationBinding GetMoreGeneratorsURL}">
-                <Hyperlink Name="lnkGrammars" Command="{x:Static util:BrowserBehavior.OpenURL}" CommandParameter="{util:ConfigurationBinding GetMoreGeneratorsURL}" Foreground="{DynamicResource AccentColorBrush}">
-                    Get More Grammars
-                </Hyperlink>
-            </TextBlock>
+            <DockPanel Margin="3" DockPanel.Dock="Bottom" LastChildFill="False">
+                <Button ToolTip="Get More Generators" Command="{Binding GetMoreGenerators}" DockPanel.Dock="Right" Padding="12" Margin="3,3,0,3" Style="{DynamicResource MetroCircleButtonStyle}">
+                    <Rectangle Width="12" Height="12" Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
+                        <Rectangle.OpacityMask>
+                            <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_globe}" />
+                        </Rectangle.OpacityMask>
+                    </Rectangle>
+                </Button>
+                <Button ToolTip="Refresh Generators" Command="{Binding RefreshGenerators}" DockPanel.Dock="Right" Padding="12" Margin="3,3,0,3" Style="{DynamicResource MetroCircleButtonStyle}">
+                    <Rectangle Width="12" Height="12" Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
+                        <Rectangle.OpacityMask>
+                            <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_refresh}" />
+                        </Rectangle.OpacityMask>
+                    </Rectangle>
+                </Button>
+            </DockPanel>
             <Grid>
                 <ListBox Margin="0" ItemsSource="{Binding FilteredGenerators}">
                     <ListBox.ItemTemplate>
@@ -123,7 +134,7 @@
                                     <StackPanel>
                                         <TextBlock Text="{Binding Description}" FontWeight="Bold" />
                                         <TextBlock Text="{Binding Author, StringFormat={}By: {0}}" />
-                                    </StackPanel>                                    
+                                    </StackPanel>
                                 </TextBlock.ToolTip>
                                 <TextBlock.InputBindings>
                                     <MouseBinding Gesture="LeftDoubleClick" Command="{Binding DataContext.SelectGenerator, RelativeSource={RelativeSource AncestorType=ListBox}}" CommandParameter="{Binding FilePath}" />
@@ -137,18 +148,20 @@
         <GridSplitter Grid.Row="2" Grid.Column="1" Width="3" HorizontalAlignment="Stretch" ResizeDirection="Columns" ResizeBehavior="PreviousAndNext" Margin="0" />
         <DockPanel Grid.Row="2" Grid.Column="2" LastChildFill="True">
             <Label Content="" Style="{DynamicResource TitleLabel}" FontWeight="Bold" DockPanel.Dock="Top" />
-            <dockablz:Layout>                
-                <dragablz:TabablzControl HeaderMemberPath="Name" SelectedValue="{Binding SelectedGenerator}" ShowDefaultCloseButton="True" AddLocationHint="After" ItemsSource="{Binding LoadedGenerators}">
-                    <dragablz:TabablzControl.ContentTemplate>
-                        <DataTemplate DataType="{x:Type util:GeneratorWrapper}">
-                            <controls:GeneratorTabItem Generator="{Binding}" />
-                        </DataTemplate>
-                    </dragablz:TabablzControl.ContentTemplate>
-                    <dragablz:TabablzControl.InterTabController>
-                        <dragablz:InterTabController InterTabClient="{Binding InterTabClientInstance}" />
-                    </dragablz:TabablzControl.InterTabController>
-                </dragablz:TabablzControl>
-            </dockablz:Layout>
+            <Grid>
+                <dockablz:Layout>
+                    <dragablz:TabablzControl HeaderMemberPath="Name" SelectedValue="{Binding SelectedGenerator}" ShowDefaultCloseButton="True" AddLocationHint="After" ItemsSource="{Binding LoadedGenerators}">
+                        <dragablz:TabablzControl.ContentTemplate>
+                            <DataTemplate DataType="{x:Type util:GeneratorWrapper}">
+                                <controls:GeneratorTabItem Generator="{Binding}" />
+                            </DataTemplate>
+                        </dragablz:TabablzControl.ContentTemplate>
+                        <dragablz:TabablzControl.InterTabController>
+                            <dragablz:InterTabController InterTabClient="{Binding InterTabClientInstance}" />
+                        </dragablz:TabablzControl.InterTabController>
+                    </dragablz:TabablzControl>
+                </dockablz:Layout>
+            </Grid>
         </DockPanel>
     </Grid>
 </metro:MetroWindow>

@@ -17,6 +17,10 @@ using TheRandomizer.WinApp.Utility;
 using TheRandomizer.Utility;
 using System.Windows;
 using TheRandomizer.WinApp.Models;
+using System.Threading;
+using MahApps.Metro.Controls.Dialogs;
+using MahApps.Metro.Controls;
+using TheRandomizer.WinApp.Views;
 
 namespace TheRandomizer.WinApp.ViewModels
 {
@@ -36,19 +40,21 @@ namespace TheRandomizer.WinApp.ViewModels
         #endregion
 
         #region Members
-        private Utility.InterTabClient _interTabClient;
+        private InterTabClient _interTabClient;
+        private BackgroundWorker _loadGeneratorsWorker;
         #endregion
 
         #region Constructors
         public MainWindowViewModel()
         {
             Tags.ItemPropertyChanged += Tags_ItemPropertyChanged;
-            LoadGenerators();
         }
-
         #endregion
 
         #region Properties
+        private MainWindow MainWindowInstance { get { return Application.Current.MainWindow as MainWindow; } }
+
+        public Cursor Cursor { get { return GetProperty<Cursor>(); } set { SetProperty(value); } }
         public ObservableList<Tag> Tags { get; } = new ObservableList<Tag>();
         public GeneratorInfoCollection Generators { get; private set; }
         public GeneratorInfoCollection FilteredGenerators
@@ -93,27 +99,40 @@ namespace TheRandomizer.WinApp.ViewModels
         #region Public Methods
         public ICommand RefreshGenerators
         {
-            get { return new DelegateCommand(RefreshGeneratorList); }
+            get { return new DelegateCommand(LoadGenerators); }
         }
 
         public ICommand SelectAllTags
         {
-            get { return new DelegateCommand<ToggleType>(ToggleTagSelction, ToggleType.All); }
+            get { return new DelegateCommand<ToggleType>(ToggleTagSelection, ToggleType.All); }
         }
 
         public ICommand UnselectAllTags
         {
-            get { return new DelegateCommand<ToggleType>(ToggleTagSelction, ToggleType.None); }
+            get { return new DelegateCommand<ToggleType>(ToggleTagSelection, ToggleType.None); }
         }
 
         public ICommand ToggleTags
         {
-            get { return new DelegateCommand<ToggleType>(ToggleTagSelction, ToggleType.Flip); }
+            get { return new DelegateCommand<ToggleType>(ToggleTagSelection, ToggleType.Flip); }
         }
 
-        public ICommand Help
+        public ICommand GeneratorsHelp
         {
-            get { return new DelegateCommand(ShowHelp); }
+            get { return new DelegateCommand(ShowGeneratorsHelp); }
+        }
+
+        public ICommand GetMoreGenerators
+        {
+            get { return new DelegateCommand(
+                () =>
+                {
+                    Cursor = Cursors.Wait;
+                    var view = new GetMoreGenerators();
+                    Cursor = null;
+                    view.ShowDialog();
+                }
+            ); }
         }
 
         public ICommand About
@@ -128,7 +147,7 @@ namespace TheRandomizer.WinApp.ViewModels
         #endregion
 
         #region Private Methods
-        private void ToggleTagSelction(ToggleType toggle)
+        private void ToggleTagSelection(ToggleType toggle)
         {
             foreach (Tag tag in Tags)
             {
@@ -144,14 +163,19 @@ namespace TheRandomizer.WinApp.ViewModels
             }
         }
 
-        private void RefreshGeneratorList()
+        public void LoadGenerators()
         {
-            LoadGenerators();
+            Cursor = Cursors.Wait;
+            _loadGeneratorsWorker = new BackgroundWorker();
+            _loadGeneratorsWorker.WorkerReportsProgress = true;
+            _loadGeneratorsWorker.DoWork += LoadGenerators_DoWork;
+            _loadGeneratorsWorker.RunWorkerCompleted += LoadGenerators_Completed;
+            _loadGeneratorsWorker.RunWorkerAsync();
         }
 
-        private void ShowHelp()
+        private void ShowGeneratorsHelp()
         {
-            MessageBox.Show("Coming Soon!");
+            System.Windows.Forms.Help.ShowHelp(null, @"help\TheRandomizer.Generators.chm");
         }
 
         private void ShowAbout()
@@ -162,33 +186,34 @@ namespace TheRandomizer.WinApp.ViewModels
         
         private void LaunchGenerator(string filePath)
         {
-            var xml = File.ReadAllText(filePath);
-            var generator = BaseGenerator.Deserialize(xml);
-            var model = new GeneratorWrapper(generator);
-            LoadedGenerators.Add(model);
-            SelectedGenerator = model;
+            Cursor = Cursors.Wait;
+            var worker = new BackgroundWorker();
+            worker.DoWork += LaunchGenerator_DoWork;
+            worker.RunWorkerCompleted += LaunchGenerator_RunWorkerCompleted;
+            worker.RunWorkerAsync(filePath);
         }
 
-        public void LoadGenerators()
+        private void LaunchGenerator_DoWork(object sender, DoWorkEventArgs e)
+        {
+            var xml = File.ReadAllText(e.Argument as string);
+            var generator = BaseGenerator.Deserialize(xml);
+            var model = new GeneratorWrapper(generator, e.Argument as string);
+            e.Result = model;
+        }        
+
+        private void LaunchGenerator_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
+        {
+            var model = e.Result as GeneratorWrapper;
+            LoadedGenerators.Add(model);
+            SelectedGenerator = model;
+            Cursor = null;
+        }
+
+        public void LoadGenerators_DoWork(object sender, DoWorkEventArgs e)
         {
             if (Directory.Exists(GeneratorInfoCollection.GeneratorPath))
             {
-                Generators = GeneratorInfoCollection.LoadGeneratorList();
-                OnPropertyChanged("FilteredGenerators");
-                Tags.Clear();
-                Tags.AddRange(Generators.GetTags());
-                if (Properties.Settings.Default.ShowGeneratorLoadErrors && GeneratorInfoCollection.GeneratorLoadErrors.Count > 0)
-                {
-                    if (!DesignerProperties.GetIsInDesignMode(Application.Current.MainWindow))
-                    {
-                        var loadErrors = new Views.LoadErrorDialog();
-                        loadErrors.DataContext = GeneratorInfoCollection.GeneratorLoadErrors;
-                        if (loadErrors.ShowDialog() == false)
-                        {
-                            Application.Current.Shutdown(0);
-                        }
-                    }
-                }
+                e.Result = GeneratorInfoCollection.LoadGeneratorList(LoadGenerators_Progress);                
             }
             else
             {
@@ -196,6 +221,31 @@ namespace TheRandomizer.WinApp.ViewModels
             }
         }
 
+        private void LoadGenerators_Progress(string fileName)
+        {
+
+        }
+                
+        private void LoadGenerators_Completed(object sender, RunWorkerCompletedEventArgs e)
+        {
+            Generators = e.Result as GeneratorInfoCollection;
+            Tags.Clear();
+            Tags.AddRange(Generators.GetTags());
+            OnPropertyChanged("FilteredGenerators");
+            if (Properties.Settings.Default.ShowGeneratorLoadErrors && GeneratorInfoCollection.GeneratorLoadErrors.Count > 0)
+            {
+                if (!DesignerProperties.GetIsInDesignMode(Application.Current.MainWindow))
+                {
+                    var loadErrors = new Views.LoadErrorDialog();
+                    loadErrors.DataContext = GeneratorInfoCollection.GeneratorLoadErrors;
+                    if (loadErrors.ShowDialog() == false)
+                    {
+                        Application.Current.Shutdown(0);
+                    }
+                }
+            }
+            Cursor = null;
+        }
         #endregion
 
         #region Event Handlers

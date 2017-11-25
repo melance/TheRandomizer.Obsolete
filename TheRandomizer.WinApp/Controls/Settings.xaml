@@ -59,6 +59,10 @@
         </DockPanel>
         <Label Height="26" VerticalAlignment="Top" Content="Show Load Errors" Grid.Row="3" Grid.Column="0" Margin="3" />
         <metro:ToggleSwitch OnLabel="" OffLabel="" IsChecked="{util:SettingBinding ShowGeneratorLoadErrors}" Grid.Row="3" Grid.Column="1" />
-        <Button Width="100" Command="{Binding ResetSettings}" Margin="3" Content="Reset Settings" Grid.Row="4" Grid.Column="1" VerticalAlignment="Bottom" HorizontalAlignment="Right"  />
+        <DockPanel LastChildFill="False" Grid.Row="4" Grid.Column="0" Grid.ColumnSpan="2">
+            <Button DockPanel.Dock="Right" Width="80" Command="{Binding SaveSettings}" Margin="3" Content="_Save" Grid.Row="4" Grid.Column="1" VerticalAlignment="Bottom" HorizontalAlignment="Right"  />
+            <Button DockPanel.Dock="Right" Width="80" Command="{Binding Cancel}" Margin="3" Content="Cancel" Grid.Row="4" Grid.Column="1" VerticalAlignment="Bottom" HorizontalAlignment="Right"  />
+            <Button DockPanel.Dock="Left" Width="80" Command="{Binding ResetSettings}" Margin="3" Content="Reset" Grid.Row="4" Grid.Column="1" VerticalAlignment="Bottom" HorizontalAlignment="Right"  />
+        </DockPanel>
     </Grid>
 </UserControl>

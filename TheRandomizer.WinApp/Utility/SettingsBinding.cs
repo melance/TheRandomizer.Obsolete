@@ -12,6 +12,8 @@ namespace TheRandomizer.WinApp.Utility
 {
     public class SettingBindingExtension : Binding
     {
+        private bool _generatorsPathChanged = false;
+        
         public SettingBindingExtension()
         {
             Initialize();
@@ -30,22 +32,27 @@ namespace TheRandomizer.WinApp.Utility
         private void Initialize()
         {
             Properties.Settings.Default.PropertyChanged += PropertyChanged;
+            Properties.Settings.Default.SettingsSaving += SettingsSaved;
             Source = Properties.Settings.Default;
             Mode = BindingMode.TwoWay;
         }
 
+        private void SettingsSaved(object sender, CancelEventArgs e)
+        {
+            if (_generatorsPathChanged)
+            {
+                var main = Application.Current.MainWindow.DataContext as ViewModels.MainWindowViewModel;
+                main?.LoadGenerators();
+            }
+            App.ChangeAppStyle();
+        }
+
         private void PropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            Properties.Settings.Default.Save();
             switch (e.PropertyName)
             {
-                case "Theme":
-                case "Accent":
-                    App.ChangeAppStyle();
-                    break;
                 case "GeneratorDirectory":
-                    var main = Application.Current.MainWindow.DataContext as ViewModels.MainWindowViewModel;
-                    main?.LoadGenerators();
+                    _generatorsPathChanged = true;
                     break;
             }
         }

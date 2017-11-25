@@ -38,7 +38,10 @@ namespace TheRandomizer.WebApp.Models
             IsLibrary = info.IsLibrary;
             OutputFormat = info.OutputFormat;
             SupportsMaxLength = info.SupportsMaxLength;
-			Tags.AddRange(info.Tags);            
+            foreach (var tag in info.Tags)
+            {
+                Tags.Add(tag);
+            }
 
 			var user = DataContext.User;
 

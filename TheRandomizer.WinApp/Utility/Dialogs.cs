@@ -5,6 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.WindowsAPICodePack.Dialogs;
 using System.Windows.Forms;
+using System.Windows.Input;
+using TheRandomizer.WinApp.Commands;
+using System.Windows;
 
 namespace TheRandomizer.WinApp.Utility
 {
@@ -16,6 +19,30 @@ namespace TheRandomizer.WinApp.Utility
         private static readonly CommonFileDialogFilter[] Extensions = { new CommonFileDialogFilter("The Randomizer Generators (*.rgen)","*.rgen"),
                                                                         new CommonFileDialogFilter("Extensible Markup Language File (*.xml)", "*.xml"),
                                                                         new CommonFileDialogFilter("All Files (*.*)","*.*") };
+
+        public static ICommand Ok
+        {
+            get
+            {
+                return new DelegateCommand<Window>(w =>
+                                                   {
+                                                       w.DialogResult = true;
+                                                       w.Close();
+                                                   });
+            }
+        }
+
+        public static ICommand Cancel
+        {
+            get
+            {
+                return new DelegateCommand<Window>(w =>
+                {
+                    w.DialogResult = false;
+                    w.Close();
+                });
+            }
+        }
 
         public static string OpenFolderDialog(string defaultDirectory)
         {
