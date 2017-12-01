@@ -33,7 +33,7 @@ namespace TheRandomizer.WebApp.Controllers
                         new GeneratorTypeModel(typeof(AssignmentGenerator), "AssignmentEditor"),
                         new GeneratorTypeModel(typeof(DiceGenerator), "DiceEditor"),
                         new GeneratorTypeModel(typeof(ListGenerator), "ListEditor"),
-                        new GeneratorTypeModel(typeof(LUAGenerator), "LuaEditor"),
+                        new GeneratorTypeModel(typeof(LuaGenerator), "LuaEditor"),
                         new GeneratorTypeModel(typeof(PhonotacticsGenerator), "PhonotacticsEditor"),
                         new GeneratorTypeModel(typeof(TableGenerator), "TableEditor")
                     };
@@ -248,12 +248,12 @@ namespace TheRandomizer.WebApp.Controllers
         #region Lua Generator
         public ActionResult LuaEditor()
         {
-            return View(new LUAGenerator());
+            return View(new LuaGenerator());
         }
 
         [IsOwner]
         [HttpPost]
-        public ActionResult LuaEditor(LUAGenerator generator)
+        public ActionResult LuaEditor(LuaGenerator generator)
         {
             return SaveGenerator(generator);
         }

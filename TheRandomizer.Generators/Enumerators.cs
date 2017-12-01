@@ -6,6 +6,17 @@ using System.Threading.Tasks;
 
 namespace TheRandomizer.Generators
 {
+    public enum GeneratorType
+    {
+        Unknown,
+        Assignment,
+        Dice,
+        List,
+        Lua,
+        Phonotactics,
+        Table
+    }
+
     public enum OutputFormat
     {
         Text,

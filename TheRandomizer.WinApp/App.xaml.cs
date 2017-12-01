@@ -7,6 +7,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using System.IO;
 
 namespace TheRandomizer.WinApp
 {
@@ -19,24 +20,42 @@ namespace TheRandomizer.WinApp
 
         protected override void OnStartup(StartupEventArgs e)
         {
+            LoadCustomAccents();
             ChangeAppStyle();
-            var timer = new Stopwatch();
-            var splash = new Views.SplashScreen();
+            
+            if (WinApp.Properties.Settings.Default.ShowSplash)
+            {
+                var timer = new Stopwatch();    
+                var splash = new Views.SplashScreen();
+                timer.Start();
 
-            timer.Start();
+                base.OnStartup(e);
 
-            splash.Show();
+                splash.Show();
 
-            base.OnStartup(e);
-            var mainWindow = new MainWindow();
+                var mainWindow = new MainWindow();
 
-            timer.Stop();
+                timer.Stop();
 
-            var remainingSplashTime = SPLASH_DISPLAY_MILLISECONDS - timer.ElapsedMilliseconds;
-            if (remainingSplashTime > 0)
-                System.Threading.Thread.Sleep((int)remainingSplashTime);
+                var remainingSplashTime = SPLASH_DISPLAY_MILLISECONDS - timer.ElapsedMilliseconds;
+                if (remainingSplashTime > 0)
+                    System.Threading.Thread.Sleep((int)remainingSplashTime);
 
-            splash.Close();
+                splash.Close();
+            }
+            else
+            {
+                base.OnStartup(e);
+            }
+        }
+
+        public static void LoadCustomAccents()
+        {
+            foreach (var fileName in Directory.GetFiles(@".\Accents\","*.xaml",SearchOption.TopDirectoryOnly))
+            {
+                var uri = new Uri($"pack://application:,,,/{fileName}", UriKind.RelativeOrAbsolute);
+                ThemeManager.AddAccent(Path.GetFileNameWithoutExtension(fileName), uri);
+            }
         }
 
         public static void ChangeAppStyle()

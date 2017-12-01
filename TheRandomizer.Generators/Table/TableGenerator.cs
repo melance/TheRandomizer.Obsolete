@@ -10,7 +10,7 @@ using TheRandomizer.Generators.Attributes;
 namespace TheRandomizer.Generators.Table
 {
     [XmlType("Table")]
-    [GeneratorDisplay("Table Generator", "A generator meant to mimic the table format often found in random tables of rpg books.")]
+    [GeneratorDisplay(Generators.GeneratorType.Table, "A generator meant to mimic the table format often found in random tables of rpg books.")]
     public class TableGenerator : BaseGenerator
     {
         /// <summary>

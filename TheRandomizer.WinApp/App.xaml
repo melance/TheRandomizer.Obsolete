@@ -4,6 +4,7 @@
              xmlns:metro="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
              xmlns:dragablz="clr-namespace:Dragablz;assembly=Dragablz"             
              xmlns:local="clr-namespace:TheRandomizer.WinApp"
+             xmlns:conv="clr-namespace:TheRandomizer.WinApp.Converters"
              StartupUri="MainWindow.xaml">
     <Application.Resources>
         <ResourceDictionary>
@@ -19,8 +20,12 @@
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.AnimatedSingleRowTabControl.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/Dragablz;component/themes/mahapps.xaml" />
 
-            </ResourceDictionary.MergedDictionaries>            
-                        
+            </ResourceDictionary.MergedDictionaries>
+
+            <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+            <conv:IntegerToVisiblityConverter x:Key="IntegerToVisiblityConverter" />
+            <conv:MarginConverter x:Key="MarginConverter" />
+
             <Style TargetType="{x:Type dragablz:TabablzControl}" BasedOn="{StaticResource MahAppsTabablzControlStyle}" />
 
             <Style TargetType="GridSplitter">
@@ -73,8 +78,6 @@
                     </Trigger>
                 </Style.Triggers>
             </Style>
-
-            <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
 
             <ControlTemplate x:Key="CircleButton" TargetType="Button">
                 <Grid>

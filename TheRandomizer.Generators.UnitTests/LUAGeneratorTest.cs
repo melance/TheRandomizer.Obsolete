@@ -52,7 +52,7 @@ namespace TheRandomizer.Generators.Parameter.UnitTests
 
         private string Generate(string script)
         {
-            var generator = new LUAGenerator();
+            var generator = new LuaGenerator();
             generator.Name = "Test";
             generator.Script = script;
             var result = generator.Generate();

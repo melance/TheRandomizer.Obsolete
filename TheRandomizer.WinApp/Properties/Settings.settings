@@ -14,7 +14,7 @@
     <Setting Name="Accent" Type="System.String" Scope="User">
       <Value Profile="(Default)">Blue</Value>
     </Setting>
-    <Setting Name="ShowGeneratorLoadErrors" Type="System.Boolean" Scope="User">
+    <Setting Name="ShowSplash" Type="System.Boolean" Scope="User">
       <Value Profile="(Default)">True</Value>
     </Setting>
   </Settings>

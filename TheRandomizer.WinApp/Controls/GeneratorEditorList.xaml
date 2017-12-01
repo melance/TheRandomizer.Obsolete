@@ -1,0 +1,24 @@
+﻿<UserControl x:Class="TheRandomizer.WinApp.Controls.GeneratorEditorList"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:TheRandomizer.WinApp.Controls"
+             xmlns:metro="http://metro.mahapps.com/winfx/xaml/controls"
+             mc:Ignorable="d" 
+             d:DesignHeight="400" 
+             d:DesignWidth="400">
+    <d:DesignerProperties.DesignStyle>
+        <Style TargetType="UserControl">
+            <Setter Property="Background" Value="White" />
+        </Style>
+    </d:DesignerProperties.DesignStyle>
+    <DockPanel>
+        <DockPanel DockPanel.Dock="Top">
+            <Label Content="Keep White Space" DockPanel.Dock="Left" VerticalContentAlignment="Center" />
+            <metro:ToggleSwitch HorizontalContentAlignment="Right" OnLabel="Yes" OffLabel="No" IsChecked="{Binding KeepWhiteSpace}" />
+        </DockPanel>
+        <Label Content="Items" DockPanel.Dock="Top" Style="{DynamicResource SubTitleLabel }" />
+        <TextBox Text="{Binding Items}" AcceptsReturn="True" AcceptsTab="True" TextWrapping="Wrap" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto" />
+    </DockPanel>
+</UserControl>

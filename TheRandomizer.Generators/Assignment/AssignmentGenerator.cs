@@ -14,7 +14,7 @@ using System.IO;
 namespace TheRandomizer.Generators.Assignment
 {
     [XmlType("Assignment")]
-    [GeneratorDisplay("Assignment Generator", "A highly customizable and general purpose generator useful for most content.")]
+    [GeneratorDisplay(Generators.GeneratorType.Assignment, "A highly customizable and general purpose generator useful for most content.")]
     public class AssignmentGenerator : BaseGenerator
     {
         #region Constants

@@ -74,12 +74,12 @@ namespace TheRandomizer.WinApp.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool ShowGeneratorLoadErrors {
+        public bool ShowSplash {
             get {
-                return ((bool)(this["ShowGeneratorLoadErrors"]));
+                return ((bool)(this["ShowSplash"]));
             }
             set {
-                this["ShowGeneratorLoadErrors"] = value;
+                this["ShowSplash"] = value;
             }
         }
     }

@@ -12,13 +12,13 @@ using TheRandomizer.Generators.Parameter;
 namespace TheRandomizer.Generators.List
 {
     [XmlType("List")]
-    [GeneratorDisplay("List Generator", "A simple generator that selects an item from a list of choices.")]
+    [GeneratorDisplay(Generators.GeneratorType.List, "A simple generator that selects an item from a list of choices.")]
     public class ListGenerator : BaseGenerator
     {
         /// <summary>
         /// The newline delimited string of items to choose from
         /// </summary>
-        [XmlElement("items")]
+        [XmlElement("items", IsNullable = true)]
         [Required]
         public string Items { get; set; }
 
@@ -30,7 +30,7 @@ namespace TheRandomizer.Generators.List
         public bool KeepWhitespace { get; set; } = false;
 
         [XmlIgnore]
-        private new bool SupportsMaxLength { get; }
+        public new bool SupportsMaxLength { get; set; }
 
         [XmlIgnore]
         public new ConfigurationList Parameters { get; }

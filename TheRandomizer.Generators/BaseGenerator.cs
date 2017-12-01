@@ -163,18 +163,18 @@ namespace TheRandomizer.Generators
         public virtual bool Published { get; set; } = false;
 
         [XmlIgnore]
-        public string GeneratorType
+        public GeneratorType GeneratorType
         {
             get
             {
                 var attribute = (GeneratorDisplayAttribute)GetType().GetCustomAttribute(typeof(GeneratorDisplayAttribute), true);
                 if (attribute != null)
                 {
-                    return attribute.Name;
+                    return attribute.GeneratorType;
                 }
                 else
                 {
-                    return GetType().Name;
+                    return GeneratorType.Unknown;
                 }
             }
         }

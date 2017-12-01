@@ -94,9 +94,24 @@ namespace TheRandomizer.WinApp.ViewModels
 
         public ObservableCollection<GeneratorWrapper> LoadedGenerators { get; } = new ObservableCollection<GeneratorWrapper>();
         public GeneratorWrapper SelectedGenerator { get { return GetProperty<GeneratorWrapper>(); } set { SetProperty(value); } }
+
+        public int LoadErrorCount { get { return GeneratorInfoCollection.GeneratorLoadErrors.Count(); } }
         #endregion  
 
-        #region Public Methods
+        #region Commands
+        public ICommand ShowLoadErrors
+        {
+            get
+            {
+                return new DelegateCommand(() =>
+                {
+                    var loadErrors = new LoadErrorDialog();
+                    loadErrors.DataContext = GeneratorInfoCollection.GeneratorLoadErrors;
+                    loadErrors.ShowDialog();
+                });
+            }
+        }
+
         public ICommand RefreshGenerators
         {
             get { return new DelegateCommand(LoadGenerators); }
@@ -124,7 +139,8 @@ namespace TheRandomizer.WinApp.ViewModels
 
         public ICommand GetMoreGenerators
         {
-            get { return new DelegateCommand(
+            get {
+                return new DelegateCommand(
                 () =>
                 {
                     Cursor = Cursors.Wait;
@@ -133,6 +149,22 @@ namespace TheRandomizer.WinApp.ViewModels
                     view.ShowDialog();
                 }
             ); }
+        }
+
+        public ICommand GeneratorEditor
+        {
+            get
+            {
+                return new DelegateCommand<Type>(
+                t =>
+                {
+                    if (!t.IsSubclassOf(typeof(BaseGenerator))) throw new ArgumentException();
+                    var model = new GeneratorEditorViewModel(Activator.CreateInstance(t) as BaseGenerator);
+                    var editor = new GeneratorEditor();
+                    editor.DataContext = model;
+                    editor.Show();
+                });
+            }
         }
 
         public ICommand About
@@ -232,18 +264,7 @@ namespace TheRandomizer.WinApp.ViewModels
             Tags.Clear();
             Tags.AddRange(Generators.GetTags());
             OnPropertyChanged("FilteredGenerators");
-            if (Properties.Settings.Default.ShowGeneratorLoadErrors && GeneratorInfoCollection.GeneratorLoadErrors.Count > 0)
-            {
-                if (!DesignerProperties.GetIsInDesignMode(Application.Current.MainWindow))
-                {
-                    var loadErrors = new Views.LoadErrorDialog();
-                    loadErrors.DataContext = GeneratorInfoCollection.GeneratorLoadErrors;
-                    if (loadErrors.ShowDialog() == false)
-                    {
-                        Application.Current.Shutdown(0);
-                    }
-                }
-            }
+            OnPropertyChanged("LoadErrorCount");
             Cursor = null;
         }
         #endregion

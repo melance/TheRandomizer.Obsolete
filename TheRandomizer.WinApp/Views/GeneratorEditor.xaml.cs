@@ -10,17 +10,17 @@ using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
 using System.Windows.Shapes;
+using MahApps.Metro.Controls;
 
-namespace TheRandomizer.WinApp.Controls
+namespace TheRandomizer.WinApp.Views
 {
     /// <summary>
     /// Interaction logic for GeneratorEditor.xaml
     /// </summary>
-    public partial class GeneratorEditorLua : UserControl
+    public partial class GeneratorEditor : MetroWindow
     {
-        public GeneratorEditorLua()
+        public GeneratorEditor()
         {
             InitializeComponent();
         }

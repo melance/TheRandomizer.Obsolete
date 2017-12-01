@@ -12,7 +12,7 @@ using System.ComponentModel.DataAnnotations;
 namespace TheRandomizer.Generators.Phonotactics
 {
     [XmlType("Phonotactics")]
-    [GeneratorDisplay("Phonotactics Generator", "A generator based on the concepts of phonotactics.")]
+    [GeneratorDisplay(Generators.GeneratorType.Phonotactics, "A generator based on the concepts of phonotactics.")]
     public class PhonotacticsGenerator : BaseGenerator
     {
         /// <summary>Used to set the text casing of the result</summary>

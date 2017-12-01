@@ -13,7 +13,7 @@ using TheRandomizer.Generators.Attributes;
 namespace TheRandomizer.Generators.Dice
 {
     [XmlType(TypeName = "Dice")]
-    [GeneratorDisplay("Dice Generator", "A generator designed specifically to handle programmed dice rolling.")]
+    [GeneratorDisplay(Generators.GeneratorType.Dice, "A generator designed specifically to handle programmed dice rolling.")]
     public class DiceGenerator : BaseGenerator
     {
         #region Constants

@@ -40,6 +40,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AttributeExtensions.cs" />
     <Compile Include="CollectionExtensions.cs" />
     <Compile Include="Collections\DisposableList.cs" />
     <Compile Include="Collections\ObservableList.cs" />

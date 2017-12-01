@@ -75,7 +75,7 @@ namespace TheRandomizer.WinApp.Utility
         {
             get
             {
-                return _generator?.GeneratorType;
+                return _generator?.GeneratorType.ToString();
             }
         }
 

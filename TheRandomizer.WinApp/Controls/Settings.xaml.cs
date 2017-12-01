@@ -68,7 +68,15 @@ namespace TheRandomizer.WinApp.Controls
         {
             get
             {
-                return new DelegateCommand(() => Properties.Settings.Default.Save());
+                return new DelegateCommand(() =>
+                {
+                    Properties.Settings.Default.Save();
+                    var main = (Application.Current.MainWindow as MainWindow);
+                    if (main != null)
+                    {
+                        main.flySettings.IsOpen = false;
+                    }
+                });
             }
         }
 
@@ -76,7 +84,15 @@ namespace TheRandomizer.WinApp.Controls
         {
             get
             {
-                return new DelegateCommand(() => Properties.Settings.Default.Reload());
+                return new DelegateCommand(() =>
+                {
+                    Properties.Settings.Default.Reload();
+                    var main = (Application.Current.MainWindow as MainWindow);
+                    if (main != null)
+                    {
+                        main.flySettings.IsOpen = false;
+                    }
+                });
             }
         }
 
@@ -98,12 +114,23 @@ namespace TheRandomizer.WinApp.Controls
         {
             get
             {
+                const string ACCENT_BASE_COLOR = "AccentBaseColor";
+                const string ACCENT_COLOR = "AccentColor";
+
                 var value = new List<ColorView>();
                 foreach (var accent in ThemeManager.Accents)
                 {
-                    var color = (Color)accent.Resources["AccentBaseColor"];
+                    Color color = Colors.Black;
+                    if (accent.Resources[ACCENT_BASE_COLOR] != null)
+                    {
+                        color = (Color)accent.Resources[ACCENT_BASE_COLOR];
+                    }
+                    else if (accent.Resources[ACCENT_COLOR] != null)
+                    {
+                        color = (Color)accent.Resources[ACCENT_COLOR];
+                    }
+                    
                     value.Add(new ColorView(accent.Name, accent.Name, color));
-
                 }
                 return value.OrderBy(cv => cv.Name).ToList();
             }
