@@ -47,15 +47,21 @@ namespace TheRandomizer.WinApp.ViewModels
         #region Constructors
         public MainWindowViewModel()
         {
+            Tags = new ObservableList<Models.Tag>();
             Tags.ItemPropertyChanged += Tags_ItemPropertyChanged;
+        }
+        public MainWindowViewModel(IDialogCoordinator dialogCoordinator) : this()
+        {
+            DialogCoordinator = dialogCoordinator;
         }
         #endregion
 
         #region Properties
         private MainWindow MainWindowInstance { get { return Application.Current.MainWindow as MainWindow; } }
+        private IDialogCoordinator DialogCoordinator { get; set; }
 
         public Cursor Cursor { get { return GetProperty<Cursor>(); } set { SetProperty(value); } }
-        public ObservableList<Tag> Tags { get; } = new ObservableList<Tag>();
+        public ObservableList<Models.Tag> Tags { get; private set; } 
         public GeneratorInfoCollection Generators { get; private set; }
         public GeneratorInfoCollection FilteredGenerators
         {
@@ -63,7 +69,7 @@ namespace TheRandomizer.WinApp.ViewModels
             {
                 if (Tags.Count > 0)
                 {
-                    return new GeneratorInfoCollection(Generators.Where(bg => bg.Tags == null || bg.Tags.Count() == 0 || bg.Tags.Intersect(SelectedTags).Count() > 0));
+                    return new GeneratorInfoCollection(Generators.Where(bg => bg.Tags == null || bg.Tags.Count() == 0 || bg.Tags.Intersect(SelectedTags, TagComparer.Instance).Count() > 0));
                 }
                 else
                 {
@@ -71,11 +77,11 @@ namespace TheRandomizer.WinApp.ViewModels
                 }
             }
         }
-        protected List<string> SelectedTags
+        protected List<Generators.Tag> SelectedTags
         {
             get
             {
-                return Tags.Where(t => t.Selected).Select(t => t.Name).ToList();
+                return Tags.Where(t => t.Selected).Select(t => new Generators.Tag(t.Name)).ToList();
             }
         }
 
@@ -151,37 +157,44 @@ namespace TheRandomizer.WinApp.ViewModels
             ); }
         }
 
-        public ICommand GeneratorEditor
+        public ICommand CreateGenerator
         {
             get
             {
-                return new DelegateCommand<Type>(
-                t =>
+                return new DelegateCommand(
+                () =>
                 {
-                    if (!t.IsSubclassOf(typeof(BaseGenerator))) throw new ArgumentException();
-                    var model = new GeneratorEditorViewModel(Activator.CreateInstance(t) as BaseGenerator);
-                    var editor = new GeneratorEditor();
-                    editor.DataContext = model;
+                    MainWindowInstance.flyTools.IsOpen = false;
+                    var editor = new GeneratorEditor();                    
+                    editor.ShowActivated = true;
                     editor.Show();
                 });
             }
         }
-
-        public ICommand About
-        {
-            get { return new DelegateCommand(ShowAbout); }
-        }
-        
+               
         public ICommand SelectGenerator
         {
             get { return new DelegateCommand<string>(LaunchGenerator); }
+        }
+
+        public ICommand ConvertGenerator
+        {
+            get
+            {
+                return new DelegateCommand(() =>
+                {
+                    var convert = new Views.ConvertGenerator();
+                    convert.Owner = MainWindowInstance;
+                    convert.ShowDialog();
+                });
+            }
         }
         #endregion
 
         #region Private Methods
         private void ToggleTagSelection(ToggleType toggle)
         {
-            foreach (Tag tag in Tags)
+            foreach (Models.Tag tag in Tags)
             {
                 switch (toggle)
                 {
@@ -209,13 +222,7 @@ namespace TheRandomizer.WinApp.ViewModels
         {
             System.Windows.Forms.Help.ShowHelp(null, @"help\TheRandomizer.Generators.chm");
         }
-
-        private void ShowAbout()
-        {
-            var about = new Views.About();
-            about.ShowDialog();            
-        }
-        
+                
         private void LaunchGenerator(string filePath)
         {
             Cursor = Cursors.Wait;

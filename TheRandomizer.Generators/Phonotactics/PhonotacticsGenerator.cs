@@ -8,6 +8,7 @@ using TheRandomizer.Generators.Lexer;
 using System.Globalization;
 using TheRandomizer.Generators.Attributes;
 using System.ComponentModel.DataAnnotations;
+using TheRandomizer.Generators.Parameter;
 
 namespace TheRandomizer.Generators.Phonotactics
 {
@@ -36,6 +37,9 @@ namespace TheRandomizer.Generators.Phonotactics
         [XmlArray("patterns")]
         [XmlArrayItem("item")]
         public List<Pattern> Patterns { get; set; } = new List<Pattern>();
+
+        [XmlIgnore]
+        public override ConfigurationList Parameters { get; set; }
 
         protected override string GenerateInternal(int? maxLength)
         {

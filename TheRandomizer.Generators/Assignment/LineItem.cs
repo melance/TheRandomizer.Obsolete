@@ -5,37 +5,24 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml.Serialization;
+using TheRandomizer.Utility;
 
 namespace TheRandomizer.Generators.Assignment
 {
-    public class LineItem
+    public class LineItem : ObservableBase
     {
-        private int _weight = 1;
-
         [XmlAttribute("name")]
         [Required]
-        public string Name { get; set; }
+        public string Name { get { return GetProperty<string>(); } set { SetProperty(value); } }
         [XmlText()]
-        public string Expression { get; set; }
+        public string Expression { get { return GetProperty<string>(); } set { SetProperty(value); } }
         [XmlAttribute("next")]
-        public string Next { get; set; }
+        public string Next { get { return GetProperty<string>(); } set { SetProperty(value); } }
         [XmlAttribute("weight")]
-        public int Weight { 
-            get
-            {
-                return _weight;
-            }
-            set
-            {
-                if (value > 0)
-                {
-                    _weight = value;
-                }
-            }
-        }
+        public int Weight { get { return GetProperty<int>(); } set { value = (value <= 0 ? 1 : value); SetProperty(value); } }
         [XmlAttribute("variable")]
-        public string Variable { get; set; }
+        public string Variable { get { return GetProperty<string>(); } set { SetProperty(value); } }
         [XmlAttribute("repeat")]
-        public string Repeat { get; set; } 
+        public string Repeat { get { return GetProperty<string>(); } set { SetProperty(value); } }
     }
 }

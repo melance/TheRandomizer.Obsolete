@@ -1,0 +1,62 @@
+﻿<UserControl x:Class="TheRandomizer.WinApp.Controls.About"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:TheRandomizer.WinApp.Controls"
+             xmlns:viewModels="clr-namespace:TheRandomizer.WinApp.ViewModels"
+             xmlns:util="clr-namespace:TheRandomizer.WinApp.Utility"
+             FontFamily="Consolas"
+             mc:Ignorable="d" 
+             d:DesignHeight="400" 
+             d:DesignWidth="300">
+    <d:DesignerProperties.DesignStyle>
+        <Style TargetType="UserControl">
+            <Setter Property="Background" Value="White" />
+        </Style>
+    </d:DesignerProperties.DesignStyle>
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <DataTemplate x:Key="DataList">
+                <DockPanel LastChildFill="True">
+                    <TextBlock Width="140">
+                        <Hyperlink Command="{x:Static util:BrowserBehavior.OpenURL}" CommandParameter="{Binding Url}">
+                            <Run Text="{Binding Name}" />
+                        </Hyperlink>
+                    </TextBlock>
+                    <TextBlock Text="{Binding Description}" HorizontalAlignment="Right" FontWeight="Bold" />
+                </DockPanel>
+            </DataTemplate>
+            <Style x:Key="SubHeader" TargetType="TextBlock">
+                <Style.Setters>
+                    <Setter Property="FontWeight" Value="Bold" />
+                    <Setter Property="Background" Value="{StaticResource AccentColorBrush}" />
+                    <Setter Property="Foreground" Value="{StaticResource IdealForegroundColorBrush}" />
+                    <Setter Property="Padding" Value="3,0,0,0" />
+                    <Setter Property="Margin" Value="0,3,0,0" />
+                </Style.Setters>
+            </Style>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <DockPanel>
+        <DockPanel DockPanel.Dock="Top">
+            <Border Background="{DynamicResource AccentColorBrush}">
+                <Image Source="/TheRandomizer;component/TheRandomizer.ico" Height="32" />
+            </Border>
+            <Label Content="{x:Static viewModels:AboutViewModel.Title}" FontSize="24" Style="{DynamicResource SubTitleLabel}" />
+            <Label Content="{x:Static viewModels:AboutViewModel.Version}" Style="{DynamicResource SubTitleLabel}" />
+        </DockPanel>
+        <TextBlock Text="{x:Static viewModels:AboutViewModel.Description}" TextWrapping="Wrap" FontWeight="Bold" Margin="3" DockPanel.Dock="Top" />
+        <Label Content="Contributors" Style="{DynamicResource SubTitleLabel}" DockPanel.Dock="Top" />
+        <ItemsControl DockPanel.Dock="Top" ItemsSource="{x:Static viewModels:AboutViewModel.Contributors}" ItemTemplate="{StaticResource DataList}" Margin="3" />
+        <Label Content="Third Party Components" Style="{DynamicResource SubTitleLabel}"  DockPanel.Dock="Top" />
+        <TextBlock DockPanel.Dock="Bottom" Margin="3">
+            <TextBlock Text="License:" FontWeight="Bold" />
+            <Hyperlink NavigateUri="{x:Static viewModels:AboutViewModel.LicenseURL}">
+                <Run Text="{x:Static viewModels:AboutViewModel.License}" />
+            </Hyperlink>
+        </TextBlock>
+        <Separator DockPanel.Dock="Bottom" />
+        <ItemsControl DockPanel.Dock="Top" ItemsSource="{x:Static viewModels:AboutViewModel.ThirdPartyComponents}" ItemTemplate="{StaticResource DataList}" Margin="3" />
+    </DockPanel>
+</UserControl>

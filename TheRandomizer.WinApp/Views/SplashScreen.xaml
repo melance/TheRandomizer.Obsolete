@@ -15,7 +15,8 @@
         BorderThickness="0"
         Topmost="True"
         Height="136" 
-        Width="390">
+        Width="390"
+        Icon="/TheRandomizer;component/TheRandomizer.ico">
     <Canvas>
         <Image Source="/TheRandomizer;component/SplashScreen.png" VerticalAlignment="Top" />
     </Canvas>

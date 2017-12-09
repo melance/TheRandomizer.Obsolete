@@ -27,34 +27,13 @@ namespace TheRandomizer.WinApp.Views
             InitializeComponent();
         }
 
-        private ObservableCollection<string> Tags
+        private ObservableCollection<Generators.Tag> Tags
         {
             get
             {
                 if (DataContext == null || DataContext.GetType() != typeof(GeneratorWrapper)) return null;
                 return ((GeneratorWrapper)DataContext).Tags;
             }
-        }
-
-        private void TextBox_TextChanged(object sender, TextChangedEventArgs e)
-        {
-            var txtBox = sender as TextBox;
-            if (txtBox != null)
-            {
-                var item = txtBox.DataContext as string;
-                if (item != null)
-                {
-                    var container = lstTags.ItemContainerGenerator.ContainerFromItem(item);
-                    if (container != null)
-                    {
-                        var index = lstTags.ItemContainerGenerator.IndexFromContainer(container);
-                        if (txtBox.Text != Tags[index])
-                        {
-                            Tags[index] = txtBox.Text;
-                        }
-                    }
-                }
-            }
-        }
+        }        
     }
 }

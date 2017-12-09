@@ -10,6 +10,8 @@ using TheRandomizer.Generators.Exceptions;
 using TheRandomizer.Generators.Attributes;
 using System.Xml;
 using System.IO;
+using TheRandomizer.Utility.Collections;
+using System.Collections.ObjectModel;
 
 namespace TheRandomizer.Generators.Assignment
 {
@@ -71,14 +73,14 @@ namespace TheRandomizer.Generators.Assignment
         [XmlArray("items")]
         [XmlArrayItem("item")]
         [RequireOneElement(ErrorMessage = "You must include at least one Line Item.")]
-        public List<LineItem> LineItems { get; set; } = new List<LineItem>();
+        public ObservableList<LineItem> LineItems { get; set; } = new ObservableList<LineItem>();
 
         /// <summary>
         /// An optional list of libraries to import into the generator
         /// </summary>
         [XmlArray("imports")]
         [XmlArrayItem("import")]
-        public List<String> Imports { get; set; } = new List<String>();
+        public ObservableCollection<Import> Imports { get; set; } = new ObservableCollection<Import>();
         #endregion
 
         #region Protected Methods
@@ -139,7 +141,7 @@ namespace TheRandomizer.Generators.Assignment
                 OnRequestGenerator(e);
                 if (e.Generator != null)
                 {
-                    throw new Exceptions.LibraryNotFoundException(import);
+                    throw new LibraryNotFoundException(import);
                 }
                 else
                 {

@@ -8,41 +8,106 @@
                    xmlns:util="clr-namespace:TheRandomizer.WinApp.Utility"
                    xmlns:ctrls="clr-namespace:TheRandomizer.WinApp.Controls"
                    xmlns:viewModels="clr-namespace:TheRandomizer.WinApp.ViewModels"
+                   xmlns:dialogs="clr-namespace:MahApps.Metro.Controls.Dialogs;assembly=MahApps.Metro"
+                   xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+                   dialogs:DialogParticipation.Register="{Binding}"
+                   Closing="MetroWindow_Closing"
                    mc:Ignorable="d"
-                   Title="{Binding FileName, StringFormat=Generator Editor ({0}), TargetNullValue='Generator Editor'}" 
+                   Title="{Binding FileName, StringFormat=Generator Editor - {0}, TargetNullValue='Generator Editor'}" 
                    Height="600" 
-                   Width="800">
+                   Width="800" 
+                   Name="winGeneratorEditor"
+                   Icon="/TheRandomizer;component/TheRandomizer.ico">
     <Window.DataContext>
         <viewModels:GeneratorEditorViewModel />
     </Window.DataContext>
     <Window.Resources>
         <ResourceDictionary>
-            <DataTemplate x:Key="ListDataTemplate">
-                <ctrls:GeneratorEditorList />
-            </DataTemplate>
+            <DataTemplate x:Key="AssignmentDataTemplate"><ctrls:GeneratorEditorAssignment /></DataTemplate>
+            <DataTemplate x:Key="DiceDataTemplate"><ctrls:GeneratorEditorDice /></DataTemplate>
+            <DataTemplate x:Key="ListDataTemplate"><ctrls:GeneratorEditorList /></DataTemplate>
+            <DataTemplate x:Key="LuaDataTemplate"><ctrls:GeneratorEditorLua /></DataTemplate>
+            <DataTemplate x:Key="PhonotacticDataTemplate"><ctrls:GeneratorEditorPhonotactics /></DataTemplate>
+            <DataTemplate x:Key="TableDataTemplate"><ctrls:GeneratorEditorTable /></DataTemplate>
             <util:GeneratorEditorTemplateSelector x:Key="TemplateSelector" 
-                                                          ListDataTemplate="{StaticResource ListDataTemplate}" />
+                                                  AssignmentDataTemplate="{StaticResource AssignmentDataTemplate}"
+                                                  DiceDataTemplate="{StaticResource DiceDataTemplate}"
+                                                  ListDataTemplate="{StaticResource ListDataTemplate}" 
+                                                  LuaDataTemplate="{StaticResource LuaDataTemplate}"
+                                                  PhonotacticTemplate="{StaticResource PhonotacticDataTemplate}"
+                                                  TableTemplate="{StaticResource TableDataTemplate}"/>
         </ResourceDictionary>
     </Window.Resources>
+    <metro:MetroWindow.Flyouts>
+        <metro:FlyoutsControl>
+            <metro:Flyout Name="flyPreview" Header="Preview" Position="Top" IsModal="True" VerticalAlignment="Stretch">
+                <DockPanel HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+                    <TextBox Text="{Binding GeneratorXML, Mode=OneWay}" TextWrapping="Wrap" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto" />
+                </DockPanel>
+            </metro:Flyout>
+        </metro:FlyoutsControl>
+    </metro:MetroWindow.Flyouts>
     <Grid>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="auto" />
-            <ColumnDefinition />
+            <ColumnDefinition Width="*" />
         </Grid.ColumnDefinitions>
         <Grid.RowDefinitions>
             <RowDefinition Height="auto" />
             <RowDefinition Height="auto" />
             <RowDefinition />
         </Grid.RowDefinitions>
-        <Menu Grid.Row="0" Grid.ColumnSpan="2">
-            <MenuItem Header="File">
-                <MenuItem Header="New" />
-                <MenuItem Header="Open" />
-                <MenuItem Header="Save" Command="{Binding Save}" />
-                <MenuItem Header="Save As..." Command="{Binding SaveAs}" />
-            </MenuItem>
-        </Menu>
-        <Grid Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2">
+        <StackPanel Orientation="Horizontal" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2">
+            <metro:DropDownButton ItemsSource="{Binding NewGeneratorList}" Margin="0,0,3,0" BorderThickness="2">
+                <metro:DropDownButton.IconTemplate>
+                    <DataTemplate>
+                        <Rectangle Width="12" Height="12" Margin="0,0,5,0" Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
+                            <Rectangle.OpacityMask>
+                                <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_page}" />
+                            </Rectangle.OpacityMask>
+                        </Rectangle>
+                    </DataTemplate>
+                </metro:DropDownButton.IconTemplate>
+                <metro:DropDownButton.ItemContainerStyle>
+                    <Style TargetType="MenuItem">
+                        <Setter Property="Header" Value="{Binding Text}" />
+                        <Setter Property="Command" Value="{Binding Command}" />
+                        <Setter Property="ToolTip" Value="{Binding ToolTip}" />
+                    </Style>
+                </metro:DropDownButton.ItemContainerStyle>
+            </metro:DropDownButton>
+            <Button Command="{Binding Open}" ToolTip="Open" Style="{DynamicResource SquareButtonStyle}" Margin="0,0,3,0" Width="32">
+                <Rectangle Width="12" Height="12" Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
+                    <Rectangle.OpacityMask>
+                        <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_folder_open}" />
+                    </Rectangle.OpacityMask>
+                </Rectangle>
+            </Button>
+            <Button Command="{Binding Save}" IsEnabled="{Binding HasGenerator}" ToolTip="Save" Style="{DynamicResource SquareButtonStyle}" Margin="0,0,0,0" BorderThickness="2,2,0,2">
+                <Rectangle Width="12" Height="12" Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
+                    <Rectangle.OpacityMask>
+                        <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_save}" />
+                    </Rectangle.OpacityMask>
+                </Rectangle>
+            </Button>
+            <metro:DropDownButton IsEnabled="{Binding HasGenerator}" ItemsSource="{Binding SaveList}" Margin="0,0,3,0" BorderThickness="0,2,2,2">
+                <metro:DropDownButton.ItemContainerStyle>
+                    <Style TargetType="MenuItem">
+                        <Setter Property="Header" Value="{Binding Text}" />
+                        <Setter Property="Command" Value="{Binding Command}" />
+                        <Setter Property="ToolTip" Value="{Binding ToolTip}" />
+                    </Style>
+                </metro:DropDownButton.ItemContainerStyle>
+            </metro:DropDownButton>
+            <ToggleButton IsEnabled="{Binding HasGenerator}" IsChecked="{Binding ElementName=flyPreview, Path=IsOpen}" Command="{Binding ViewXML}" ToolTip="Preview XML" Style="{DynamicResource SquareButtonStyle}" Margin="0,0,3,0" Width="32">                
+                <Rectangle Width="12" Height="12" Fill="{Binding RelativeSource={RelativeSource AncestorType=ToggleButton}, Path=Foreground}">
+                    <Rectangle.OpacityMask>
+                        <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_code_xml}" />
+                    </Rectangle.OpacityMask>
+                </Rectangle>
+            </ToggleButton>
+        </StackPanel>
+        <Grid Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2" IsEnabled="{Binding HasGenerator}" >
             <Grid.RowDefinitions>
                 <RowDefinition Height="auto" />
                 <RowDefinition Height="auto" />
@@ -66,18 +131,18 @@
             <Label Content="Url" Grid.Column="0" Grid.Row="3" />
             <TextBox Text="{Binding Generator.Url}" Grid.Column="1" Grid.Row="3" Margin="3" />
             <Label Content="Supports Max Length" Grid.Column="0" Grid.Row="4" Visibility="{Binding MaxLengthVisibility}" />
-            <metro:ToggleSwitch IsChecked="{Binding Generator.SupportsMaxLength}" Visibility="{Binding MaxLengthVisibility}" OnLabel="Yes" OffLabel="No" HorizontalContentAlignment="Right" Grid.Column="1" Grid.Row="4" Margin="3" />
+            <metro:ToggleSwitch IsChecked="{Binding Generator.SupportsMaxLength}" Visibility="{Binding MaxLengthVisibility}" OnLabel="Yes" OffLabel="No" HorizontalContentAlignment="Right" HorizontalAlignment="Left" Grid.Column="1" Grid.Row="4" Margin="3" />
             <Label Content="Tags" Grid.Column="0" Grid.Row="5" />
             <TextBox Text="{Binding Generator.TagList}" Grid.Column="1" Grid.Row="5" Margin="3" />
             <Label Content="CSS" Grid.Column="0" Grid.Row="6" />
             <TextBox Text="{Binding Generator.CSS}" Grid.Column="1" Grid.Row="6" Margin="3" TextWrapping="Wrap" Height="48" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto" />
         </Grid>
-        <DockPanel Grid.Column="0" Grid.Row="2" Visibility="{Binding ParameterVisibility}">
+        <DockPanel IsEnabled="{Binding HasGenerator}" Grid.Column="0" Grid.Row="2" Visibility="{Binding ParameterVisibility}">
             <Label DockPanel.Dock="Top" Style="{DynamicResource SubTitleLabel}" Content="Parameters" Grid.Column="0" Grid.Row="7" />
             <DataGrid Grid.Column="0" Grid.Row="8" Grid.ColumnSpan="2" Margin="3" ItemsSource="{Binding Generator.Parameters}" SelectionMode="Single" SelectionUnit="FullRow" CanUserReorderColumns="False" CanUserResizeColumns="True" AutoGenerateColumns="False" CanUserAddRows="True" CanUserDeleteRows="True" CanUserSortColumns="False" >
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Name" Binding="{Binding Name}" />
-                    <DataGridTextColumn Header="Display" Binding="{Binding Display}" />
+                    <DataGridTextColumn Header="Display" Binding="{Binding DisplayName}" />
                     <DataGridTextColumn Header="Default" Binding="{Binding Value}" />
                     <DataGridComboBoxColumn Header="Type" SelectedItemBinding="{Binding Type}" ItemsSource="{Binding ParameterTypes}" />
                 </DataGrid.Columns>
@@ -87,7 +152,7 @@
                             <Label Content="Options" DockPanel.Dock="Top" FontWeight="Bold" Padding="3,0,0,0" />
                             <DataGrid Margin="6" ItemsSource="{Binding Options}" SelectionMode="Single" SelectionUnit="CellOrRowHeader" CanUserReorderColumns="False" CanUserResizeRows="False" CanUserAddRows="True" CanUserDeleteRows="True" AutoGenerateColumns="False" AlternationCount="2" AlternatingRowBackground="Gainsboro">
                                 <DataGrid.Columns>
-                                    <DataGridTextColumn Header="Display" Binding="{Binding Display}" />
+                                    <DataGridTextColumn Header="Display" Binding="{Binding DisplayName}" />
                                     <DataGridTextColumn Header="Value" Binding="{Binding Value}" />
                                 </DataGrid.Columns>
                             </DataGrid>
@@ -96,8 +161,8 @@
                 </DataGrid.RowDetailsTemplate>
             </DataGrid>
         </DockPanel>
-        <DockPanel Grid.Column="1" Grid.Row="2">
-            <UserControl Content="{Binding Generator}" ContentTemplateSelector="{StaticResource TemplateSelector}" />
+        <DockPanel Grid.Column="1" Grid.Row="2" HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
+            <UserControl HorizontalContentAlignment="Stretch" VerticalContentAlignment="Stretch" IsEnabled="{Binding HasGenerator}" Content="{Binding Generator}" ContentTemplateSelector="{StaticResource TemplateSelector}" />
         </DockPanel>
     </Grid>
 </metro:MetroWindow>

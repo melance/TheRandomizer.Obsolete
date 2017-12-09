@@ -1,0 +1,51 @@
+﻿<UserControl x:Class="TheRandomizer.WinApp.Controls.GeneratorEditorPhonotactics"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:TheRandomizer.WinApp.Controls"
+             xmlns:system="clr-namespace:System;assembly=mscorlib"
+             xmlns:phono="clr-namespace:TheRandomizer.Generators.Phonotactics;assembly=TheRandomizer.Generators"
+             xmlns:ext="clr-namespace:TheRandomizer.WinApp.MarkupExtensions"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" 
+             d:DesignWidth="300">
+    <d:DesignerProperties.DesignStyle>
+        <Style TargetType="UserControl">
+            <Setter Property="Background" Value="White" />
+        </Style>
+    </d:DesignerProperties.DesignStyle>    
+    <DockPanel>
+        <DockPanel DockPanel.Dock="Top" Margin="0,3,3,3">
+            <Label Content="Text Case" DockPanel.Dock="Left" Width="100" />
+            <ComboBox ItemsSource="{ext:EnumValues phono:TextCase}" SelectedItem="{Binding TextCase}" />
+        </DockPanel>
+        <Grid DockPanel.Dock="Top">
+            <Grid.RowDefinitions>
+                <RowDefinition />
+                <RowDefinition Height="auto" />
+                <RowDefinition />
+            </Grid.RowDefinitions>
+            <DockPanel Grid.Row="0">
+                <Label Content="Definitions" Style="{DynamicResource SubTitleLabel}" DockPanel.Dock="Top" />
+                <DataGrid ItemsSource="{Binding Definitions}" AutoGenerateColumns="False" CanUserAddRows="True" CanUserDeleteRows="True" CanUserReorderColumns="False" CanUserResizeColumns="True" CanUserResizeRows="False">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Key" Binding="{Binding Key}" />
+                        <DataGridTextColumn Header="Delimiter" Binding="{Binding Delimiter}" />
+                        <DataGridTextColumn Header="Value" Binding="{Binding Value}" />
+                    </DataGrid.Columns>                    
+                </DataGrid>
+            </DockPanel>
+            <GridSplitter Grid.Row="1" Height="3" ResizeBehavior="PreviousAndNext" />
+            <DockPanel Grid.Row="2">
+                <Label Content="Patterns" Style="{DynamicResource SubTitleLabel}" DockPanel.Dock="Top" />
+                <DataGrid ItemsSource="{Binding Patterns}" AutoGenerateColumns="False" CanUserAddRows="True" CanUserDeleteRows="True" CanUserReorderColumns="False" CanUserResizeColumns="True" CanUserResizeRows="False">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Header="Weight" Binding="{Binding Weight}" />
+                        <DataGridTextColumn Header="Value" Binding="{Binding Value}" />
+                    </DataGrid.Columns>
+                </DataGrid>
+            </DockPanel>
+        </Grid>
+    </DockPanel>
+</UserControl>

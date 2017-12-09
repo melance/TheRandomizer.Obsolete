@@ -15,7 +15,7 @@
                    Height="300" 
                    Width="300"
                    WindowStartupLocation="CenterOwner" 
-                   Icon="/TheRandomizer.WinApp;component/TheRandomizer.ico">
+                   Icon="/TheRandomizer;component/TheRandomizer.ico">
     <dockablz:Layout>
         <dragablz:TabablzControl Name="tabContainer" HeaderMemberPath="Name" >
             <dragablz:TabablzControl.ContentTemplate>

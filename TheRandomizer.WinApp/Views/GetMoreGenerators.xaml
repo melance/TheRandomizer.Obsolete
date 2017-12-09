@@ -12,7 +12,10 @@
                    ShowMinButton="False"
                    Cursor="{Binding Cursor}"
                    mc:Ignorable="d"
-                   Title="Get More Generators" Height="300" Width="660">
+                   Title="Get More Generators" 
+                   Height="300" 
+                   Width="660"
+                   Icon="/TheRandomizer;component/TheRandomizer.ico">
     <Window.DataContext>
         <viewModels:GetMoreGeneratorsViewModel />
     </Window.DataContext>

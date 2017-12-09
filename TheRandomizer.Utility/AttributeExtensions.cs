@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -19,6 +20,13 @@ namespace TheRandomizer.Utility
         {
             var attribute = Attribute.GetCustomAttribute(pi, attributeType);
             return attribute != null;
+        }
+
+        public static string DisplayName(this Type type)
+        {
+            var attribute = type.GetCustomAttribute<DisplayNameAttribute>();
+            if (attribute == null) return type.Name;
+            return attribute.DisplayName;
         }
     }
 }

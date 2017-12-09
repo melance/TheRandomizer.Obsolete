@@ -18,16 +18,16 @@ namespace TheRandomizer.Generators.List
         /// <summary>
         /// The newline delimited string of items to choose from
         /// </summary>
-        [XmlElement("items", IsNullable = true)]
+        [XmlElement("items")]
         [Required]
-        public string Items { get; set; }
+        public string Items { get { return GetProperty<string>(); } set { SetProperty(value); } }
 
         /// <summary>
         /// If true, maintaines whitespace at the beginning and end of the result
         /// </summary>
         [XmlElement("keepWhitespace")]
         [Display(Name = "Keep Whitespace")]
-        public bool KeepWhitespace { get; set; } = false;
+        public bool KeepWhitespace { get { return GetProperty(false); } set { SetProperty(value); } }
 
         [XmlIgnore]
         public new bool SupportsMaxLength { get; set; }

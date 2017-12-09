@@ -8,7 +8,7 @@ using System.Windows.Media.Imaging;
 
 namespace TheRandomizer.WinApp.ViewModels
 {
-    class AboutViewModel 
+    sealed class AboutViewModel 
     {
         public class DetailListItem
         {
@@ -27,9 +27,9 @@ namespace TheRandomizer.WinApp.ViewModels
             public string UrlText { get; set; }
         }
 
-        private Assembly TheRandomizer { get { return Assembly.GetExecutingAssembly(); } }
+        private static Assembly TheRandomizer { get { return Assembly.GetExecutingAssembly(); } }
                 
-        public string Title
+        public static string Title
         {
             get
             {
@@ -37,7 +37,7 @@ namespace TheRandomizer.WinApp.ViewModels
             }
         }
 
-        public string Copyright
+        public static string Copyright
         {
             get
             {
@@ -45,7 +45,7 @@ namespace TheRandomizer.WinApp.ViewModels
             }
         }
 
-        public string Version
+        public static string Version
         {
             get
             {
@@ -53,7 +53,7 @@ namespace TheRandomizer.WinApp.ViewModels
             }
         }
 
-        public string Description
+        public static string Description
         {
             get
             {
@@ -61,7 +61,7 @@ namespace TheRandomizer.WinApp.ViewModels
             }
         }
 
-        public string Author
+        public static string Author
         {
             get
             {
@@ -69,15 +69,15 @@ namespace TheRandomizer.WinApp.ViewModels
             }
         }
 
-        public string LicenseURL
+        public static Uri LicenseURL
         {
             get
             {
-                return "https://creativecommons.org/licenses/by-nc/4.0/";
+                return new Uri("https://creativecommons.org/licenses/by-nc/4.0/");
             }
         }
 
-        public string License
+        public static string License
         {
             get
             {
@@ -85,7 +85,7 @@ namespace TheRandomizer.WinApp.ViewModels
             }
         }        
 
-        public List<DetailListItem> Contributors
+        public static List<DetailListItem> Contributors
         {
             get
             {
@@ -94,7 +94,7 @@ namespace TheRandomizer.WinApp.ViewModels
             }
         }
 
-        public List<DetailListItem> ThirdPartyComponents
+        public static List<DetailListItem> ThirdPartyComponents
         {
             get
             {

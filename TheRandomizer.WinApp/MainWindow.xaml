@@ -20,6 +20,7 @@
                    xmlns:table="clr-namespace:TheRandomizer.Generators.Table;assembly=TheRandomizer.Generators"
                    xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
                    xmlns:system="clr-namespace:System;assembly=mscorlib"
+                   dialog:DialogParticipation.Register="{Binding}"
                    mc:Ignorable="d"
                    Title="The Randomizer" 
                    Name="winMain"
@@ -49,66 +50,44 @@
             </ToggleButton>
         </metro:WindowCommands>
     </metro:MetroWindow.LeftWindowCommands>
-    <metro:MetroWindow.RightWindowCommands>
-        <metro:WindowCommands>
+    <metro:MetroWindow.RightWindowCommands>        
+        <metro:WindowCommands>            
+            <ToggleButton IsChecked="{Binding ElementName=flyAbout, Path=IsOpen}">
+                <Rectangle Width="20" Height="20" Fill="{Binding RelativeSource={RelativeSource AncestorType=ToggleButton}, Path=Foreground}">
+                    <Rectangle.OpacityMask>
+                        <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_information}" />
+                    </Rectangle.OpacityMask>
+                </Rectangle>
+            </ToggleButton>
             <ToggleButton IsChecked="{Binding ElementName=flySettings, Path=IsOpen}">
                 <Rectangle Width="20" Height="20" Fill="{Binding RelativeSource={RelativeSource AncestorType=ToggleButton}, Path=Foreground}">
                     <Rectangle.OpacityMask>
                         <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_settings}" />
                     </Rectangle.OpacityMask>
                 </Rectangle>
-            </ToggleButton>            
+            </ToggleButton>
         </metro:WindowCommands>
     </metro:MetroWindow.RightWindowCommands>
     <metro:MetroWindow.Flyouts>
         <metro:FlyoutsControl>
-            <metro:Flyout Name="flyTools" Header="Tools" Theme="Inverse" Position="Left" IsModal="False" TitleVisibility="Hidden" CloseButtonVisibility="Hidden">
-                <StackPanel>
-                    <StackPanel.Margin>
-                        <MultiBinding Converter="{StaticResource MarginConverter}">
-                            <Binding>
-                                <Binding.Source>
-                                    <system:Double>0</system:Double>                                    
-                                </Binding.Source>
-                            </Binding>
-                            <Binding ElementName="winMain" Path="TitlebarHeight" />
-                            <Binding>
-                                <Binding.Source>
-                                    <system:Double>0</system:Double>
-                                </Binding.Source>
-                            </Binding>
-                            <Binding>
-                                <Binding.Source>
-                                    <system:Double>0</system:Double>
-                                </Binding.Source>
-                            </Binding>
-                        </MultiBinding>
-                    </StackPanel.Margin>
-                    <DockPanel>
-                        <metro:DropDownButton DockPanel.Dock="Right">
-                            <metro:DropDownButton.Items>
-                                <MenuItem Header="Assignment Generator" Margin="3" Command="{Binding GeneratorEditor}" CommandParameter="{x:Type assign:AssignmentGenerator}" />
-                                <MenuItem Header="Dice Generator" Margin="3" Command="{Binding GeneratorEditor}" CommandParameter="{x:Type dice:DiceGenerator}" />
-                                <MenuItem Header="List Generator" Margin="3" Command="{Binding GeneratorEditor}" CommandParameter="{x:Type list:ListGenerator}" />
-                                <MenuItem Header="Lua Generator" Margin="3" Command="{Binding GeneratorEditor}" CommandParameter="{x:Type lua:LuaGenerator}" />
-                                <MenuItem Header="Phonotactics Generator" Margin="3" Command="{Binding GeneratorEditor}" CommandParameter="{x:Type phono:PhonotacticsGenerator}" />
-                                <MenuItem Header="Table Generator" Margin="3" Command="{Binding GeneratorEditor}" CommandParameter="{x:Type table:TableGenerator}" />                            
-                            </metro:DropDownButton.Items>
-                        </metro:DropDownButton>
-                        <Label Content="Create a new" />
-                    </DockPanel>
+            <metro:Flyout Name="flyTools" Header="Tools" IsPinned="False" Theme="Inverse" Position="Left" IsModal="True" TitleVisibility="Visible" CloseButtonVisibility="Visible">
+                <StackPanel Margin="3,0,3,0">
+                    <Button Content="Generator Editor" Margin="3" ToolTip="Create or Edit Generators" Command="{Binding CreateGenerator}"/>
+                    <Button Content="Convert Grammar" Margin="3" ToolTip="Convert an old Grammar to the new format" Command="{Binding ConvertGenerator}" />
                     <Separator />
-                    <MenuItem Header="Convert Old Grammar" HorizontalContentAlignment="Left" ToolTip="Convert an old Grammar to the new format" Click="mnuConvert_Click" />
+                    <Button Content="Donate" Margin="3" ToolTip="Donate via Paypal" Command="{x:Static util:BrowserBehavior.OpenURL}" CommandParameter="https://www.paypal.me/LanceBoudreaux" Visibility="{util:SettingBinding ShowDonateButton, Converter={StaticResource BooleanToVisibilityConverter}}"  />
                 </StackPanel>
             </metro:Flyout>
-            <metro:Flyout Name="flySettings" Header="Settings" Theme="Inverse" Position="Right" IsModal="True">
+            <metro:Flyout Name="flySettings" Header="Settings" IsPinned="False" Theme="Inverse" Position="Right" IsModal="True">
                 <controls:Settings />
+            </metro:Flyout>
+            <metro:Flyout Name="flyAbout" Header="About" IsPinned="False" Theme="Inverse" Position="Right" IsModal="True">
+                <controls:About />
             </metro:Flyout>
         </metro:FlyoutsControl>
     </metro:MetroWindow.Flyouts>
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition x:Name="Menu" Height="Auto" />
             <RowDefinition x:Name="Filters" Height="Auto" />
             <RowDefinition />
         </Grid.RowDefinitions>
@@ -117,19 +96,7 @@
             <ColumnDefinition Width="3" />
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-        <Menu IsMainMenu="true" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3">            
-            <MenuItem Header="_Help">
-                <MenuItem Header="_Generators Help" Command="{Binding GeneratorsHelp}" />
-                <MenuItem Header="_About" Command="{Binding About}" />
-                <Separator />
-                <MenuItem Header="Donate" Command="{x:Static util:BrowserBehavior.OpenURL}" CommandParameter="{util:ConfigurationBinding DonationURL}">
-                    <MenuItem.Icon>
-                        <Rectangle Width="18" Height="18" Fill="{StaticResource DonateIcon}" />
-                    </MenuItem.Icon>
-                </MenuItem>
-            </MenuItem>
-        </Menu>
-        <Expander Margin="0" BorderBrush="Transparent" IsExpanded="True" ExpandDirection="Down" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" >
+        <Expander Margin="0" BorderBrush="Transparent" IsExpanded="True" ExpandDirection="Down" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" >
             <Expander.Header>
                 <DockPanel>
                     <Button ToolTip="Unselect all tags" Style="{DynamicResource MetroCircleButtonStyle}" BorderThickness="0" Foreground="{DynamicResource IdealForegroundColorBrush}" DockPanel.Dock="Right" Command="{Binding UnselectAllTags}" Margin="3">
@@ -164,7 +131,7 @@
                 </ItemsControl>
             </ScrollViewer>
         </Expander>
-        <DockPanel HorizontalAlignment="Stretch" Grid.Row="2" Grid.Column="0" LastChildFill="True">
+        <DockPanel HorizontalAlignment="Stretch" Grid.Row="1" Grid.Column="0" LastChildFill="True">
             <Label Content="Generators" Style="{DynamicResource TitleLabel}" FontWeight="Bold" DockPanel.Dock="Top" />
             <DockPanel Margin="3" DockPanel.Dock="Bottom" LastChildFill="False">
                 <metro:Badged Badge="{Binding LoadErrorCount}" BadgeBackground="Red" BadgePlacementMode="Right" Visibility="{Binding LoadErrorCount, Converter={StaticResource IntegerToVisiblityConverter}}">

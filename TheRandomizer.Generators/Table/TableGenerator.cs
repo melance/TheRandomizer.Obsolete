@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using System.Xml.Serialization;
 using NCalc;
 using TheRandomizer.Generators.Attributes;
+using TheRandomizer.Utility.Collections;
 
 namespace TheRandomizer.Generators.Table
 {
@@ -20,13 +21,13 @@ namespace TheRandomizer.Generators.Table
         [XmlArrayItem("loopTable", typeof(LoopTable))]
         [XmlArrayItem("randomTable", typeof(RandomTable))]
         [XmlArrayItem("selectTable", typeof(SelectTable))]
-        public List<BaseTable> Tables { get; set; } = new List<BaseTable>();
+        public ObservableList<BaseTable> Tables { get; set; } = new ObservableList<BaseTable>();
 
         /// <summary>
         /// The formatted string used to output the results of the tables
         /// </summary>
         [XmlElement("output")]
-        public string Output { get; set; }
+        public string Output { get { return GetProperty<string>(); } set { SetProperty(value); } }
 
         /// <summary>
         /// A keyed list of the values calculated by the generator

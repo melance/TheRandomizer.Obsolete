@@ -12,7 +12,9 @@
                    x:Name="winLoadErrorDialog"
                    Title="The following errors occured loading the generators:" 
                    Height="500" 
-                   Width="800" WindowStartupLocation="CenterScreen">
+                   Width="800" 
+                   WindowStartupLocation="CenterScreen"
+                   Icon="/TheRandomizer;component/TheRandomizer.ico">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition />

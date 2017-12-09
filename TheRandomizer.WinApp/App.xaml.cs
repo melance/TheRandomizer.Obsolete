@@ -8,6 +8,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
 using System.IO;
+using NDesk.Options;
 
 namespace TheRandomizer.WinApp
 {
@@ -20,9 +21,24 @@ namespace TheRandomizer.WinApp
 
         protected override void OnStartup(StartupEventArgs e)
         {
+            var editor = false;
+            var p = new OptionSet() { { "e|editor", v => editor = true } };
+            p.Parse(e.Args);
+
             LoadCustomAccents();
             ChangeAppStyle();
-            
+
+
+            if (editor)
+            {
+                StartupUri = new Uri(@"Views/GeneratorEditor.xaml", UriKind.Relative);
+            }
+            else
+            {
+                StartupUri = new Uri("MainWindow.xaml", UriKind.Relative);
+            }
+            ShutdownMode = ShutdownMode.OnLastWindowClose;
+
             if (WinApp.Properties.Settings.Default.ShowSplash)
             {
                 var timer = new Stopwatch();    
@@ -64,6 +80,11 @@ namespace TheRandomizer.WinApp
             var accent = ThemeManager.GetAccent(WinApp.Properties.Settings.Default.Accent);
             if (theme != null && accent != null)
                 ThemeManager.ChangeAppStyle(Current, accent, theme);
+        }
+
+        private void Application_Startup(object sender, StartupEventArgs e)
+        {
+
         }
     }
 }

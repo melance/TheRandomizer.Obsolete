@@ -9,6 +9,7 @@ using System.Xml.Serialization;
 using TheRandomizer.Generators.Parameter;
 using TheRandomizer.Utility;
 using TheRandomizer.Generators.Attributes;
+using TheRandomizer.Utility.Collections;
 
 namespace TheRandomizer.Generators.Dice
 {
@@ -24,13 +25,15 @@ namespace TheRandomizer.Generators.Dice
         #endregion
 
         #region Public Properties
+        [XmlIgnore]
+        public override bool SupportsMaxLength { get; set; } = false;
+
         /// <summary>A list of dice roll functions the user can select from using a RollFunction parameter</summary>
         [XmlElement("function")]
-        public List<RollFunction> Functions { get; set; } = new List<RollFunction>();
+        public ObservableList<RollFunction> Functions { get; set; } = new ObservableList<RollFunction>();
 
         /// <summary>A list of parameters to provide to the generator</summary>
-        [XmlArray("parameters")]
-        [XmlArrayItem("parameter")]
+        [XmlIgnore]
         public override ConfigurationList Parameters
         {
             get

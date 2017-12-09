@@ -12,6 +12,8 @@ using TheRandomizer.Utility;
 using TheRandomizer.Utility.Collections;
 using TheRandomizer.WinApp.Commands;
 using TheRandomizer.WinApp.Models;
+using TheRandomizer.WinApp.ViewModels;
+using TheRandomizer.WinApp.Views;
 
 namespace TheRandomizer.WinApp.Utility
 {
@@ -45,6 +47,8 @@ namespace TheRandomizer.WinApp.Utility
                 return _generator != null ? _generator.Id : Guid.Empty;
             }
         }
+
+        public BaseGenerator Generator { get { return _generator; } private set { _generator = value; } }
 
         public string Name {
             get
@@ -95,7 +99,7 @@ namespace TheRandomizer.WinApp.Utility
             }
         }
 
-        public ObservableCollection<string> Tags
+        public ObservableCollection<Generators.Tag> Tags
         {
             get
             {
@@ -188,7 +192,7 @@ namespace TheRandomizer.WinApp.Utility
                                                    });
             }
         }
-
+        
         public ICommand AddTag
         {
             get
@@ -203,7 +207,7 @@ namespace TheRandomizer.WinApp.Utility
             {
                 return new DelegateCommand<string>(s => Tags.Remove(s));
             }
-        }
+        } 
         #endregion
 
         #region Methods
