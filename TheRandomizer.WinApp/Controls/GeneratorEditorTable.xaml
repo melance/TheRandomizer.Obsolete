@@ -1,0 +1,111 @@
+﻿<UserControl x:Class="TheRandomizer.WinApp.Controls.GeneratorEditorTable"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:TheRandomizer.WinApp.Controls"
+             xmlns:dragablz="clr-namespace:Dragablz;assembly=Dragablz"
+             xmlns:dockablz="clr-namespace:Dragablz.Dockablz;assembly=Dragablz"
+             xmlns:viewModels="clr-namespace:TheRandomizer.WinApp.ViewModels"
+             xmlns:util="clr-namespace:TheRandomizer.WinApp.Utility"
+             xmlns:metro="http://metro.mahapps.com/winfx/xaml/controls"
+             xmlns:tables="clr-namespace:TheRandomizer.Generators.Table;assembly=TheRandomizer.Generators"
+             xmlns:conv="clr-namespace:TheRandomizer.WinApp.Converters"
+             xmlns:diag="clr-namespace:System.Diagnostics;assembly=WindowsBase"
+             xmlns:toolkit="http://schemas.microsoft.com/wpf/2008/toolkit"
+             Name="usrTable"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <d:DesignerProperties.DesignStyle>
+        <Style TargetType="UserControl">
+            <Setter Property="Background" Value="White" />
+        </Style>
+    </d:DesignerProperties.DesignStyle>
+    <UserControl.Resources>
+        <conv:TableConverter x:Key="TableConverter" />
+        <DataTemplate x:Key="LoopTableTemplate">
+        </DataTemplate>
+        <DataTemplate x:Key="RandomTableTemplate">
+            <DockPanel>
+                <Label Margin="3" Content="Modifier" Width="80" Style="{DynamicResource MetroLabel}" />
+                <TextBox Margin="3" Text="{Binding Modifier}" VerticalAlignment="Center" Style="{DynamicResource MetroTextBox}" />
+            </DockPanel>
+        </DataTemplate>
+        <DataTemplate x:Key="SelectTableTemplate">
+            <DockPanel>
+                <Label Margin="3" Content="Select Value" Width="80" Style="{DynamicResource MetroLabel}" />
+                <TextBox Margin="3" Text="{Binding SelectValue}" VerticalAlignment="Center" Style="{DynamicResource MetroTextBox}" />
+            </DockPanel>
+        </DataTemplate>
+        <util:TableTemplateSelector x:Key="TableTemplateSelector"
+                                    LoopTableTemplate="{StaticResource LoopTableTemplate}"
+                                    RandomTableTemplate="{StaticResource RandomTableTemplate}"
+                                    SelectTableTemplate="{StaticResource SelectTableTemplate}" />
+    </UserControl.Resources>
+    <DockPanel>
+        <dragablz:TabablzControl x:Name="tabTables" ItemsSource="{Binding Tables}" SelectedItem="{Binding DataContext.SelectedTable, ElementName=winGeneratorEditor}" ShowDefaultCloseButton="True" HeaderMemberPath="Name">
+            <dragablz:TabablzControl.HeaderPrefixContent>
+                <DockPanel HorizontalAlignment="Right">
+                    <Button ToolTip="New Loop Table" Margin="0,0,1,1" BorderThickness="0" Background="{Binding Background, ElementName=tabTables}" Command="{Binding DataContext.AddTable, ElementName=winGeneratorEditor}" CommandParameter="{x:Type tables:LoopTable}">
+                        <Rectangle Width="12" Height="12" Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
+                            <Rectangle.OpacityMask>
+                                <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_repeat}" />
+                            </Rectangle.OpacityMask>
+                        </Rectangle>
+                    </Button>
+                    <Button ToolTip="New Random Table" Margin="1,0,1,1" BorderThickness="0" Background="{Binding Background, ElementName=tabTables}" Command="{Binding DataContext.AddTable, ElementName=winGeneratorEditor}" CommandParameter="{x:Type tables:RandomTable}">
+                        <Rectangle Width="12" Height="12" Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
+                            <Rectangle.OpacityMask>
+                                <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_shuffle}" />
+                            </Rectangle.OpacityMask>
+                        </Rectangle>
+                    </Button>
+                    <Button ToolTip="New Select Table" Margin="1,0,0,1" BorderThickness="0" Background="{Binding Background, ElementName=tabTables}" Command="{Binding DataContext.AddTable, ElementName=winGeneratorEditor}" CommandParameter="{x:Type tables:SelectTable}">
+                        <Rectangle Width="12" Height="12" Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
+                            <Rectangle.OpacityMask>
+                                <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_arrow_right}" />
+                            </Rectangle.OpacityMask>
+                        </Rectangle>
+                    </Button>
+                </DockPanel>
+            </dragablz:TabablzControl.HeaderPrefixContent>
+            <dragablz:TabablzControl.ContentTemplate>
+                <DataTemplate>
+                    <DockPanel>
+                        <Label Content="{Binding TableType}" DockPanel.Dock="Top" Style="{DynamicResource SubTitleLabel}"/>
+                        <UniformGrid Columns="2" DockPanel.Dock="Top">
+                            <DockPanel>
+                                <Label Content="Name" Margin="3" Width="80" />
+                                <TextBox Text="{Binding Name}" Margin="3" VerticalContentAlignment="Center" />
+                            </DockPanel>
+                            <DockPanel>
+                                <Label Content="Column" Margin="3" Width="80" />
+                                <TextBox Text="{Binding Column}" Margin="3" VerticalContentAlignment="Center" />
+                            </DockPanel>
+                            <DockPanel>
+                                <Label Content="Repeat" Margin="3"  Width="80"/>
+                                <TextBox Text="{Binding Repeat}" Margin="3" VerticalContentAlignment="Center" />
+                            </DockPanel>
+                            <DockPanel>
+                                <Label Content="Repeat Join" Margin="3"  Width="80"/>
+                                <TextBox Text="{Binding RepeateJoin}" Margin="3" VerticalContentAlignment="Center" />
+                            </DockPanel>
+                            <DockPanel>
+                                <Label Content="Skip Table" Margin="3"  Width="80"/>
+                                <TextBox Text="{Binding SkipTable}" Margin="3" VerticalContentAlignment="Center" />
+                            </DockPanel>
+                            <ContentControl DockPanel.Dock="Top" Content="{Binding}" ContentTemplateSelector="{StaticResource TableTemplateSelector}" />
+                        </UniformGrid>
+                        <TextBox AcceptsReturn="True" AcceptsTab="True" TextWrapping="NoWrap" FontFamily="Consolas" Text="{Binding Value}" />
+                        <!--<DockPanel DockPanel.Dock="Top" LastChildFill="False">                            
+                            <Button Margin="3" Command="{Binding DataContext.AddColumn, ElementName=winGeneratorEditor}" CommandParameter="{Binding}" DockPanel.Dock="Right" Content="Add Column" />
+                            <Button Margin="3" Command="{Binding DataContext.DeleteColumn, ElementName=winGeneratorEditor}" CommandParameter="{Binding}" DockPanel.Dock="Right" Content="Delete Column" />
+                        </DockPanel>
+                        
+                        <DataGrid ItemsSource="{Binding Value, Converter={StaticResource TableConverter}}" AutoGenerateColumns="True" CanUserAddRows="True" CanUserDeleteRows="True" CanUserReorderColumns="True" CanUserResizeColumns="True" CanUserResizeRows="False" CanUserSortColumns="True"/>-->
+                    </DockPanel>
+                </DataTemplate>
+            </dragablz:TabablzControl.ContentTemplate>
+        </dragablz:TabablzControl>
+    </DockPanel>
+</UserControl>

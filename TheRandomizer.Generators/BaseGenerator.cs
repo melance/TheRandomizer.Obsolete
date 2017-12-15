@@ -11,6 +11,7 @@ using System.ComponentModel.DataAnnotations;
 using LiteDB;
 using TheRandomizer.Generators.Attributes;
 using System.Collections.ObjectModel;
+using TheRandomizer.Utility;
 
 namespace TheRandomizer.Generators
 {
@@ -18,7 +19,7 @@ namespace TheRandomizer.Generators
     /// This is the base class for all generator types.
     /// </summary>
     [XmlRoot("generator", Namespace="")]
-    public abstract class BaseGenerator
+    public abstract class BaseGenerator : ObservableBase
     {
         #region Static Members
         private static List<Type> _knownTypes;
@@ -102,29 +103,35 @@ namespace TheRandomizer.Generators
         /// <summary>The name of the generator that is to be displayed to the user</summary>
         [XmlElement("name")]
         [Required]
-        public string Name { get; set; }
+        public string Name { get { return GetProperty<string>(); } set { SetProperty(value); } }
         /// <summary>The identifying name of the author</summary>
         [XmlElement("author")]
-        public string Author { get; set; }
+        public string Author { get { return GetProperty<string>(); } set { SetProperty(value); } }
+        public bool AuthorSpecified { get { return !string.IsNullOrWhiteSpace(Author); } }
         /// <summary>A long description of the purpose and output of the generator</summary>
         [XmlElement("description")]
         [Required]
-        public string Description { get; set; }
+        public string Description { get { return GetProperty<string>(); } set { SetProperty(value); } }
+        public bool DescriptionSpecified { get { return !string.IsNullOrWhiteSpace(Description); } }
         /// <summary>The version of the generator xml, provided for breaking changes</summary>
         [XmlAttribute("version")]
-        public virtual Int32 Version { get; set; } = LATEST_VERSION;
+        public virtual Int32 Version { get { return GetProperty(LATEST_VERSION); } set { SetProperty(value); } }
         /// <summary>A URL that can be displayed to the user, such as the website of the author</summary>
         [XmlElement("url")]
         [Url]
-        public string Url { get; set; }
+        public string Url { get { return GetProperty<string>(); } set { SetProperty(value); } }
+        public bool UrlSpecified { get { return !string.IsNullOrWhiteSpace(Url); } }
         /// <summary>The format of the generator results</summary>
-        [XmlElement("outputFormat")]
-        [Display(Name = "Output Format")]
-        public OutputFormat OutputFormat { get; set; } = OutputFormat.Html;
+        //[XmlElement("outputFormat")]
+        //[Display(Name = "Output Format")]
+        [XmlIgnore]
+        public OutputFormat OutputFormat { get { return GetProperty(OutputFormat.Html); } set { SetProperty(value); } } 
         /// <summary>A list of tags used to categorize the generator</summary>
         [XmlArray("tags")]
         [XmlArrayItem("tag")]
-        public ObservableCollection<string> Tags { get; } = new ObservableCollection<string>();
+        public ObservableCollection<Tag> Tags { get; } = new ObservableCollection<Tag>();
+        public bool TagsSpecified { get { return Tags.Count > 0; } }
+
         [XmlIgnore]
         [Required]
         [Display(Name = "Tags")]
@@ -132,7 +139,7 @@ namespace TheRandomizer.Generators
         {
             get
             {
-                return string.Join(TAG_DELIMITER, Tags);
+                return string.Join(TAG_DELIMITER, Tags.Select(t => t.Value));
             }
             set
             {
@@ -143,38 +150,42 @@ namespace TheRandomizer.Generators
                 }
             }
         }
+
         /// <summary>A boolean that determines if the generator supports limiting the length of the generated value</summary>
         [XmlElement("supportsMaxLength")]
         [Display(Name = "Supports Max Length")]
-        public virtual bool SupportsMaxLength { get; set; }
+        public virtual bool? SupportsMaxLength { get { return GetProperty(false); } set { SetProperty(value); } }
+        public virtual bool SupportsMaxLengthSpecified { get { return SupportsMaxLength.HasValue; } }
 
         /// <summary>A list of parameters to provide to the generator</summary>
         [XmlArray("parameters")]
         [XmlArrayItem("parameter")]
         public virtual ConfigurationList Parameters { get; set; } = new ConfigurationList();
+        public virtual bool ParametersSpecified { get { return Parameters != null && Parameters.Count > 0; } }
 
         [XmlElement("css")]
-        public virtual string CSS { get; set; } = string.Empty;
+        public virtual string CSS { get { return GetProperty<string>(); } set { SetProperty(value); } }
+        public virtual bool CSSSpecified { get { return !string.IsNullOrWhiteSpace(CSS); } }
 
         [XmlIgnore]
         public virtual bool IsDirty { get { return _cleanHash == GetHashCode(); } }
 
         [XmlIgnore]
-        public virtual bool Published { get; set; } = false;
+        public virtual bool Published { get { return GetProperty(false); } set { SetProperty(value); } }
 
         [XmlIgnore]
-        public string GeneratorType
+        public GeneratorType GeneratorType
         {
             get
             {
                 var attribute = (GeneratorDisplayAttribute)GetType().GetCustomAttribute(typeof(GeneratorDisplayAttribute), true);
                 if (attribute != null)
                 {
-                    return attribute.Name;
+                    return attribute.GeneratorType;
                 }
                 else
                 {
-                    return GetType().Name;
+                    return GeneratorType.Unknown;
                 }
             }
         }
@@ -233,7 +244,7 @@ namespace TheRandomizer.Generators
         {
             var values = new List<string>();
             _generating = true;
-            if (SupportsMaxLength && maxLength == 0) maxLength = Int32.MaxValue;
+            if (SupportsMaxLength == true && maxLength == 0) maxLength = Int32.MaxValue;
 
             AssignParameterValues();
 
@@ -252,7 +263,6 @@ namespace TheRandomizer.Generators
         /// <returns>An xml string</returns>
         public string Serialize()
         {
-            var serializer = new XmlSerializer(typeof(BaseGenerator), KnownTypes());
             string value;
             using (var stream = new StringWriter())
             {

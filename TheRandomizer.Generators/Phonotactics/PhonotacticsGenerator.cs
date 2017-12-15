@@ -8,11 +8,12 @@ using TheRandomizer.Generators.Lexer;
 using System.Globalization;
 using TheRandomizer.Generators.Attributes;
 using System.ComponentModel.DataAnnotations;
+using TheRandomizer.Generators.Parameter;
 
 namespace TheRandomizer.Generators.Phonotactics
 {
     [XmlType("Phonotactics")]
-    [GeneratorDisplay("Phonotactics Generator", "A generator based on the concepts of phonotactics.")]
+    [GeneratorDisplay(Generators.GeneratorType.Phonotactics, "A generator based on the concepts of phonotactics.")]
     public class PhonotacticsGenerator : BaseGenerator
     {
         /// <summary>Used to set the text casing of the result</summary>
@@ -36,6 +37,12 @@ namespace TheRandomizer.Generators.Phonotactics
         [XmlArray("patterns")]
         [XmlArrayItem("item")]
         public List<Pattern> Patterns { get; set; } = new List<Pattern>();
+
+        [XmlIgnore]
+        public override bool? SupportsMaxLength { get { return null; } set { } }
+
+        [XmlIgnore]
+        public override ConfigurationList Parameters { get; set; } = new ConfigurationList();
 
         protected override string GenerateInternal(int? maxLength)
         {

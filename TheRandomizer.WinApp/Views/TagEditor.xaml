@@ -6,26 +6,23 @@
                    xmlns:local="clr-namespace:TheRandomizer.WinApp.Views"
                    xmlns:util="clr-namespace:TheRandomizer.WinApp.Utility"
                    xmlns:metro="http://metro.mahapps.com/winfx/xaml/controls"
+                   xmlns:toolkit="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Input.Toolkit"
+                   xmlns:models="clr-namespace:TheRandomizer.WinApp.Models"
+                   Style="{DynamicResource WindowStyle}"
                    mc:Ignorable="d"
                    ShowMaxRestoreButton="False"
                    ShowMinButton="False"
                    Title="Tags" 
                    Name="winTagEditor"
                    Height="300" 
-                   Width="200">
+                   Width="200"
+                   Icon="/TheRandomizer;component/TheRandomizer.ico">
     <Window.DataContext>
         <util:GeneratorWrapper />
     </Window.DataContext>
     <DockPanel>
         <DockPanel DockPanel.Dock="Bottom" LastChildFill="False">
-            <Button Command="{Binding AddTag}" DockPanel.Dock="Left">
-                <Rectangle Height="12" Width="{Binding ActualHeight, RelativeSource={RelativeSource Self}}" Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
-                    <Rectangle.OpacityMask>
-                        <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_add}" />
-                    </Rectangle.OpacityMask>
-                </Rectangle>
-            </Button>
-            <Button Command="{Binding Save}" CommandParameter="{Binding ElementName=winTagEditor}" DockPanel.Dock="Right">
+             <Button Command="{Binding Save}" CommandParameter="{Binding ElementName=winTagEditor}" DockPanel.Dock="Right">
                 <Rectangle Height="12" Width="{Binding ActualHeight, RelativeSource={RelativeSource Self}}" Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
                     <Rectangle.OpacityMask>
                         <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_check}" />
@@ -40,21 +37,21 @@
                 </Rectangle>
             </Button>
         </DockPanel>
-        <ListBox x:Name="lstTags" ItemsSource="{Binding Tags}" Margin="0,3,0,0" BorderThickness="0">
-            <ListBox.ItemTemplate>
-                <DataTemplate>
-                    <DockPanel>
-                        <Button DockPanel.Dock="Right" Command="{Binding ElementName=lstTags, Path=DataContext.RemoveTag}" CommandParameter="{Binding .}">
-                            <Rectangle Height="12" Width="{Binding ActualHeight, RelativeSource={RelativeSource Self}}" Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
-                                <Rectangle.OpacityMask>
-                                    <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_delete}" />
-                                </Rectangle.OpacityMask>
-                            </Rectangle>
-                        </Button>
-                        <TextBox DockPanel.Dock="Left" Text="{Binding ., UpdateSourceTrigger=PropertyChanged}" HorizontalAlignment="Stretch" TextChanged="TextBox_TextChanged" />
-                    </DockPanel>
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>
+        <DataGrid ItemsSource="{Binding Tags}" HeadersVisibility="None" AutoGenerateColumns="False" CanUserAddRows="True" CanUserDeleteRows="True" CanUserReorderColumns="False" CanUserResizeColumns="True" CanUserResizeRows="False">
+            <DataGrid.Columns>
+                <DataGridTemplateColumn>
+                    <DataGridTemplateColumn.CellTemplate>
+                        <DataTemplate>
+                            <TextBlock Text="{Binding Value}" />
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellTemplate>
+                    <DataGridTemplateColumn.CellEditingTemplate>
+                        <DataTemplate>
+                            <toolkit:AutoCompleteBox Text="{Binding Value, Mode=TwoWay}" SelectedItem="{Binding Value, Mode=TwoWay}" ItemsSource="{x:Static models:GeneratorInfoCollection.Tags}" IsTextCompletionEnabled="True"  HorizontalAlignment="Stretch"/>
+                        </DataTemplate>
+                    </DataGridTemplateColumn.CellEditingTemplate>
+                </DataGridTemplateColumn>
+            </DataGrid.Columns>
+        </DataGrid>        
     </DockPanel>
 </metro:MetroWindow>

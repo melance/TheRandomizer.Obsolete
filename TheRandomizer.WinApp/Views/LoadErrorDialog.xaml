@@ -7,12 +7,15 @@
                    xmlns:metro="http://metro.mahapps.com/winfx/xaml/controls"
                    xmlns:models="clr-namespace:TheRandomizer.WinApp.Models"
                    xmlns:cmds="clr-namespace:TheRandomizer.WinApp.Commands"
+                   Style="{DynamicResource WindowStyle}"
                    ShowIconOnTitleBar="False"
                    mc:Ignorable="d"
                    x:Name="winLoadErrorDialog"
                    Title="The following errors occured loading the generators:" 
                    Height="500" 
-                   Width="800" WindowStartupLocation="CenterScreen">
+                   Width="800" 
+                   WindowStartupLocation="CenterScreen"
+                   Icon="/TheRandomizer;component/TheRandomizer.ico">
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition />

@@ -64,6 +64,7 @@
   <ItemGroup>
     <Compile Include="Assignment\AssignmentGenerator.cs" />
     <Compile Include="Assignment\CachedLineItems.cs" />
+    <Compile Include="Assignment\Import.cs" />
     <Compile Include="Assignment\LineItemList.cs" />
     <Compile Include="Attributes\CustomNCalcFunctionAttribute.cs" />
     <Compile Include="Attributes\GeneratorDisplayAttribute.cs" />
@@ -117,6 +118,8 @@
     <Compile Include="Table\RandomTable.cs" />
     <Compile Include="Table\SelectTable.cs" />
     <Compile Include="Table\TableGenerator.cs" />
+    <Compile Include="Tag.cs" />
+    <Compile Include="TagComparer.cs" />
     <Compile Include="TransformXml.cs" />
     <Compile Include="Attributes\RequireOneElementAttribute.cs" />
   </ItemGroup>

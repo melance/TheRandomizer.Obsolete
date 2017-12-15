@@ -6,11 +6,12 @@ using System.Threading.Tasks;
 using System.Xml.Serialization;
 using NCalc;
 using TheRandomizer.Generators.Attributes;
+using TheRandomizer.Utility.Collections;
 
 namespace TheRandomizer.Generators.Table
 {
     [XmlType("Table")]
-    [GeneratorDisplay("Table Generator", "A generator meant to mimic the table format often found in random tables of rpg books.")]
+    [GeneratorDisplay(Generators.GeneratorType.Table, "A generator meant to mimic the table format often found in random tables of rpg books.")]
     public class TableGenerator : BaseGenerator
     {
         /// <summary>
@@ -20,13 +21,13 @@ namespace TheRandomizer.Generators.Table
         [XmlArrayItem("loopTable", typeof(LoopTable))]
         [XmlArrayItem("randomTable", typeof(RandomTable))]
         [XmlArrayItem("selectTable", typeof(SelectTable))]
-        public List<BaseTable> Tables { get; set; } = new List<BaseTable>();
+        public ObservableList<BaseTable> Tables { get; set; } = new ObservableList<BaseTable>();
 
         /// <summary>
         /// The formatted string used to output the results of the tables
         /// </summary>
         [XmlElement("output")]
-        public string Output { get; set; }
+        public string Output { get { return GetProperty<string>(); } set { SetProperty(value); } }
 
         /// <summary>
         /// A keyed list of the values calculated by the generator
@@ -35,7 +36,7 @@ namespace TheRandomizer.Generators.Table
         private Dictionary<string, object> Values { get; } = new Dictionary<string, object>();
 
         [XmlIgnore]
-        private new bool SupportsMaxLength { get; }
+        public override bool? SupportsMaxLength { get { return null; } set { } }
 
         protected override string GenerateInternal(int? maxLength)
         {

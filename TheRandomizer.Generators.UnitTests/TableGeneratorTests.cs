@@ -15,7 +15,6 @@ namespace TheRandomizer.Generators.Parameter.UnitTests
             var table = new RandomTable();
             table.Name = "Simple";
             table.Column = "Roll";
-            table.Delimiter = "|";
             table.Value = @"Roll | Result
                             1    | Hello
                             2    | Goodbye";
@@ -36,7 +35,6 @@ namespace TheRandomizer.Generators.Parameter.UnitTests
             var table = new SelectTable();
             table.Name = "Simple";
             table.Column = "Roll";
-            table.Delimiter = "|";
             table.Value = @"Roll | Result
                             1    | Hello
                             2    | Goodbye";
@@ -55,7 +53,6 @@ namespace TheRandomizer.Generators.Parameter.UnitTests
             var table = new LoopTable();
             table.Name = "Simple";
             table.Column = "Roll";
-            table.Delimiter = "|";
             table.Value = @"Roll | Result
                             1    | Hello
                             2    | Goodbye";
@@ -76,7 +73,6 @@ namespace TheRandomizer.Generators.Parameter.UnitTests
             var table = new LoopTable();
             table.Name = "Simple";
             table.Column = "Roll";
-            table.Delimiter = "|";
             table.Value = @"Roll | Result
                             1    | Hello
                             2    | Goodbye";

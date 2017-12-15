@@ -16,11 +16,11 @@ using System.Windows.Shapes;
 namespace TheRandomizer.WinApp.Controls
 {
     /// <summary>
-    /// Interaction logic for GeneratorEditor.xaml
+    /// Interaction logic for GeneratorEditorPhonotactics.xaml
     /// </summary>
-    public partial class GeneratorEditorLua : UserControl
+    public partial class GeneratorEditorPhonotactics : UserControl
     {
-        public GeneratorEditorLua()
+        public GeneratorEditorPhonotactics()
         {
             InitializeComponent();
         }

@@ -26,15 +26,9 @@ namespace TheRandomizer.WinApp
         public MainWindow()
         {
             InitializeComponent();
+            DataContext = new MainWindowViewModel(DialogCoordinator.Instance);
         }
         
-        private void mnuConvert_Click(object sender, RoutedEventArgs e)
-        {
-            var convert = new Views.ConvertGenerator();
-            convert.Owner = this;
-            convert.ShowDialog();
-        }
-
         private void MetroWindow_Loaded(object sender, RoutedEventArgs e)
         {
             (DataContext as MainWindowViewModel)?.LoadGenerators();

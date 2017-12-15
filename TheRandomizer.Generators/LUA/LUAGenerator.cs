@@ -11,8 +11,8 @@ using NLua.Exceptions;
 namespace TheRandomizer.Generators.LUA
 {
     [XmlType("Lua")]
-    [GeneratorDisplay("Lua Generator", "A LUA scripting language based generator.")]
-    public class LUAGenerator : BaseGenerator
+    [GeneratorDisplay(Generators.GeneratorType.Lua, "A LUA scripting language based generator.")]
+    public class LuaGenerator : BaseGenerator
     {
         /// <summary>
         /// The text of the Lua script to run
@@ -20,6 +20,9 @@ namespace TheRandomizer.Generators.LUA
         [XmlElement("script")]
         [LuaHide]
         public string Script { get; set; }
+
+        [XmlIgnore]
+        public override bool? SupportsMaxLength { get { return null; } set { } }
 
         private StringBuilder Result { get; } = new StringBuilder();
 

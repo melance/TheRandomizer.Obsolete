@@ -7,12 +7,16 @@
                    xmlns:metro="http://metro.mahapps.com/winfx/xaml/controls"
                    xmlns:viewModels="clr-namespace:TheRandomizer.WinApp.ViewModels"
                    xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+                   Style="{DynamicResource WindowStyle}"
                    x:Name="winGetMoreGenerators"
                    ShowMaxRestoreButton="False"
                    ShowMinButton="False"
                    Cursor="{Binding Cursor}"
                    mc:Ignorable="d"
-                   Title="Get More Generators" Height="300" Width="660">
+                   Title="Get More Generators" 
+                   Height="300" 
+                   Width="660"
+                   Icon="/TheRandomizer;component/TheRandomizer.ico">
     <Window.DataContext>
         <viewModels:GetMoreGeneratorsViewModel />
     </Window.DataContext>

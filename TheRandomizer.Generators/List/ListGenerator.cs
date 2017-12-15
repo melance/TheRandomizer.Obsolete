@@ -12,7 +12,7 @@ using TheRandomizer.Generators.Parameter;
 namespace TheRandomizer.Generators.List
 {
     [XmlType("List")]
-    [GeneratorDisplay("List Generator", "A simple generator that selects an item from a list of choices.")]
+    [GeneratorDisplay(Generators.GeneratorType.List, "A simple generator that selects an item from a list of choices.")]
     public class ListGenerator : BaseGenerator
     {
         /// <summary>
@@ -20,20 +20,20 @@ namespace TheRandomizer.Generators.List
         /// </summary>
         [XmlElement("items")]
         [Required]
-        public string Items { get; set; }
+        public string Items { get { return GetProperty<string>(); } set { SetProperty(value); } }
 
         /// <summary>
         /// If true, maintaines whitespace at the beginning and end of the result
         /// </summary>
         [XmlElement("keepWhitespace")]
         [Display(Name = "Keep Whitespace")]
-        public bool KeepWhitespace { get; set; } = false;
+        public bool KeepWhitespace { get { return GetProperty(false); } set { SetProperty(value); } }
 
         [XmlIgnore]
-        private new bool SupportsMaxLength { get; }
+        public override bool? SupportsMaxLength { get { return null; } set { } }
 
         [XmlIgnore]
-        public new ConfigurationList Parameters { get; }
+        public override ConfigurationList Parameters { get; set; } = new ConfigurationList();
 
         /// <summary>
         /// Generates content by selecting a single item from the list

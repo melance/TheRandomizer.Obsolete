@@ -8,13 +8,14 @@ namespace TheRandomizer.Generators.Attributes
 {
     public class GeneratorDisplayAttribute : Attribute
     {
-        public GeneratorDisplayAttribute(string name, string description)
-        {
-            Name = name;
+        public GeneratorDisplayAttribute(GeneratorType type, string description)
+        {            
             Description = description;
+            GeneratorType = type;
         }
 
-        public string Name { get; }
+        public string Name { get { return $"{GeneratorType} Generator"; } }
         public string Description { get; }        
+        public GeneratorType GeneratorType { get; }
     }
 }

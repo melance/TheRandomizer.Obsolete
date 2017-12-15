@@ -115,7 +115,7 @@ namespace TheRandomizer.WebApp.DataAccess
         {
             using (var db = OpenDatabase())
             {
-                var tags = criteria.Tags.Where(kvp => kvp.Value).Select(kvp => kvp.Key).ToList();
+                var tags = criteria.Tags.Where(kvp => kvp.Value).Select(kvp => new Tag(kvp.Key)).ToList();
                 var collection = db.GetCollection<BaseGenerator>(GENERATORS_COLLECTION)
                     .FindAll()
                     .Select(bg => bg.AsGeneratorInfo())
@@ -182,7 +182,7 @@ namespace TheRandomizer.WebApp.DataAccess
                                 .SelectMany(bg => bg.Tags)
                                 .Distinct()
                                 .ToList()
-                                .ToDictionary(x => x, x => false);
+                                .ToDictionary(x => x.Value, x => false);
                 return list;
             }
         }

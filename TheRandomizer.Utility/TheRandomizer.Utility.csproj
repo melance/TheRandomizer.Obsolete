@@ -40,12 +40,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AttributeExtensions.cs" />
     <Compile Include="CollectionExtensions.cs" />
     <Compile Include="Collections\DisposableList.cs" />
     <Compile Include="Collections\ObservableList.cs" />
     <Compile Include="Common.cs" />
     <Compile Include="IntegerExtensions.cs" />
     <Compile Include="LinqExtensions.cs" />
+    <Compile Include="ObjectExtensions.cs" />
     <Compile Include="ObservableBase.cs" />
     <Compile Include="SimpleEncryption.cs" />
     <Compile Include="StringExtensions.cs" />

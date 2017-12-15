@@ -1,25 +1,37 @@
 ﻿<metro:MetroWindow x:Class="TheRandomizer.WinApp.MainWindow"
-                    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-                    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-                    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-                    xmlns:local="clr-namespace:TheRandomizer.WinApp"
-                    xmlns:viewModels="clr-namespace:TheRandomizer.WinApp.ViewModels"
-                    xmlns:metro="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
-                    xmlns:dragablz="clr-namespace:Dragablz;assembly=Dragablz"
-                    xmlns:dockablz="clr-namespace:Dragablz.Dockablz;assembly=Dragablz"
-                    xmlns:controls="clr-namespace:TheRandomizer.WinApp.Controls"
-                    xmlns:conv="clr-namespace:TheRandomizer.WinApp.Converters"
-                    xmlns:util="clr-namespace:TheRandomizer.WinApp.Utility"
-                    xmlns:dialog="clr-namespace:MahApps.Metro.Controls.Dialogs;assembly=MahApps.Metro"
-                    mc:Ignorable="d"
-                    Title="The Randomizer" 
-                    Icon="TheRandomizer.ico"
-                    Height="600" 
-                    Width="800"
-                    Cursor="{Binding Cursor}"
-                    Loaded="MetroWindow_Loaded"
-                    Closed="MetroWindow_Closed">
+                   xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                   xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                   xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                   xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                   xmlns:local="clr-namespace:TheRandomizer.WinApp"
+                   xmlns:viewModels="clr-namespace:TheRandomizer.WinApp.ViewModels"
+                   xmlns:metro="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+                   xmlns:dragablz="clr-namespace:Dragablz;assembly=Dragablz"
+                   xmlns:dockablz="clr-namespace:Dragablz.Dockablz;assembly=Dragablz"
+                   xmlns:controls="clr-namespace:TheRandomizer.WinApp.Controls"
+                   xmlns:conv="clr-namespace:TheRandomizer.WinApp.Converters"
+                   xmlns:util="clr-namespace:TheRandomizer.WinApp.Utility"
+                   xmlns:dialog="clr-namespace:MahApps.Metro.Controls.Dialogs;assembly=MahApps.Metro"
+                   xmlns:assign="clr-namespace:TheRandomizer.Generators.Assignment;assembly=TheRandomizer.Generators"
+                   xmlns:dice="clr-namespace:TheRandomizer.Generators.Dice;assembly=TheRandomizer.Generators"
+                   xmlns:list="clr-namespace:TheRandomizer.Generators.List;assembly=TheRandomizer.Generators"
+                   xmlns:lua="clr-namespace:TheRandomizer.Generators.LUA;assembly=TheRandomizer.Generators"
+                   xmlns:phono="clr-namespace:TheRandomizer.Generators.Phonotactics;assembly=TheRandomizer.Generators"
+                   xmlns:table="clr-namespace:TheRandomizer.Generators.Table;assembly=TheRandomizer.Generators"
+                   xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+                   xmlns:system="clr-namespace:System;assembly=mscorlib"
+                   Style="{DynamicResource WindowStyle}"
+                   dialog:DialogParticipation.Register="{Binding}"
+                   mc:Ignorable="d"
+                   Title="The Randomizer" 
+                   Name="winMain"
+                   Icon="TheRandomizer.ico"
+                   Height="600" 
+                   Width="800"
+                   Cursor="{Binding Cursor}"
+                   Loaded="MetroWindow_Loaded"
+                   Closed="MetroWindow_Closed"
+                   ShowIconOnTitleBar="False">
     <Window.DataContext>
         <viewModels:MainWindowViewModel />
     </Window.DataContext>
@@ -28,51 +40,65 @@
             <VisualBrush x:Key="DonateIcon" Visual="{StaticResource appbar_paypal}" />
         </ResourceDictionary>
     </Window.Resources>
-    <metro:MetroWindow.RightWindowCommands>
+    <metro:MetroWindow.LeftWindowCommands>
         <metro:WindowCommands>
+            <ToggleButton IsChecked="{Binding ElementName=flyTools, Path=IsOpen}">
+                <Rectangle Width="20" Height="20" Fill="{Binding RelativeSource={RelativeSource AncestorType=ToggleButton}, Path=Foreground}">
+                    <Rectangle.OpacityMask>
+                        <VisualBrush Stretch="Fill" Visual="{iconPacks:PackIconEntypo Kind=Menu}" />
+                    </Rectangle.OpacityMask>
+                </Rectangle>
+            </ToggleButton>
+        </metro:WindowCommands>
+    </metro:MetroWindow.LeftWindowCommands>
+    <metro:MetroWindow.RightWindowCommands>        
+        <metro:WindowCommands>            
+            <ToggleButton IsChecked="{Binding ElementName=flyAbout, Path=IsOpen}">
+                <Rectangle Width="20" Height="20" Fill="{Binding RelativeSource={RelativeSource AncestorType=ToggleButton}, Path=Foreground}">
+                    <Rectangle.OpacityMask>
+                        <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_information}" />
+                    </Rectangle.OpacityMask>
+                </Rectangle>
+            </ToggleButton>
             <ToggleButton IsChecked="{Binding ElementName=flySettings, Path=IsOpen}">
                 <Rectangle Width="20" Height="20" Fill="{Binding RelativeSource={RelativeSource AncestorType=ToggleButton}, Path=Foreground}">
                     <Rectangle.OpacityMask>
                         <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_settings}" />
                     </Rectangle.OpacityMask>
                 </Rectangle>
-            </ToggleButton>            
+            </ToggleButton>
         </metro:WindowCommands>
     </metro:MetroWindow.RightWindowCommands>
     <metro:MetroWindow.Flyouts>
         <metro:FlyoutsControl>
-            <metro:Flyout Name="flySettings" Header="Settings" Theme="Inverse" Position="Right" IsModal="True">
+            <metro:Flyout Name="flyTools" Header="Tools" IsPinned="False" Theme="Inverse" Position="Left" IsModal="True" TitleVisibility="Visible" CloseButtonVisibility="Visible">
+                <StackPanel Margin="3,0,3,0">
+                    <Button Content="Generator Editor" Margin="3" ToolTip="Create or Edit Generators" Command="{Binding CreateGenerator}"/>
+                    <Button Content="Convert Grammar" Margin="3" ToolTip="Convert an old Grammar to the new format" Command="{Binding ConvertGenerator}" />
+                    <Separator />
+                    <Button Content="Donate" Margin="3" ToolTip="Donate via Paypal" Command="{x:Static util:BrowserBehavior.OpenURL}" CommandParameter="https://www.paypal.me/LanceBoudreaux" Visibility="{util:SettingBinding ShowDonateButton, Converter={StaticResource BooleanToVisibilityConverter}}"  />
+                </StackPanel>
+            </metro:Flyout>
+            <metro:Flyout Name="flySettings" Header="Settings" IsPinned="False" Theme="Inverse" Position="Right" IsModal="True">
                 <controls:Settings />
+            </metro:Flyout>
+            <metro:Flyout Name="flyAbout" Header="About" IsPinned="False" Theme="Inverse" Position="Right" IsModal="True">
+                <controls:About />
             </metro:Flyout>
         </metro:FlyoutsControl>
     </metro:MetroWindow.Flyouts>
     <Grid>
         <Grid.RowDefinitions>
-            <RowDefinition x:Name="Menu" Height="Auto" />
             <RowDefinition x:Name="Filters" Height="Auto" />
             <RowDefinition />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="210"/>
             <ColumnDefinition Width="3" />
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
-        <Menu IsMainMenu="true" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3">
-            <MenuItem Header="_Tools">
-                <MenuItem Name="mnuConvert" Header="_Convert Old Grammar..." ToolTip="Convert an old Grammar to the new format" Click="mnuConvert_Click" />
-            </MenuItem>
-            <MenuItem Header="_Help">
-                <MenuItem Header="_Generators Help" Command="{Binding GeneratorsHelp}" />
-                <MenuItem Header="_About" Command="{Binding About}" />
-                <Separator />
-                <MenuItem Header="Donate" Command="{x:Static util:BrowserBehavior.OpenURL}" CommandParameter="{util:ConfigurationBinding DonationURL}">
-                    <MenuItem.Icon>
-                        <Rectangle Width="18" Height="18" Fill="{StaticResource DonateIcon}" />
-                    </MenuItem.Icon>
-                </MenuItem>
-            </MenuItem>
-        </Menu>
-        <Expander Margin="0" BorderBrush="Transparent" IsExpanded="True" ExpandDirection="Down" Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" >
+        <Expander Margin="0" BorderBrush="Transparent" IsExpanded="True" ExpandDirection="Down" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" >
             <Expander.Header>
                 <DockPanel>
                     <Button ToolTip="Unselect all tags" Style="{DynamicResource MetroCircleButtonStyle}" BorderThickness="0" Foreground="{DynamicResource IdealForegroundColorBrush}" DockPanel.Dock="Right" Command="{Binding UnselectAllTags}" Margin="3">
@@ -107,9 +133,18 @@
                 </ItemsControl>
             </ScrollViewer>
         </Expander>
-        <DockPanel HorizontalAlignment="Stretch" Grid.Row="2" Grid.Column="0" LastChildFill="True">
+        <DockPanel HorizontalAlignment="Stretch" Grid.Row="1" Grid.Column="0" LastChildFill="True">
             <Label Content="Generators" Style="{DynamicResource TitleLabel}" FontWeight="Bold" DockPanel.Dock="Top" />
             <DockPanel Margin="3" DockPanel.Dock="Bottom" LastChildFill="False">
+                <metro:Badged Badge="{Binding LoadErrorCount}" BadgeBackground="Red" BadgePlacementMode="Right" Visibility="{Binding LoadErrorCount, Converter={StaticResource IntegerToVisiblityConverter}}">
+                    <Button ToolTip="Show Load Errors" Command="{Binding ShowLoadErrors}" DockPanel.Dock="Left" Padding="12" Margin="3" Style="{DynamicResource MetroCircleButtonStyle}">
+                        <Rectangle Width="12" Height="12" Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
+                            <Rectangle.OpacityMask>
+                                <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_alert}" />
+                            </Rectangle.OpacityMask>
+                        </Rectangle>
+                    </Button>
+                </metro:Badged>
                 <Button ToolTip="Get More Generators" Command="{Binding GetMoreGenerators}" DockPanel.Dock="Right" Padding="12" Margin="3,3,0,3" Style="{DynamicResource MetroCircleButtonStyle}">
                     <Rectangle Width="12" Height="12" Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
                         <Rectangle.OpacityMask>
@@ -145,8 +180,8 @@
                 </ListBox>
             </Grid>
         </DockPanel>
-        <GridSplitter Grid.Row="2" Grid.Column="1" Width="3" HorizontalAlignment="Stretch" ResizeDirection="Columns" ResizeBehavior="PreviousAndNext" Margin="0" />
-        <DockPanel Grid.Row="2" Grid.Column="2" LastChildFill="True">
+        <GridSplitter Grid.Row="1" Grid.Column="1" Width="3" HorizontalAlignment="Stretch" ResizeDirection="Columns" ResizeBehavior="PreviousAndNext" Margin="0" />
+        <DockPanel Grid.Row="1" Grid.Column="2" LastChildFill="True">
             <Label Content="" Style="{DynamicResource TitleLabel}" FontWeight="Bold" DockPanel.Dock="Top" />
             <Grid>
                 <dockablz:Layout>
@@ -163,5 +198,9 @@
                 </dockablz:Layout>
             </Grid>
         </DockPanel>
+        <TextBlock Visibility="{Binding NewReleaseAvailable, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}" Grid.Row="2" Grid.ColumnSpan="3" Padding="6" Background="{DynamicResource AccentColorBrush}" HorizontalAlignment="Stretch" Foreground="{DynamicResource IdealForegroundColorBrush}">
+            <Hyperlink FontStyle="Normal" CommandParameter="{Binding NewRelease.HtmlUrl, Mode=OneWay}" Command="{x:Static util:BrowserBehavior.OpenURL}" Foreground="{DynamicResource IdealForegroundColorBrush}">The Randomizer v<Run Text="{Binding NewRelease.TagName, Mode=OneWay}" /> (<Run Text="{Binding NewRelease.Name, Mode=OneWay}" />) is available.
+            Click here to download.</Hyperlink>
+        </TextBlock>
     </Grid>
 </metro:MetroWindow>

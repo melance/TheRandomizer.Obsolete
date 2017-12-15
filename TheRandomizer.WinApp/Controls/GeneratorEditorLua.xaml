@@ -4,16 +4,15 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:local="clr-namespace:TheRandomizer.WinApp.Controls"
-             xmlns:avalon="http://icsharpcode.net/sharpdevelop/avalonedit"
              mc:Ignorable="d" 
-             d:DesignHeight="300" 
-             d:DesignWidth="300">
+             d:DesignHeight="300" d:DesignWidth="300">
     <d:DesignerProperties.DesignStyle>
         <Style TargetType="UserControl">
             <Setter Property="Background" Value="White" />
         </Style>
     </d:DesignerProperties.DesignStyle>
     <DockPanel>
-        <avalon:TextEditor FontFamily="Consolas" FontSize="10pt" SyntaxHighlighting="{Binding Highlighting}" ShowLineNumbers="{Binding ShowLineNumbers}" WordWrap="False" />
+        <Label Content="Script" DockPanel.Dock="Top" Style="{DynamicResource SubTitleLabel }" />
+        <TextBox Text="{Binding Script, UpdateSourceTrigger=PropertyChanged}" AcceptsReturn="True" AcceptsTab="True" TextWrapping="Wrap" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto" />            
     </DockPanel>
 </UserControl>

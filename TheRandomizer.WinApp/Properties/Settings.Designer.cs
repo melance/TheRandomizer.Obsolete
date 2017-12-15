@@ -74,12 +74,48 @@ namespace TheRandomizer.WinApp.Properties {
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.Configuration.DefaultSettingValueAttribute("True")]
-        public bool ShowGeneratorLoadErrors {
+        public bool ShowSplash {
             get {
-                return ((bool)(this["ShowGeneratorLoadErrors"]));
+                return ((bool)(this["ShowSplash"]));
             }
             set {
-                this["ShowGeneratorLoadErrors"] = value;
+                this["ShowSplash"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("True")]
+        public bool CheckUpdates {
+            get {
+                return ((bool)(this["CheckUpdates"]));
+            }
+            set {
+                this["CheckUpdates"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool IncludeBeta {
+            get {
+                return ((bool)(this["IncludeBeta"]));
+            }
+            set {
+                this["IncludeBeta"] = value;
+            }
+        }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        public string EditorMRU {
+            get {
+                return ((string)(this["EditorMRU"]));
+            }
+            set {
+                this["EditorMRU"] = value;
             }
         }
     }

@@ -4,9 +4,10 @@
              xmlns:metro="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
              xmlns:dragablz="clr-namespace:Dragablz;assembly=Dragablz"             
              xmlns:local="clr-namespace:TheRandomizer.WinApp"
-             StartupUri="MainWindow.xaml">
+             xmlns:conv="clr-namespace:TheRandomizer.WinApp.Converters">
     <Application.Resources>
         <ResourceDictionary>
+            <!-- Import Mah Apps -->
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />
@@ -19,21 +20,29 @@
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.AnimatedSingleRowTabControl.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/Dragablz;component/themes/mahapps.xaml" />
 
-            </ResourceDictionary.MergedDictionaries>            
-                        
-            <Style TargetType="{x:Type dragablz:TabablzControl}" BasedOn="{StaticResource MahAppsTabablzControlStyle}" />
+            </ResourceDictionary.MergedDictionaries>
 
-            <Style TargetType="GridSplitter">
-                <Setter Property="Background" Value="{DynamicResource WindowBackgroundBrush}" />
-            </Style>
+            <!-- Converters -->
+            <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
+            <conv:IntegerToVisiblityConverter x:Key="IntegerToVisiblityConverter" />
+            <conv:InvertBinaryConverter x:Key="InvertBinaryConverter" />
 
+            <!-- MahApps Control Styles-->
             <Style TargetType="{x:Type metro:MetroWindow}" x:Key="WindowStyle">
                 <Setter Property="BorderBrush" Value="{DynamicResource AccentColorBrush}" />
                 <Setter Property="BorderThickness" Value="2" />
                 <Setter Property="Padding" Value="2" />
             </Style>
-
+                        
+            <!--<Style TargetType="{x:Type dragablz:TabablzControl}" BasedOn="{StaticResource MahAppsTabablzControlStyle}" />-->
+            
+            <!-- Static Resources -->
             <SolidColorBrush x:Key="ContentLabelBrush" Color="Black" />
+
+            <!-- Standard Control Styles-->
+            <Style TargetType="GridSplitter">
+                <Setter Property="Background" Value="{DynamicResource WindowBackgroundBrush}" />
+            </Style>
 
             <Style x:Key="TitleLabel" TargetType="Label">
                 <Setter Property="Background" Value="{DynamicResource AccentColorBrush}" />
@@ -47,10 +56,6 @@
                 <Setter Property="Foreground" Value="{DynamicResource IdealForegroundColorBrush}" />
                 <Setter Property="FontWeight" Value="Normal" />
             </Style>
-
-            <Style TargetType="CheckBox" 
-                   x:Key="ToggleCheck" 
-                   BasedOn="{StaticResource {x:Type ToggleButton}}" />
 
             <Style TargetType="{x:Type TextBox}">
                 <Style.Triggers>
@@ -73,8 +78,6 @@
                     </Trigger>
                 </Style.Triggers>
             </Style>
-
-            <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter" />
 
             <ControlTemplate x:Key="CircleButton" TargetType="Button">
                 <Grid>

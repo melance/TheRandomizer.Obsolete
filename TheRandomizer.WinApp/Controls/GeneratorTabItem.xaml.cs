@@ -16,6 +16,8 @@ using TheRandomizer.WinApp.ViewModels;
 using TheRandomizer.Generators;
 using System.IO;
 using TheRandomizer.WinApp.Utility;
+using TheRandomizer.WinApp.Commands;
+using TheRandomizer.WinApp.Views;
 
 namespace TheRandomizer.WinApp.Controls
 {
@@ -48,7 +50,7 @@ namespace TheRandomizer.WinApp.Controls
             }
         }
 
-        public GeneratorWrapper Generator
+        internal GeneratorWrapper Generator
         {
             get
             {
@@ -60,7 +62,7 @@ namespace TheRandomizer.WinApp.Controls
             {
                 SetValue(GeneratorProperty, value);
             }
-        }
+        }        
         #endregion
 
         #region Methods
@@ -91,12 +93,7 @@ namespace TheRandomizer.WinApp.Controls
             Document?.execCommand("SelectAll");
             Document?.execCommand("Copy");
         }
-
-        private void EditTags(object sender, ExecutedRoutedEventArgs e)
-        {
-            MessageBox.Show("Edit Tags");
-        }
-
+        
         private void Generate(object sender, ExecutedRoutedEventArgs e)
         {
             try

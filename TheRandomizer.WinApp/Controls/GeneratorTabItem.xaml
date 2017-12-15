@@ -6,6 +6,8 @@
              xmlns:local="clr-namespace:TheRandomizer.WinApp.Controls"
              xmlns:metro="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
              xmlns:param="clr-namespace:TheRandomizer.Generators.Parameter;assembly=TheRandomizer.Generators"
+             xmlns:toolkit="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Input.Toolkit"
+             xmlns:models="clr-namespace:TheRandomizer.WinApp.Models"
              xmlns:cmds="clr-namespace:TheRandomizer.WinApp.Commands"
              xmlns:util="clr-namespace:TheRandomizer.WinApp.Utility"
              HorizontalAlignment="Stretch"
@@ -34,7 +36,6 @@
         <CommandBinding Command="Save" Executed="Save" CanExecute="HasResults" />
         <CommandBinding Command="SelectAll" Executed="SelectAll" CanExecute="HasResults" />
         <CommandBinding Command="{StaticResource Cancel}" Executed="Cancel" CanExecute="HasGenerator" />
-        <CommandBinding Command="{StaticResource EditTags}" Executed="EditTags" CanExecute="HasGenerator" />
         <CommandBinding Command="{StaticResource Generate}" Executed="Generate" CanExecute="HasGenerator" /> 
         <CommandBinding Command="{StaticResource SelectNone}" Executed="SelectNone" CanExecute="HasResults" />
     </UserControl.CommandBindings>
@@ -68,7 +69,9 @@
             </DockPanel>
             <Expander DockPanel.Dock="Top" HorizontalAlignment="Stretch" IsExpanded="True" BorderThickness="0">
                 <Expander.Header>
-                    <TextBlock Text="Details" Foreground="{DynamicResource IdealForegroundColorBrush}" />
+                    <DockPanel>                        
+                        <TextBlock Text="Details" Foreground="{DynamicResource IdealForegroundColorBrush}" />
+                    </DockPanel>
                 </Expander.Header>
                 <DockPanel x:Name="pnlDetails" DockPanel.Dock="Bottom" HorizontalAlignment="Stretch" LastChildFill="True" Margin="0">
                     <ScrollViewer VerticalScrollBarVisibility="Auto">
@@ -80,7 +83,7 @@
                             </DockPanel>
                             <DockPanel LastChildFill="True">
                                 <TextBlock FontWeight="Bold"><Hyperlink Name="lnkEditTags" Command="{Binding Generator.EditTags}" ><Run Text="Tags: "></Run></Hyperlink></TextBlock>
-                                <TextBlock Text="{Binding Generator.TagList}" Height="auto" TextWrapping="Wrap" />
+                                <TextBlock Text="{Binding Generator.TagList}" Height="auto" TextWrapping="Wrap" />                                
                             </DockPanel>
                             <DockPanel LastChildFill="True">
                                 <TextBlock FontWeight="Bold" ToolTip="{Binding Generator.URL, Mode=OneWay}" TextTrimming="CharacterEllipsis">

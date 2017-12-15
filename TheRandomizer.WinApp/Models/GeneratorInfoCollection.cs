@@ -24,6 +24,10 @@ namespace TheRandomizer.WinApp.Models
         public GeneratorInfoCollection(List<GeneratorInfo> list) : base(list) { }
         #endregion
 
+        #region Static Members
+        private static GeneratorInfoCollection _generatorList;
+        #endregion  
+
         #region Static Properties
         public static ObservableCollection<GeneratorError> GeneratorLoadErrors { get; private set; } = new ObservableCollection<GeneratorError>();
         
@@ -44,6 +48,23 @@ namespace TheRandomizer.WinApp.Models
                 return Path.Combine(GeneratorPath, GENERATOR_LIST_FILE_NAME);
             }
         }
+
+        public static GeneratorInfoCollection GeneratorList
+        {
+            get
+            {
+                if (_generatorList == null) LoadGeneratorList(null);
+                return _generatorList;
+            }
+        }
+
+        public static List<string> Tags
+        {
+            get
+            {
+                return _generatorList.GetTags().Select(t => t.Name).ToList();
+            }
+        }        
         #endregion
         
         #region Public Static Methods
@@ -91,27 +112,32 @@ namespace TheRandomizer.WinApp.Models
                 progressCallback?.Invoke(Path.GetFileNameWithoutExtension(filePath));
                 try
                 {
-                    var found = values.Where(gi => gi.FilePath.Equals(filePath, StringComparison.InvariantCultureIgnoreCase));
-                    if (found.Any())
+                    var generator = new GeneratorInfo(filePath);
+                    if (!generator.IsLibrary)
                     {
-                        if (found.First().LastModified < File.GetLastWriteTime(filePath))
+                        var found = values.Where(gi => gi.FilePath.Equals(filePath, StringComparison.InvariantCultureIgnoreCase));
+                        if (found.Any())
                         {
-                            values.Remove(found.First());
+                            if (found.First().LastModified < File.GetLastWriteTime(filePath))
+                            {
+                                values.Remove(found.First());
+                                values.Add(new GeneratorInfo(filePath));
+                            }
+                        }
+                        else
+                        {
                             values.Add(new GeneratorInfo(filePath));
                         }
-                    }
-                    else
-                    {
-                        values.Add(new GeneratorInfo(filePath));
                     }
                 }
                 catch (Exception ex)
                 {
                     GeneratorLoadErrors.Add(new GeneratorError(Path.GetFileName(filePath), ex.Message));
                 }
-            }
+            }            
             values.SaveGeneratorList();
-            return new GeneratorInfoCollection(values.OrderBy(gi => gi.Name ));
+            _generatorList = new GeneratorInfoCollection(values.OrderBy(gi => gi.Name ));
+            return _generatorList;
         }
         #endregion
           
@@ -121,7 +147,7 @@ namespace TheRandomizer.WinApp.Models
             var tags = new List<string>();
             foreach (var item in Items)
             {
-                tags.AddRange(item.Tags);
+                tags.AddRange(item.Tags.Select(t => t.Value));
             }
             tags = tags.Distinct(StringComparer.InvariantCultureIgnoreCase).ToList();
             return tags.Select(s => new Tag(s)).ToList();

@@ -25,8 +25,10 @@ namespace TheRandomizer.WinApp.Models
         public string Author { get; private set; }
         public string Description { get; private set; }
         public string FilePath { get; private set; }
-        public ObservableCollection<string> Tags { get; set; }
+        public ObservableCollection<Generators.Tag> Tags { get; set; }
         public DateTime LastModified { get; private set; }
+        public GeneratorType GeneratorType { get; private set; }
+        public bool IsLibrary { get; private set; } = false;
 
         private void GetGenertorFromFile(string filePath)
         {
@@ -36,7 +38,12 @@ namespace TheRandomizer.WinApp.Models
             Name = generator.Name;
             Author = generator.Author;
             Description = generator.Description;
-            Tags = new ObservableCollection<string>(generator.Tags);
+            GeneratorType = generator.GeneratorType;
+            if (GeneratorType == GeneratorType.Assignment)
+            {
+                IsLibrary = ((Generators.Assignment.AssignmentGenerator)generator).IsLibrary;
+            }
+            Tags = new ObservableCollection<Generators.Tag>(generator.Tags);
             LastModified = File.GetLastWriteTime(FilePath);
         }
     }

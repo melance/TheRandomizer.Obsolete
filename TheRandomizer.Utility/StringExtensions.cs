@@ -4,11 +4,50 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
+using System.Xml;
+using System.Xml.Serialization;
 
 namespace TheRandomizer.Utility
 {
     public static class StringExtensions
     {
+        /// <summary>
+        /// Attempts to deserialize the provided <see cref="string"/> into the type specified by <typeparamref name="T"/>
+        /// </summary>
+        /// <typeparam name="T">The type to deserialize the <see cref="string"/> into</typeparam>
+        /// <param name="extended">The <see cref="string"/> to deserialize</param>
+        /// <param name="value">The <typeparamref name="T"/> object resulting from the deserialization</param>
+        /// <returns>True if the deserialization was successful, otherwise false.</returns>
+        public static bool TryDeserialize<T>(this string extended, out T value) where T : class
+        {
+            try
+            {
+                value = extended.Deserialize<T>();
+                return true;
+            }
+            catch
+            {
+                value = null;
+            }
+            return false;
+        }
+
+        /// <summary>
+        /// Deserializes a <see cref="string"/> into the type specified by <typeparamref name="T"/>.
+        /// </summary>
+        /// <typeparam name="T">The type to deserialize the <see cref="string"/> into</typeparam>
+        /// <param name="extended">The <see cref="string"/> to deserialize</param>
+        /// <returns>An object of type <typeparamref name="T"/></returns>
+        public static T Deserialize<T>(this string extended) where T : class
+        {
+            using (var reader = new StringReader(extended))
+            {
+                var deserializer = new XmlSerializer(typeof(T));
+                return deserializer.Deserialize(reader) as T;
+            }
+        }
+
         /// <summary>
         /// Returns true if the <paramref name="extended"/> is an <see cref="int"/>
         /// </summary>
