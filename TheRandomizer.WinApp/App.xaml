@@ -33,9 +33,9 @@
                 <Setter Property="BorderThickness" Value="2" />
                 <Setter Property="Padding" Value="2" />
             </Style>
-                        
-            <!--<Style TargetType="{x:Type dragablz:TabablzControl}" BasedOn="{StaticResource MahAppsTabablzControlStyle}" />-->
-            
+
+            <Style TargetType="{x:Type dragablz:TabablzControl}" BasedOn="{StaticResource MahAppsTabablzControlStyle}" />
+
             <!-- Static Resources -->
             <SolidColorBrush x:Key="ContentLabelBrush" Color="Black" />
 
