@@ -39,7 +39,10 @@ namespace TheRandomizer.Generators.Phonotactics
         public List<Pattern> Patterns { get; set; } = new List<Pattern>();
 
         [XmlIgnore]
-        public override ConfigurationList Parameters { get; set; }
+        public override bool? SupportsMaxLength { get { return null; } set { } }
+
+        [XmlIgnore]
+        public override ConfigurationList Parameters { get; set; } = new ConfigurationList();
 
         protected override string GenerateInternal(int? maxLength)
         {

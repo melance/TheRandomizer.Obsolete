@@ -83,7 +83,7 @@ namespace TheRandomizer.WebApp.Controllers
                     Author = generator.Author,
                     Description = generator.Description,
                     Parameters = generator.Parameters,
-                    SupportsMaxLength = generator.SupportsMaxLength,
+                    SupportsMaxLength = (generator.SupportsMaxLength == true),
                     IsFavorite = user == null ? false : user.Favorites.Contains(id),
                     IsOwner = user == null ? false : user.OwnerOfGenerator.Contains(id)
                 };

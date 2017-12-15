@@ -50,7 +50,7 @@ namespace TheRandomizer.WinApp.Controls
             }
         }
 
-        public GeneratorWrapper Generator
+        internal GeneratorWrapper Generator
         {
             get
             {

@@ -10,6 +10,7 @@
                    xmlns:viewModels="clr-namespace:TheRandomizer.WinApp.ViewModels"
                    xmlns:dialogs="clr-namespace:MahApps.Metro.Controls.Dialogs;assembly=MahApps.Metro"
                    xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+                   Style="{DynamicResource WindowStyle}"
                    dialogs:DialogParticipation.Register="{Binding}"
                    Closing="MetroWindow_Closing"
                    mc:Ignorable="d"
@@ -17,6 +18,7 @@
                    Height="600" 
                    Width="800" 
                    Name="winGeneratorEditor"
+                   Cursor="{Binding Cursor}"
                    Icon="/TheRandomizer;component/TheRandomizer.ico">
     <Window.DataContext>
         <viewModels:GeneratorEditorViewModel />
@@ -76,13 +78,23 @@
                     </Style>
                 </metro:DropDownButton.ItemContainerStyle>
             </metro:DropDownButton>
-            <Button Command="{Binding Open}" ToolTip="Open" Style="{DynamicResource SquareButtonStyle}" Margin="0,0,3,0" Width="32">
+            <Button Command="{Binding Open}" ToolTip="Open" Style="{DynamicResource SquareButtonStyle}" BorderThickness="2,2,0,2" Margin="0,0,0,0" Width="32">
                 <Rectangle Width="12" Height="12" Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
                     <Rectangle.OpacityMask>
                         <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_folder_open}" />
                     </Rectangle.OpacityMask>
                 </Rectangle>
             </Button>
+            <metro:DropDownButton ItemsSource="{Binding MRU}" ToolTip="Open Recent File" Margin="0,0,3,0" BorderThickness="0,2,2,2" IsEnabled="{Binding HasMRUItems}">
+                <metro:DropDownButton.ItemContainerStyle>
+                    <Style TargetType="MenuItem">
+                        <Setter Property="Header" Value="{Binding FileName}" />
+                        <Setter Property="Command" Value="{Binding DataContext.OpenRecent, RelativeSource={RelativeSource AncestorType=metro:DropDownButton}}" />
+                        <Setter Property="CommandParameter" Value="{Binding FilePath}" />
+                        <Setter Property="ToolTip" Value="{Binding FilePath}" />
+                    </Style>
+                </metro:DropDownButton.ItemContainerStyle>
+            </metro:DropDownButton>
             <Button Command="{Binding Save}" IsEnabled="{Binding HasGenerator}" ToolTip="Save" Style="{DynamicResource SquareButtonStyle}" Margin="0,0,0,0" BorderThickness="2,2,0,2">
                 <Rectangle Width="12" Height="12" Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
                     <Rectangle.OpacityMask>
@@ -130,7 +142,7 @@
             <TextBox Text="{Binding Generator.Author}" Grid.Column="1" Grid.Row="2" Margin="3" />
             <Label Content="Url" Grid.Column="0" Grid.Row="3" />
             <TextBox Text="{Binding Generator.Url}" Grid.Column="1" Grid.Row="3" Margin="3" />
-            <Label Content="Supports Max Length" Grid.Column="0" Grid.Row="4" Visibility="{Binding MaxLengthVisibility}" />
+            <Label Content="Supports Max Length" VerticalContentAlignment="Center" Grid.Column="0" Grid.Row="4" Visibility="{Binding MaxLengthVisibility}" />
             <metro:ToggleSwitch IsChecked="{Binding Generator.SupportsMaxLength}" Visibility="{Binding MaxLengthVisibility}" OnLabel="Yes" OffLabel="No" HorizontalContentAlignment="Right" HorizontalAlignment="Left" Grid.Column="1" Grid.Row="4" Margin="3" />
             <Label Content="Tags" Grid.Column="0" Grid.Row="5" />
             <TextBox Text="{Binding Generator.TagList}" Grid.Column="1" Grid.Row="5" Margin="3" />

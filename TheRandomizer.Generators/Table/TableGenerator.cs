@@ -36,7 +36,7 @@ namespace TheRandomizer.Generators.Table
         private Dictionary<string, object> Values { get; } = new Dictionary<string, object>();
 
         [XmlIgnore]
-        private new bool SupportsMaxLength { get; }
+        public override bool? SupportsMaxLength { get { return null; } set { } }
 
         protected override string GenerateInternal(int? maxLength)
         {

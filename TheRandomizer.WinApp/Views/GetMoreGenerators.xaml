@@ -7,6 +7,7 @@
                    xmlns:metro="http://metro.mahapps.com/winfx/xaml/controls"
                    xmlns:viewModels="clr-namespace:TheRandomizer.WinApp.ViewModels"
                    xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+                   Style="{DynamicResource WindowStyle}"
                    x:Name="winGetMoreGenerators"
                    ShowMaxRestoreButton="False"
                    ShowMinButton="False"

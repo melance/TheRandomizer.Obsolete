@@ -8,6 +8,7 @@
                    xmlns:metro="http://metro.mahapps.com/winfx/xaml/controls"
                    xmlns:toolkit="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Input.Toolkit"
                    xmlns:models="clr-namespace:TheRandomizer.WinApp.Models"
+                   Style="{DynamicResource WindowStyle}"
                    mc:Ignorable="d"
                    ShowMaxRestoreButton="False"
                    ShowMinButton="False"
@@ -46,7 +47,7 @@
                     </DataGridTemplateColumn.CellTemplate>
                     <DataGridTemplateColumn.CellEditingTemplate>
                         <DataTemplate>
-                            <toolkit:AutoCompleteBox SelectedItem="{Binding Value, Mode=TwoWay}" ItemsSource="{x:Static models:GeneratorInfoCollection.Tags}" IsTextCompletionEnabled="True"  HorizontalAlignment="Stretch"/>
+                            <toolkit:AutoCompleteBox Text="{Binding Value, Mode=TwoWay}" SelectedItem="{Binding Value, Mode=TwoWay}" ItemsSource="{x:Static models:GeneratorInfoCollection.Tags}" IsTextCompletionEnabled="True"  HorizontalAlignment="Stretch"/>
                         </DataTemplate>
                     </DataGridTemplateColumn.CellEditingTemplate>
                 </DataGridTemplateColumn>

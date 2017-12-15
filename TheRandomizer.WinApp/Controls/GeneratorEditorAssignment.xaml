@@ -7,6 +7,7 @@
              xmlns:local="clr-namespace:TheRandomizer.WinApp.Controls"
              xmlns:dragablz="clr-namespace:Dragablz;assembly=Dragablz"
              xmlns:ctrls="clr-namespace:TheRandomizer.WinApp.Controls"
+             xmlns:toolkit="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls.Input.Toolkit"
              Name="usrAssignment"
              mc:Ignorable="d" 
              d:DesignHeight="300" 
@@ -16,6 +17,12 @@
             <Setter Property="Background" Value="White" />
         </Style>
     </d:DesignerProperties.DesignStyle>
+    <UserControl.Resources>
+        <Style TargetType="{x:Type DataGridCell}" x:Key="TemplateCell">
+            <Setter Property="KeyboardNavigation.IsTabStop" Value="False" />
+        </Style>
+
+    </UserControl.Resources>
     <DockPanel>
         <DockPanel DockPanel.Dock="Top">
             <Label Content="Is Library" DockPanel.Dock="Left" Width="100" VerticalAlignment="Center" />
@@ -25,7 +32,18 @@
             <TabItem Header="Items">
                 <DataGrid Name="grdLineItems" ItemsSource="{Binding LineItems}" AutoGenerateColumns="False" CanUserAddRows="True" CanUserDeleteRows="True" CanUserReorderColumns="False" CanUserResizeColumns="True" CanUserResizeRows="False">
                     <DataGrid.Columns>
-                        <DataGridTextColumn Header="Name" Binding="{Binding Name}" FontFamily="Consolas" />
+                        <DataGridTemplateColumn Header="Name" FocusManager.FocusedElement="{Binding ElementName=txtName}">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Label Content="{Binding Name}" HorizontalContentAlignment="Right" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                            <DataGridTemplateColumn.CellEditingTemplate>
+                                <DataTemplate>
+                                    <toolkit:AutoCompleteBox Name="txtName" Text="{Binding Name, Mode=TwoWay}" SelectedItem="{Binding Name, Mode=TwoWay}" ItemsSource="{Binding DataContext.Names, ElementName=winGeneratorEditor}" IsTextCompletionEnabled="True"  HorizontalAlignment="Stretch" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellEditingTemplate>
+                        </DataGridTemplateColumn>
                         <DataGridTemplateColumn Header="Weight">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
@@ -38,10 +56,21 @@
                                 </DataTemplate>
                             </DataGridTemplateColumn.CellEditingTemplate>
                         </DataGridTemplateColumn>
-                        <DataGridTextColumn Header="Next" Binding="{Binding Next}" FontFamily="Consolas" />
+                        <DataGridTemplateColumn Header="Next">
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Label Content="{Binding Next}" HorizontalContentAlignment="Right" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                            <DataGridTemplateColumn.CellEditingTemplate>
+                                <DataTemplate>
+                                    <toolkit:AutoCompleteBox Text="{Binding Next, Mode=TwoWay}" SelectedItem="{Binding Next, Mode=TwoWay}" ItemsSource="{Binding DataContext.Names, ElementName=winGeneratorEditor}" IsTextCompletionEnabled="True"  HorizontalAlignment="Stretch" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellEditingTemplate>
+                        </DataGridTemplateColumn>
                         <DataGridTextColumn Header="Variable" Binding="{Binding Variable}" FontFamily="Consolas" />
                         <DataGridTextColumn Header="Repeat" Binding="{Binding Repeat}" FontFamily="Consolas" />
-                        <DataGridTemplateColumn Header="Expression">
+                        <DataGridTemplateColumn Header="Expression" FocusManager.FocusedElement="{Binding ElementName=txtElement}">
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
                                     <TextBlock Text="{Binding Expression}" MaxHeight="24" FontFamily="Consolas" />
@@ -64,7 +93,7 @@
                                                     </ToggleButton>
                                                     <Label Style="{DynamicResource SubTitleLabel}" Content="Expression" />
                                                 </DockPanel>
-                                                <TextBox FontFamily="Consolas" Text="{Binding ElementName=txtExpresion, Path=Text}" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto" AcceptsReturn="True" />
+                                                <TextBox Name="txtElement" FontFamily="Consolas" Text="{Binding ElementName=txtExpresion, Path=Text}" ScrollViewer.HorizontalScrollBarVisibility="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto" AcceptsReturn="True" />
                                             </DockPanel>
                                         </Popup>
                                         <ToggleButton Name="btnExpand" DockPanel.Dock="Right">

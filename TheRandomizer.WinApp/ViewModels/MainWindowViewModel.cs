@@ -47,6 +47,7 @@ namespace TheRandomizer.WinApp.ViewModels
         #region Constructors
         public MainWindowViewModel()
         {
+            GetReleases();
             Tags = new ObservableList<Models.Tag>();
             Tags.ItemPropertyChanged += Tags_ItemPropertyChanged;
         }
@@ -102,6 +103,9 @@ namespace TheRandomizer.WinApp.ViewModels
         public GeneratorWrapper SelectedGenerator { get { return GetProperty<GeneratorWrapper>(); } set { SetProperty(value); } }
 
         public int LoadErrorCount { get { return GeneratorInfoCollection.GeneratorLoadErrors.Count(); } }
+
+        public Octokit.Release NewRelease { get { return GetProperty<Octokit.Release>(); } set { SetProperty(value); OnPropertyChanged("NewReleaseAvailable"); } }
+        public bool NewReleaseAvailable { get { return NewRelease != null; } }
         #endregion  
 
         #region Commands
@@ -192,6 +196,43 @@ namespace TheRandomizer.WinApp.ViewModels
         #endregion
 
         #region Private Methods
+        private async void GetReleases()
+        {
+            if (Properties.Settings.Default.CheckUpdates)
+            {
+                var client = new Octokit.GitHubClient(new Octokit.ProductHeaderValue("TheRandomizer"));
+                var releases = await client.Repository.Release.GetAll("melance", "TheRandomizer");
+                Octokit.Release newRelease = null;
+                Version newReleaseVersion = null;
+
+                if (releases?.Count > 0)
+                {
+                    foreach (var release in releases)
+                    {
+                        if (!release.Prerelease || Properties.Settings.Default.IncludeBeta)
+                        {
+                            var version = new Version(release.TagName);
+                            if (version > CurrentVersion && (newReleaseVersion == null || version > newReleaseVersion))
+                            {
+                                newRelease = release;
+                                newReleaseVersion = version;
+                            }
+                        }
+                    }
+                }
+
+                if (newRelease != null) NewRelease = newRelease;
+            }
+        }
+
+        private Version CurrentVersion
+        {
+            get
+            {
+                return System.Reflection.Assembly.GetExecutingAssembly().GetName().Version;
+            }
+        }
+
         private void ToggleTagSelection(ToggleType toggle)
         {
             foreach (Models.Tag tag in Tags)

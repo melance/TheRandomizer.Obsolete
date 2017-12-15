@@ -30,10 +30,10 @@ namespace TheRandomizer.Generators.List
         public bool KeepWhitespace { get { return GetProperty(false); } set { SetProperty(value); } }
 
         [XmlIgnore]
-        public new bool SupportsMaxLength { get; set; }
+        public override bool? SupportsMaxLength { get { return null; } set { } }
 
         [XmlIgnore]
-        public new ConfigurationList Parameters { get; }
+        public override ConfigurationList Parameters { get; set; } = new ConfigurationList();
 
         /// <summary>
         /// Generates content by selecting a single item from the list

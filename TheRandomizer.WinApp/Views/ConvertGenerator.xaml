@@ -7,6 +7,7 @@
                    xmlns:metro="http://metro.mahapps.com/winfx/xaml/controls"
                    xmlns:viewModels="clr-namespace:TheRandomizer.WinApp.ViewModels"
                    xmlns:cmds="clr-namespace:TheRandomizer.WinApp.Commands"
+                   Style="{DynamicResource WindowStyle}"
                    Icon="/TheRandomizer;component/TheRandomizer.ico"
                    mc:Ignorable="d"
                    x:Name="ConvertGeneratorWindow"

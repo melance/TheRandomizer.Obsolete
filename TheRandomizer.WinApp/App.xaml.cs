@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Windows;
 using System.IO;
 using NDesk.Options;
+using TheRandomizer.Generators;
 
 namespace TheRandomizer.WinApp
 {
@@ -19,58 +20,161 @@ namespace TheRandomizer.WinApp
     {
         private const int SPLASH_DISPLAY_MILLISECONDS = 5000;
 
+        static bool _showGUI = true;
+        static int? _maxLength = null;
+        static int _repeat = 1;
+        static Dictionary<string, string> _parameters;
+
+        private enum Mode
+        {
+            Standard,
+            Editor,
+            Test
+        }
+        
         protected override void OnStartup(StartupEventArgs e)
         {
-            var editor = false;
-            var p = new OptionSet() { { "e|editor", v => editor = true } };
+            var help = false;
+            var generatorPath = string.Empty;
+            var mode = Mode.Standard;
+
+            var p = new OptionSet() {
+                { "m=|mode=", "Set the application mode, 'Standard' or 'Editor'", v => mode = SetMode(v) },
+                { "ml=|maxlength=", "If used in conjunction with 'generate', provides the max length to the generator.", GetMaxLength },
+                { "r=|repeat=", "If used in conjunction with 'generate', provides the number of times to run the generator.", GetRepeat },
+                { "p=|parameter=", "If used in conjunction with 'generate', adds a parameter. The parameter takes the form Name=Value.", GetParameter },
+                { "g=|generate=", "Runs the provided generator and opens the results in your default web browser.", v => generatorPath = v },
+                { "?|help", "Shows this help.", v => help = true } };
+            
             p.Parse(e.Args);
 
-            LoadCustomAccents();
-            ChangeAppStyle();
+            if (!string.IsNullOrWhiteSpace(generatorPath)) RunGenerator(generatorPath);
+            if (help) PrintHelp(p);
 
-
-            if (editor)
+            if (_showGUI)
             {
-                StartupUri = new Uri(@"Views/GeneratorEditor.xaml", UriKind.Relative);
+                LoadCustomAccents();
+                ChangeAppStyle();
+                
+                switch (mode)
+                {
+#if DEBUG
+                    case Mode.Test:
+                        StartupUri = new Uri(@"Views/Test.xaml", UriKind.Relative);
+                        break;
+#endif
+                    case Mode.Editor:
+                        StartupUri = new Uri(@"Views/GeneratorEditor.xaml", UriKind.Relative);
+                        break;
+                    default:
+                        StartupUri = new Uri("MainWindow.xaml", UriKind.Relative);
+                        break;
+                }
+
+              
+                ShutdownMode = ShutdownMode.OnLastWindowClose;
+
+                if (WinApp.Properties.Settings.Default.ShowSplash)
+                {
+                    var timer = new Stopwatch();
+                    var splash = new Views.SplashScreen();
+                    timer.Start();
+
+                    base.OnStartup(e);
+
+                    splash.Show();
+
+                    var mainWindow = new MainWindow();
+
+                    timer.Stop();
+
+                    var remainingSplashTime = SPLASH_DISPLAY_MILLISECONDS - timer.ElapsedMilliseconds;
+                    if (remainingSplashTime > 0)
+                        System.Threading.Thread.Sleep((int)remainingSplashTime);
+
+                    splash.Close();
+                }
+                else
+                {
+                    base.OnStartup(e);
+                }
             }
             else
             {
-                StartupUri = new Uri("MainWindow.xaml", UriKind.Relative);
+                Current.Shutdown();
             }
-            ShutdownMode = ShutdownMode.OnLastWindowClose;
+        }
+        
+        private static Mode SetMode(string value)
+        {
+            var result = Mode.Standard;
+            Enum.TryParse(value, true, out result);
+            return result;
+        }
 
-            if (WinApp.Properties.Settings.Default.ShowSplash)
+        private static void PrintHelp(OptionSet p)
+        {
+            _showGUI = false;
+            string help;
+            using (var writer = new StringWriter())
             {
-                var timer = new Stopwatch();    
-                var splash = new Views.SplashScreen();
-                timer.Start();
-
-                base.OnStartup(e);
-
-                splash.Show();
-
-                var mainWindow = new MainWindow();
-
-                timer.Stop();
-
-                var remainingSplashTime = SPLASH_DISPLAY_MILLISECONDS - timer.ElapsedMilliseconds;
-                if (remainingSplashTime > 0)
-                    System.Threading.Thread.Sleep((int)remainingSplashTime);
-
-                splash.Close();
+                p.WriteOptionDescriptions(writer);
+                help = writer.ToString();
             }
-            else
+            MessageBox.Show(help);
+        }
+
+        private static void GetMaxLength(string value)
+        {
+            int parsed;
+            if (int.TryParse(value, out parsed))
             {
-                base.OnStartup(e);
+                _maxLength = parsed;
             }
+        }
+
+        private static void GetRepeat(string value)
+        {
+            if (!int.TryParse(value, out _repeat))
+            {
+                _repeat = 1;
+            }
+        }
+
+        private static void GetParameter(string value)
+        {
+            if (value.Contains("="))
+            {
+                var parts = value.Split('=');
+                if (_parameters == null) _parameters = new Dictionary<string, string>();
+                _parameters.Add(parts[0], string.Join("=", parts.Skip(1)));
+            }
+        }
+
+        private static void RunGenerator(string filePath)
+        {
+            _showGUI = false;
+            filePath = Environment.ExpandEnvironmentVariables(filePath);
+            if (!Path.IsPathRooted(filePath)) filePath = Path.Combine(Directory.GetCurrentDirectory(), filePath);
+            if (!File.Exists(filePath)) throw new ArgumentException($"Could not find the file {filePath}.");
+            var generator = BaseGenerator.Deserialize(File.ReadAllText(filePath));
+            var tempFile = Path.GetTempFileName();
+            var result = string.Empty;
+            tempFile = Path.ChangeExtension(tempFile, "html");
+            result = Utility.GeneratorWrapper.FormatResults(generator.Generate(_repeat, _maxLength), generator.CSS);
+            File.WriteAllText(tempFile, result);
+            Process.Start(tempFile);
         }
 
         public static void LoadCustomAccents()
         {
-            foreach (var fileName in Directory.GetFiles(@".\Accents\","*.xaml",SearchOption.TopDirectoryOnly))
+            if (Directory.Exists(@".\Accents\"))
             {
-                var uri = new Uri($"pack://application:,,,/{fileName}", UriKind.RelativeOrAbsolute);
-                ThemeManager.AddAccent(Path.GetFileNameWithoutExtension(fileName), uri);
+                foreach (var fileName in Directory.GetFiles(@".\Accents\", "*.xaml", SearchOption.TopDirectoryOnly))
+                {
+                    var uri = new Uri($"pack://application:,,,/{fileName}", UriKind.RelativeOrAbsolute);
+                    ThemeManager.AddAccent(Path.GetFileNameWithoutExtension(fileName), uri);
+                }
             }
         }
 

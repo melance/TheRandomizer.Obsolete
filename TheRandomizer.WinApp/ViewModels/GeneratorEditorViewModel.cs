@@ -13,6 +13,8 @@ using System.Xml.Serialization;
 using System.ComponentModel;
 using MahApps.Metro.Controls.Dialogs;
 using System.Collections.Specialized;
+using TheRandomizer.Generators.Table;
+using System.Data;
 
 namespace TheRandomizer.WinApp.ViewModels
 {
@@ -39,11 +41,51 @@ namespace TheRandomizer.WinApp.ViewModels
         private List<Models.DropDownButtonItem> _newGeneratorList;
 
         private List<Models.DropDownButtonItem> _saveList;
+
+        private Models.MRU _mru;
         #endregion
         
         #region Public Properties
+        public Models.MRU MRU
+        {
+            get
+            {
+                if (_mru == null)
+                {
+                    _mru = Models.MRU.LoadMRU();
+                    _mru.CollectionChanged += MRUChanged;
+                }
+
+                return _mru;
+            }
+        }
+
+        public bool HasMRUItems
+        {
+            get
+            {
+                return MRU.Count > 0;
+            }
+        }
+
+        public List<string> Names
+        {
+            get
+            {
+                var items = (Generator as Generators.Assignment.AssignmentGenerator)?.LineItems;
+                if (items != null)
+                {
+                    return items.Select(i => i.Name).Distinct(StringComparer.InvariantCultureIgnoreCase).ToList();
+                }
+                return new List<string>();
+            }
+        }
+
         public bool IsDirty { get { return GetProperty(false); } set { SetProperty(value); } }
         public string FilePath { get { return GetProperty<string>(); } set { SetProperty(value); OnPropertyChanged("FileName"); } }
+
+        public Cursor Cursor { get { return GetProperty<Cursor>(); } set { SetProperty(value); } }
+
         public string FileName { get
             {
                 if (string.IsNullOrWhiteSpace(FilePath)) return null;
@@ -79,7 +121,7 @@ namespace TheRandomizer.WinApp.ViewModels
                 SetProperty(value);
                 if (Generator != null)
                     SetEventHandlers();
-                OnPropertyChanged("HasGenerator");
+                OnPropertyChanged("");
             }
         }
         
@@ -165,12 +207,39 @@ namespace TheRandomizer.WinApp.ViewModels
                     var result = await CancelGeneratorClosing();
                     if (!result.HasValue || result == false)
                     {
-                        FilePath = Utility.Dialogs.OpenGeneratorFileDialog(FilePath);
-                        if (!string.IsNullOrWhiteSpace(FilePath) && File.Exists(FilePath))
+                        var filePath = Utility.Dialogs.OpenGeneratorFileDialog(FilePath);
+                        Cursor = Cursors.Wait;
+                        if (!string.IsNullOrWhiteSpace(filePath) && File.Exists(filePath))
                         {
+                            FilePath = filePath;
                             Generator = BaseGenerator.Deserialize(File.ReadAllText(FilePath));
                             IsDirty = false;
+                            MRU.Add(FilePath);
                         }
+                        Cursor = null;
+                    }
+                });
+            }
+        }
+
+        public ICommand OpenRecent
+        {
+            get
+            {
+                return new DelegateCommand<string>(async filePath =>
+                {
+                    var result = await CancelGeneratorClosing();
+                    if (!result.HasValue || result == false)
+                    {
+                        if (File.Exists(filePath))
+                        {
+                            Cursor = Cursors.Wait;
+                            FilePath = filePath;
+                            Generator = BaseGenerator.Deserialize(File.ReadAllText(filePath));
+                            IsDirty = false;
+                            MRU.Add(FilePath);
+                        }
+                        Cursor = null;
                     }
                 });
             }
@@ -185,21 +254,50 @@ namespace TheRandomizer.WinApp.ViewModels
                 {
                     Generator = (BaseGenerator)Activator.CreateInstance(generatorType);
                     IsDirty = false;
+                    FilePath = string.Empty;
                 }
             }, generatorType);
         }
 
-        private ICommand NewTable(Type tableType)
+        public BaseTable SelectedTable { get { return GetProperty<BaseTable>(); } set { SetProperty(value); } }
+
+        public ICommand AddTable
         {
-            return new DelegateCommand<Type>(t =>
-                    {
-                        if (Generator?.GeneratorType == GeneratorType.Table)
+            get
+            {
+                return new DelegateCommand<Type>(t =>
                         {
-                            var model = (Generators.Table.BaseTable)Activator.CreateInstance(t);
-                            ((Generators.Table.TableGenerator)Generator).Tables.Add(model);
+                            if (Generator?.GeneratorType == GeneratorType.Table)
+                            {
+                                var model = (BaseTable)Activator.CreateInstance(t);
+                                ((TableGenerator)Generator).Tables.Add(model);
+                                model.Name = t.DisplayName();
+                                SelectedTable = model;
+                            }
+                        }
+                    );
+            }
+        }
+
+        public ICommand AddColumn
+        {
+            get
+            {
+                return new DelegateCommand<BaseTable>(async table =>
+                {
+                    if (table != null)
+                    {
+                        var name = await DialogCoordinator.ShowInputAsync(this, "Add Column", "Enter the column name");
+                        if (!string.IsNullOrWhiteSpace(name))
+                        {
+                            var converter = new Converters.TableConverter();
+                            var data = (DataTable)converter.Convert(table.Value, typeof(DataTable), null, System.Globalization.CultureInfo.CurrentCulture);
+                            data.Columns.Add(name);
+                            table.Value = (string)converter.ConvertBack(data, typeof(string), null, System.Globalization.CultureInfo.CurrentCulture);
                         }
                     }
-                );
+                });
+            }
         }
         #endregion
 
@@ -217,6 +315,10 @@ namespace TheRandomizer.WinApp.ViewModels
             {
                 Generator.PropertyChanged += GeneratorPropertyChanged;
                 Generator.Parameters.CollectionChanged += GeneratorCollectionChanged;
+                if (Generator.GeneratorType == GeneratorType.Assignment)
+                {
+                    ((Generators.Assignment.AssignmentGenerator)Generator).LineItems.CollectionChanged += LineItemsChanged;
+                }
             }
         }
 
@@ -266,9 +368,12 @@ namespace TheRandomizer.WinApp.ViewModels
             }
             if (!string.IsNullOrWhiteSpace(name))
             {
+                Cursor = Cursors.Wait;
                 File.WriteAllText(name, Generator.Serialize());
                 FilePath = name;
                 IsDirty = false;
+                Cursor = null;
+                MRU.Add(FilePath);
             }
         }
 
@@ -283,6 +388,16 @@ namespace TheRandomizer.WinApp.ViewModels
         {
             IsDirty = true;
         }        
+
+        private void LineItemsChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            OnPropertyChanged("Names");
+        }
+
+        private void MRUChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            OnPropertyChanged("HasMRUItems");
+        }
         #endregion
 
     }

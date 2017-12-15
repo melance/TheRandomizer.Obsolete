@@ -17,7 +17,7 @@ using TheRandomizer.WinApp.Views;
 
 namespace TheRandomizer.WinApp.Utility
 {
-    public class GeneratorWrapper : ObservableBase
+    internal class GeneratorWrapper : ObservableBase
     {
         
         #region Members
@@ -123,7 +123,7 @@ namespace TheRandomizer.WinApp.Utility
         {
             get
             {
-                return _generator != null ? _generator.SupportsMaxLength : false;
+                return _generator != null ? _generator.SupportsMaxLength == true : false;
             }
         }
 
@@ -218,11 +218,11 @@ namespace TheRandomizer.WinApp.Utility
 
         public void Generate()
         {
-            Results = FormatResults(_generator?.Generate(Repeat, MaxLength));
+            Results = FormatResults(_generator?.Generate(Repeat, MaxLength), _generator?.CSS);
             OnPropertyChanged("Results");
         }
         
-        private string FormatResults(IEnumerable<string> results)
+        public static string FormatResults(IEnumerable<string> results, string css)
         {            
             using (StringWriter sWriter = new StringWriter())
             {
@@ -234,9 +234,9 @@ namespace TheRandomizer.WinApp.Utility
                     writer.WriteLine("body { font-family: Consolas, Courier New, Monospace; }");
                     writer.WriteLine("div.even { background-color: #F8F8F8; }");
                     writer.WriteLine("div.error { color: red; font-weight: bold; }");
-                    if (!string.IsNullOrWhiteSpace(_generator.CSS))
+                    if (!string.IsNullOrWhiteSpace(css))
                     {
-                        writer.WriteLine(_generator.CSS);
+                        writer.WriteLine(css);
                     }
                     writer.WriteEndTag("style");
                     writer.WriteEndTag("head");

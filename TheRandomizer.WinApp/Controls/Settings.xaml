@@ -42,6 +42,8 @@
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <Label Height="26" Content="Theme" Grid.Row="0" Grid.Column="0" Margin="3" />
@@ -60,8 +62,12 @@
             <TextBox Height="26" Text="{util:SettingBinding GeneratorDirectory}" ToolTip="{Binding RelativeSource={RelativeSource Self}, Path=Text}" Margin="3" />            
         </DockPanel>
         <Label Height="26" VerticalAlignment="Top" Content="Show Splash Screen" Grid.Row="3" Grid.Column="0" Margin="3" />
-        <metro:ToggleSwitch OnLabel="Yes" OffLabel="No" Margin="3,0,0,0" HorizontalContentAlignment="Right" IsChecked="{util:SettingBinding ShowSplash}" Grid.Row="3" Grid.Column="1" />
-        <DockPanel LastChildFill="False" Grid.Row="6" Grid.Column="0" Grid.ColumnSpan="2">
+        <metro:ToggleSwitch OnLabel="Yes" OffLabel="No" Margin="3,0,0,0" HorizontalContentAlignment="Right" HorizontalAlignment="Left" IsChecked="{util:SettingBinding ShowSplash}" Grid.Row="3" Grid.Column="1" />
+        <Label Height="26" VerticalAlignment="Top" Content="Check for Updates" Grid.Row="4" Grid.Column="0" Margin="3" />
+        <metro:ToggleSwitch OnLabel="Yes" OffLabel="No" Margin="3,0,0,0" HorizontalContentAlignment="Right" HorizontalAlignment="Left" IsChecked="{util:SettingBinding CheckUpdates}" Grid.Row="4" Grid.Column="1" />
+        <Label Height="26" VerticalAlignment="Top" Content="Include Beta Releases" Grid.Row="5" Grid.Column="0" Margin="3" />
+        <metro:ToggleSwitch OnLabel="Yes" OffLabel="No" Margin="3,0,0,0" HorizontalContentAlignment="Right" HorizontalAlignment="Left" IsEnabled="{util:SettingBinding CheckUpdates}" IsChecked="{util:SettingBinding IncludeBeta}" Grid.Row="5" Grid.Column="1" />
+        <DockPanel LastChildFill="False" Grid.Row="8" Grid.Column="0" Grid.ColumnSpan="2">
             <Button DockPanel.Dock="Right" Width="80" Command="{Binding SaveSettings}" Margin="3" Content="_Save" Grid.Row="4" Grid.Column="1" VerticalAlignment="Bottom" HorizontalAlignment="Right"  />
             <Button DockPanel.Dock="Right" Width="80" Command="{Binding Cancel}" Margin="3" Content="Cancel" Grid.Row="4" Grid.Column="1" VerticalAlignment="Bottom" HorizontalAlignment="Right"  />
             <Button DockPanel.Dock="Left" Width="80" Command="{Binding ResetSettings}" Margin="3" Content="Reset" Grid.Row="4" Grid.Column="1" VerticalAlignment="Bottom" HorizontalAlignment="Right"  />

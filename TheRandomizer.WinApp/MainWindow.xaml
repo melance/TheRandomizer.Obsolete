@@ -20,6 +20,7 @@
                    xmlns:table="clr-namespace:TheRandomizer.Generators.Table;assembly=TheRandomizer.Generators"
                    xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
                    xmlns:system="clr-namespace:System;assembly=mscorlib"
+                   Style="{DynamicResource WindowStyle}"
                    dialog:DialogParticipation.Register="{Binding}"
                    mc:Ignorable="d"
                    Title="The Randomizer" 
@@ -90,6 +91,7 @@
         <Grid.RowDefinitions>
             <RowDefinition x:Name="Filters" Height="Auto" />
             <RowDefinition />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
         <Grid.ColumnDefinitions>
             <ColumnDefinition Width="210"/>
@@ -178,8 +180,8 @@
                 </ListBox>
             </Grid>
         </DockPanel>
-        <GridSplitter Grid.Row="2" Grid.Column="1" Width="3" HorizontalAlignment="Stretch" ResizeDirection="Columns" ResizeBehavior="PreviousAndNext" Margin="0" />
-        <DockPanel Grid.Row="2" Grid.Column="2" LastChildFill="True">
+        <GridSplitter Grid.Row="1" Grid.Column="1" Width="3" HorizontalAlignment="Stretch" ResizeDirection="Columns" ResizeBehavior="PreviousAndNext" Margin="0" />
+        <DockPanel Grid.Row="1" Grid.Column="2" LastChildFill="True">
             <Label Content="" Style="{DynamicResource TitleLabel}" FontWeight="Bold" DockPanel.Dock="Top" />
             <Grid>
                 <dockablz:Layout>
@@ -196,5 +198,9 @@
                 </dockablz:Layout>
             </Grid>
         </DockPanel>
+        <TextBlock Visibility="{Binding NewReleaseAvailable, Mode=OneWay, Converter={StaticResource BooleanToVisibilityConverter}}" Grid.Row="2" Grid.ColumnSpan="3" Padding="6" Background="{DynamicResource AccentColorBrush}" HorizontalAlignment="Stretch" Foreground="{DynamicResource IdealForegroundColorBrush}">
+            <Hyperlink FontStyle="Normal" CommandParameter="{Binding NewRelease.HtmlUrl, Mode=OneWay}" Command="{x:Static util:BrowserBehavior.OpenURL}" Foreground="{DynamicResource IdealForegroundColorBrush}">The Randomizer v<Run Text="{Binding NewRelease.TagName, Mode=OneWay}" /> (<Run Text="{Binding NewRelease.Name, Mode=OneWay}" />) is available.
+            Click here to download.</Hyperlink>
+        </TextBlock>
     </Grid>
 </metro:MetroWindow>

@@ -2,7 +2,7 @@
 !define APP_NAME "The Randomizer"
 !define COMP_NAME "Lance Boudreaux"
 !define WEB_SITE "https://github.com/melance/TheRandomizer"
-!define VERSION "3.00.00.00"
+!define VERSION "3.00.20.00"
 !define COPYRIGHT "Lance Boudreaux © 2015-2017"
 !define DESCRIPTION "The infinitely customizable random content generator"
 !define INSTALLER_NAME "TheRandomizerWinAppSetup.exe"
@@ -90,6 +90,8 @@ SetOutPath "$INSTDIR"
 File "..\bin\release\*.dll"
 File "..\bin\release\*.exe"
 File "..\bin\release\*.config"
+SetOutPath "$INSTDIR\Accents"
+File "..\bin\release\Accents\*.xaml"
 SectionEnd
 
 # Registry and Start Menu Section
@@ -101,7 +103,9 @@ WriteUninstaller "$INSTDIR\Unintall.exe"
 !insertmacro MUI_STARTMENU_WRITE_BEGIN Application
 CreateDirectory "$SMPROGRAMS\$START_MENU_FOLDER"
 CreateShortCut "$SMPROGRAMS\$START_MENU_FOLDER\${APP_NAME}.lnk" "$INSTDIR\${MAIN_APP_EXE}"
+CreateShortCut "$SMPROGRAMS\$START_MENU_FOLDER\${APP_NAME} Editor.lnk" "$INSTDIR\${MAIN_APP_EXE} -m Editor"
 CreateShortCut "$DESKTOP\${APP_NAME}.lnk" "$INSTDIR\${MAIN_APP_EXE}"
+CreateShortCut "$DESKTOP\${APP_NAME} Editor.lnk" "$INSTDIR\${MAIN_APP_EXE}" "-m Editor"
 CreateShortCut "$SMPROGRAMS\$START_MENU_FOLDER\Uninstall ${APP_NAME}.lnk" "$INSTDIR\uninstall.exe"
 
 !ifdef WEB_SITE

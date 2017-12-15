@@ -26,7 +26,7 @@ namespace TheRandomizer.Generators.Dice
 
         #region Public Properties
         [XmlIgnore]
-        public override bool SupportsMaxLength { get; set; } = false;
+        public override bool? SupportsMaxLength { get { return null; } set { } }
 
         /// <summary>A list of dice roll functions the user can select from using a RollFunction parameter</summary>
         [XmlElement("function")]
@@ -129,7 +129,7 @@ namespace TheRandomizer.Generators.Dice
             }
             else
             {
-                return Functions.First((RollFunction rf) => rf.Name == rollFunction.Value).Function;
+                return Functions.First((RollFunction rf) => rf.Name.Equals(rollFunction.Value, StringComparison.InvariantCultureIgnoreCase)).Function;
             }
         }        
         #endregion

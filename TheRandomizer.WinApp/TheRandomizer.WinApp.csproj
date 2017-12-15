@@ -85,10 +85,6 @@
       <Private>True</Private>
     </Reference>
     <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Windows.Interactivity, Version=4.5.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
-      <HintPath>..\packages\JetBrains.System.Windows.Interactivity.3.0.40218.0\lib\net45\System.Windows.Interactivity.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Core" />
@@ -145,6 +141,8 @@
     <Compile Include="MarkupExtensions\EnumValuesExtension.cs" />
     <Compile Include="Models\GeneratorError.cs" />
     <Compile Include="Models\DropDownButtonItem.cs" />
+    <Compile Include="Models\MRU.cs" />
+    <Compile Include="Models\MRUEntry.cs" />
     <Compile Include="Tasks.cs" />
     <Compile Include="Utility\BrowserBehavior.cs" />
     <Compile Include="Utility\CommandLineOptions.cs" />
@@ -159,6 +157,7 @@
     <Compile Include="Commands\DelegateCommandT.cs" />
     <Compile Include="Utility\GeneratorWrapper.cs" />
     <Compile Include="Utility\SettingsBinding.cs" />
+    <Compile Include="Utility\TableTemplateSelector.cs" />
     <Compile Include="ViewModels\AboutViewModel.cs" />
     <Compile Include="ViewModels\ConvertGeneratorViewModel.cs" />
     <Compile Include="ViewModels\GeneratorEditorViewModel.cs" />
@@ -193,9 +192,12 @@
     <Compile Include="Views\TagEditor.xaml.cs">
       <DependentUpon>TagEditor.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Views\Test.xaml.cs">
+      <DependentUpon>Test.xaml</DependentUpon>
+    </Compile>
     <Content Include="Accents\Black and White.xaml">
       <SubType>Designer</SubType>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Accents\Gray.xaml">
       <SubType>Designer</SubType>
@@ -274,6 +276,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Views\TagEditor.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\Test.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

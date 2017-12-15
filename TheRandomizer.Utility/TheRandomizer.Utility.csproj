@@ -47,6 +47,7 @@
     <Compile Include="Common.cs" />
     <Compile Include="IntegerExtensions.cs" />
     <Compile Include="LinqExtensions.cs" />
+    <Compile Include="ObjectExtensions.cs" />
     <Compile Include="ObservableBase.cs" />
     <Compile Include="SimpleEncryption.cs" />
     <Compile Include="StringExtensions.cs" />

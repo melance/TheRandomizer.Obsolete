@@ -21,6 +21,9 @@ namespace TheRandomizer.Generators.LUA
         [LuaHide]
         public string Script { get; set; }
 
+        [XmlIgnore]
+        public override bool? SupportsMaxLength { get { return null; } set { } }
+
         private StringBuilder Result { get; } = new StringBuilder();
 
         private Lua _lua;

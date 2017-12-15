@@ -20,7 +20,7 @@ namespace TheRandomizer.WinApp.ViewModels
     {
         private const string GIT_HUB_USER = "melance";
         private const string GIT_HUB_REPOSITORY = "TheRandomizerCustomizations";
-        private const string GIT_HUG_FOLDER = "Grammars";
+        private const string GIT_HUB_FOLDER = "Grammars";
 
         public GetMoreGeneratorsViewModel()
         {
@@ -90,7 +90,7 @@ namespace TheRandomizer.WinApp.ViewModels
             if (!DesignerProperties.GetIsInDesignMode(dep))
             {
                 Cursor = Cursors.Wait;
-                var generators = Client.Repository.Content.GetAllContents(GIT_HUB_USER, GIT_HUB_REPOSITORY, GIT_HUG_FOLDER);
+                var generators = Client.Repository.Content.GetAllContents(GIT_HUB_USER, GIT_HUB_REPOSITORY, GIT_HUB_FOLDER);
                 var result = new List<RepositoryContent>();
                 if (generators.Wait(30000))
                 {
