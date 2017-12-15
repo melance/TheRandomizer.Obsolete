@@ -103,7 +103,7 @@ WriteUninstaller "$INSTDIR\Unintall.exe"
 !insertmacro MUI_STARTMENU_WRITE_BEGIN Application
 CreateDirectory "$SMPROGRAMS\$START_MENU_FOLDER"
 CreateShortCut "$SMPROGRAMS\$START_MENU_FOLDER\${APP_NAME}.lnk" "$INSTDIR\${MAIN_APP_EXE}"
-CreateShortCut "$SMPROGRAMS\$START_MENU_FOLDER\${APP_NAME} Editor.lnk" "$INSTDIR\${MAIN_APP_EXE} -m Editor"
+CreateShortCut "$SMPROGRAMS\$START_MENU_FOLDER\${APP_NAME} Editor.lnk" "$INSTDIR\${MAIN_APP_EXE}" "-m Editor"
 CreateShortCut "$DESKTOP\${APP_NAME}.lnk" "$INSTDIR\${MAIN_APP_EXE}"
 CreateShortCut "$DESKTOP\${APP_NAME} Editor.lnk" "$INSTDIR\${MAIN_APP_EXE}" "-m Editor"
 CreateShortCut "$SMPROGRAMS\$START_MENU_FOLDER\Uninstall ${APP_NAME}.lnk" "$INSTDIR\uninstall.exe"
