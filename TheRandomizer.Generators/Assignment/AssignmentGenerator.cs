@@ -139,7 +139,7 @@ namespace TheRandomizer.Generators.Assignment
             {
                 var e = new RequestGeneratorEventArgs(import);
                 OnRequestGenerator(e);
-                if (e.Generator != null)
+                if (e.Generator == null)
                 {
                     throw new LibraryNotFoundException(import);
                 }

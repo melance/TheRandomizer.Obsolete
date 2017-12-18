@@ -82,8 +82,10 @@ namespace TheRandomizer.Generators.Table
                             break;
                         case Lexer.TokenType.Item:
                         case Lexer.TokenType.Variable:
-                        case Lexer.TokenType.Equation:
                             result.Append(Calculate($"[{token.TokenValue}]"));
+                            break;
+                        case Lexer.TokenType.Equation:
+                            result.Append(Calculate(token.TokenValue));
                             break;
                     }
                 }

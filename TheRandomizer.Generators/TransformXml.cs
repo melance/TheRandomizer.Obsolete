@@ -7,6 +7,7 @@ using System.Xml.Linq;
 using System.IO;
 using System.Xml.XPath;
 using System.Xml;
+using TheRandomizer.Utility;
 
 namespace TheRandomizer.Generators
 {
@@ -77,69 +78,100 @@ namespace TheRandomizer.Generators
 
                 // Change the name of the root from Grammar to generator
                 root = doc.Root;
-                root.Name = "generator";
-
-                // Add the version number
-                var version = root.Attribute(XName.Get("version"));
-                if (version == null) version = new XAttribute("version", 2);
-                version.Value = "2";
-
-                // Update the value of the @type attribute
-                type = root.Attribute(XName.Get("type", "http://www.w3.org/2001/XMLSchema-instance"));
-
-                switch (type.Value)
+                if (root.Name.LocalName.Equals("library"))
                 {
-                    case "AssignmentGrammar": type.Value = "Assignment"; break;
-                    case "DiceRoll": type.Value = "Dice"; break;
-                    case "LuaGrammar": type.Value = "Lua"; break;
-                    case "PhonotacticsGrammar": type.Value = "Phonotactics"; break;
-                    case "TableGrammar": type.Value = "Table"; break;
-                }
-
-                // Move Cateogry, System, and genre to tags
-                category = root.XPathSelectElement("/generator/category");
-                system = root.XPathSelectElement("/generator/system");
-                genre = root.XPathSelectElement("/generator/genre");
-                tags = root.XPathSelectElement("/generator/tags");
-
-                if (tags == null)
-                {
-                    tags = new XElement(XName.Get("tags"));
-                    root.Add(tags);
-                }
-                
-                if (category != null) { tags.Add(new XElement(XName.Get("tag"), category.Value)); }
-                if (system != null) { tags.Add(new XElement(XName.Get("tag"), system.Value)); }
-                if (genre != null) { tags.Add(new XElement(XName.Get("tag"), genre.Value)); }
-
-                //Update table elements to the new names
-                if (type.Value == "Table")
-                {
-                    var tables = doc.XPathSelectElements("//generator/tables/table"); // (XName.Get("table", "http://www.w3.org/2001/XMLSchema"));
-                    foreach (var table in tables)
+                    var generator = new Assignment.AssignmentGenerator();
+                    foreach (var item in root.Elements())
                     {
-                        var action = table.Attribute(XName.Get("action"));
-                        switch (action.Value)
+                        var newItem = new Assignment.LineItem()
                         {
-                            case "Random": table.Name = "randomTable"; break;
-                            case "Select": table.Name = "selectTable"; break;
-                            case "Loop":
-                                table.Name = "loopTable";
-                                var loopId = table.Attribute(XName.Get("loopId"));
-                                var column = new XAttribute(XName.Get("column"), loopId.Value);
-                                loopId.Remove();
-                                table.Add(column);
-                                break;
-                        }
-                        action.Remove();
-                    }
-                }
+                            Name = item.Attribute("name").Value,
+                            Next = item.Attribute("next")?.Value,
+                            Variable = item.Attribute("variable")?.Value,
+                            Expression = item.Value
+                        };
+                        var weight = item.Attribute("weight")?.Value;
 
-                // Save the new document to a string and return it
-                using (var writer = new StringWriter())
+                        if (weight.IsNumeric())
+                        {
+                            newItem.Weight = int.Parse(weight);
+                        }
+                        else
+                        {
+                            newItem.Weight = 1;
+                        }
+
+                        generator.LineItems.Add(newItem);
+                    }
+                    generator.IsLibrary = true;
+                    xml = generator.Serialize();
+                }
+                else
                 {
-                    doc.Save(writer);
-                    return writer.ToString();
+                    root.Name = "generator";
+
+                    // Add the version number
+                    var version = root.Attribute(XName.Get("version"));
+                    if (version == null) version = new XAttribute("version", 2);
+                    version.Value = "2";
+
+                    // Update the value of the @type attribute
+                    type = root.Attribute(XName.Get("type", "http://www.w3.org/2001/XMLSchema-instance"));
+
+                    switch (type.Value)
+                    {
+                        case "AssignmentGrammar": type.Value = "Assignment"; break;
+                        case "DiceRoll": type.Value = "Dice"; break;
+                        case "LuaGrammar": type.Value = "Lua"; break;
+                        case "PhonotacticsGrammar": type.Value = "Phonotactics"; break;
+                        case "TableGrammar": type.Value = "Table"; break;
+                    }
+
+                    // Move Cateogry, System, and genre to tags
+                    category = root.XPathSelectElement("/generator/category");
+                    system = root.XPathSelectElement("/generator/system");
+                    genre = root.XPathSelectElement("/generator/genre");
+                    tags = root.XPathSelectElement("/generator/tags");
+
+                    if (tags == null)
+                    {
+                        tags = new XElement(XName.Get("tags"));
+                        root.Add(tags);
+                    }
+                
+                    if (category != null) { tags.Add(new XElement(XName.Get("tag"), category.Value)); }
+                    if (system != null) { tags.Add(new XElement(XName.Get("tag"), system.Value)); }
+                    if (genre != null) { tags.Add(new XElement(XName.Get("tag"), genre.Value)); }
+
+                    //Update table elements to the new names
+                    if (type.Value == "Table")
+                    {
+                        var tables = doc.XPathSelectElements("//generator/tables/table"); // (XName.Get("table", "http://www.w3.org/2001/XMLSchema"));
+                        foreach (var table in tables)
+                        {
+                            var action = table.Attribute(XName.Get("action"));
+                            switch (action.Value)
+                            {
+                                case "Random": table.Name = "randomTable"; break;
+                                case "Select": table.Name = "selectTable"; break;
+                                case "Loop":
+                                    table.Name = "loopTable";
+                                    var loopId = table.Attribute(XName.Get("loopId"));
+                                    var column = new XAttribute(XName.Get("column"), loopId.Value);
+                                    loopId.Remove();
+                                    table.Add(column);
+                                    break;
+                            }
+                            action.Remove();
+                        }
+                    }
+
+                    // Save the new document to a string and return it
+                    using (var writer = new StringWriter())
+                    {
+                        doc.Save(writer);
+                        return writer.ToString();
+                    }
                 }
             }
             return xml;
