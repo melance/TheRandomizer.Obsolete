@@ -218,7 +218,14 @@ namespace TheRandomizer.WinApp.Utility
 
         public void Generate()
         {
-            Results = FormatResults(_generator?.Generate(Repeat, MaxLength), _generator?.CSS);
+            try
+            {
+                Results = FormatResults(_generator?.Generate(Repeat, MaxLength), _generator?.CSS);
+            }
+            catch (Generators.Exceptions.LibraryNotFoundException ex)
+            {
+                Results = ex.Message;
+            }
             OnPropertyChanged("Results");
         }
         
@@ -275,12 +282,13 @@ namespace TheRandomizer.WinApp.Utility
         #region Event Handlers
         public void RequestGenerator(object sender, RequestGeneratorEventArgs e)
         {
-            var generatorList = Application.Current.MainWindow?.DataContext as GeneratorInfoCollection;
-            if (generatorList != null)
+            var filePath = Environment.ExpandEnvironmentVariables(e.Name);
+            if (!Path.IsPathRooted(e.Name)) filePath = Path.Combine(Properties.Settings.Default.GeneratorDirectory, e.Name);
+            filePath = Environment.ExpandEnvironmentVariables(filePath);
+            if (File.Exists(filePath))
             {
-                var generatorInfo = generatorList.First(gi => gi.Name.Equals(e.Name, StringComparison.InvariantCultureIgnoreCase));
-                e.Generator = BaseGenerator.Deserialize(File.ReadAllText(generatorInfo.FilePath));
-            }   
+                e.Generator = BaseGenerator.Deserialize(File.ReadAllText(filePath));
+            }
         }
         #endregion
     }
