@@ -33,6 +33,20 @@ namespace TheRandomizer.WinApp.ViewModels
         public Cursor Cursor { get { return GetProperty<Cursor>(); } set { SetProperty(value); } }
         public BaseGenerator Selected { get { return GetProperty<BaseGenerator>(); } set { SetProperty(value); } }
         public ObservableCollection<RepositoryContent> Generators { get { return GetProperty<ObservableCollection<RepositoryContent>>(); } set { SetProperty(value); } }
+        public bool HasImports {
+            get
+            {
+                return HasImportsInternal(Selected);
+            }
+        }
+        public string Imports
+        {
+            get
+            {
+                if (!HasImports) return string.Empty;
+                return string.Join(", ", ((TheRandomizer.Generators.Assignment.AssignmentGenerator)Selected).Imports.Select(i => i.Value).ToArray());
+            }
+        }
 
         public RepositoryContent SelectedRepository
         {
@@ -46,6 +60,8 @@ namespace TheRandomizer.WinApp.ViewModels
                 if (SelectedRepository != null)
                 {
                     GetDetails(SelectedRepository);
+                    OnPropertyChanged("HasImports");
+                    OnPropertyChanged("Imports");
                 }
             }
         }
@@ -74,6 +90,18 @@ namespace TheRandomizer.WinApp.ViewModels
                             using (var web = new WebClient())
                             {
                                 web.DownloadFile(SelectedRepository.DownloadUrl, path);
+                                foreach (var import in GetImports(Selected))
+                                {
+                                    var found = Generators.FirstOrDefault(rc => rc.Name.Equals(import, StringComparison.InvariantCultureIgnoreCase));
+                                    if (found != null)
+                                    {
+                                        var local = Path.Combine(GeneratorPath, found.Name);
+                                        if (!File.Exists(local))
+                                        {
+                                            web.DownloadFile(found.DownloadUrl, local);
+                                        }
+                                    }
+                                }
                             }
                             main?.LoadGenerators();
                             Generators.Remove(SelectedRepository);
@@ -82,6 +110,27 @@ namespace TheRandomizer.WinApp.ViewModels
                         }
                     });
             }
+        }
+
+        public List<string> GetImports(BaseGenerator generator)
+        {
+            var imports = new List<string>();
+            if (HasImportsInternal(generator))
+            {
+                var assignment = (Generators.Assignment.AssignmentGenerator)generator;
+                return assignment.Imports.Select(i => i.Value).ToList();
+            }
+            return imports;
+        }
+
+        private bool HasImportsInternal(BaseGenerator generator)
+        {
+            if (generator == null) return false;
+            if (generator.GeneratorType == GeneratorType.Assignment)
+            {
+                return ((Generators.Assignment.AssignmentGenerator)generator).Imports.Count > 0;
+            }
+            return false;
         }
 
         public void GetGeneratorList()
@@ -94,7 +143,7 @@ namespace TheRandomizer.WinApp.ViewModels
                 var result = new List<RepositoryContent>();
                 if (generators.Wait(30000))
                 {
-                    foreach (var repository in generators.Result)
+                    foreach (var repository in generators.Result.Where(r => MatchExtensions(r.Path)))
                     {
                         var local = Path.Combine(GeneratorPath, repository.Name);
                         if (!File.Exists(local))
@@ -102,7 +151,6 @@ namespace TheRandomizer.WinApp.ViewModels
                             result.Add(repository);
                         }
                     }
-                    result.RemoveAll(r => !MatchExtensions(r.Name));
                     Generators = new ObservableCollection<RepositoryContent>(result.OrderBy(r => r.Name));
                 }
                 Cursor = null;
@@ -111,7 +159,9 @@ namespace TheRandomizer.WinApp.ViewModels
 
         private bool MatchExtensions(string fileName)
         {
-            return (fileName.EndsWith(".rnd.xml", StringComparison.InvariantCultureIgnoreCase) || fileName.EndsWith(".rgen", StringComparison.InvariantCultureIgnoreCase));
+            return (fileName.EndsWith(".rnd.xml", StringComparison.InvariantCultureIgnoreCase) ||
+                    fileName.EndsWith(".lib.xml", StringComparison.InvariantCultureIgnoreCase) ||
+                    fileName.EndsWith(".rgen", StringComparison.InvariantCultureIgnoreCase));
         }
     }
 }

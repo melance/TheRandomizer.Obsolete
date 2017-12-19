@@ -38,6 +38,7 @@
                 <RowDefinition Height="auto" />
                 <RowDefinition Height="auto" />
                 <RowDefinition Height="auto" />
+                <RowDefinition Height="auto" />
                 <RowDefinition Height="*" />
             </Grid.RowDefinitions>
             <Label Style="{DynamicResource TitleLabel}" Grid.ColumnSpan="2" Content="{Binding Selected.Name}" Height="24" VerticalAlignment="Top" />
@@ -48,7 +49,9 @@
             <TextBlock Text="{Binding Selected.TagList}" Grid.Row="3" Grid.Column="1" />
             <TextBlock Text="Type:" Grid.Row="4" Grid.Column="0" FontWeight="Bold" />
             <TextBlock Text="{Binding Selected.GeneratorType}" Grid.Row="4" Grid.Column="1" />
-            <Button Command="{Binding Download}" HorizontalAlignment="Right" Grid.Row="5" Grid.ColumnSpan="2" VerticalAlignment="Bottom">
+            <TextBlock Text="Imports:" Grid.Row="5" Grid.Column="0" FontWeight="Bold" Visibility="{Binding HasImports, Converter={StaticResource BooleanToVisibilityConverter}}" />
+            <TextBlock Text="{Binding Imports}" Grid.Row="5" Grid.Column="1" Visibility="{Binding HasImports, Converter={StaticResource BooleanToVisibilityConverter}}" />
+            <Button Command="{Binding Download}" HorizontalAlignment="Right" Grid.Row="6" Grid.ColumnSpan="2" VerticalAlignment="Bottom">
                 <Rectangle Height="12" Width="{Binding ActualHeight, RelativeSource={RelativeSource Self}}" Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
                     <Rectangle.OpacityMask>
                         <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_download}" />

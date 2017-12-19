@@ -19,7 +19,7 @@ namespace TheRandomizer.Generators.Assignment
         [XmlAttribute("next")]
         public string Next { get { return GetProperty<string>(); } set { SetProperty(value); } }
         [XmlAttribute("weight")]
-        public int Weight { get { return GetProperty<int>(); } set { value = (value <= 0 ? 1 : value); SetProperty(value); } }
+        public int Weight { get { return GetProperty<int>(1); } set { value = (value <= 0 ? 1 : value); SetProperty(value); } }
         [XmlAttribute("variable")]
         public string Variable { get { return GetProperty<string>(); } set { SetProperty(value); } }
         [XmlAttribute("repeat")]

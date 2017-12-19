@@ -19,7 +19,7 @@ namespace TheRandomizer.Generators.Assignment
         {
             return new Import { Value = value };
         }
-
+        
         [XmlText]
         public string Value { get { return GetProperty<string>(); } set { SetProperty(value); } }
     }

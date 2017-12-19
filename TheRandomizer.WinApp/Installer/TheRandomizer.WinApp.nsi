@@ -2,7 +2,7 @@
 !define APP_NAME "The Randomizer"
 !define COMP_NAME "Lance Boudreaux"
 !define WEB_SITE "https://github.com/melance/TheRandomizer"
-!define VERSION "3.00.20.00"
+!define VERSION "3.00.00.03"
 !define COPYRIGHT "Lance Boudreaux © 2015-2017"
 !define DESCRIPTION "The infinitely customizable random content generator"
 !define INSTALLER_NAME "TheRandomizerWinAppSetup.exe"
