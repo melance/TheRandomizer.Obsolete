@@ -6,7 +6,7 @@ using System.Web.Mvc;
 using TheRandomizer.Generators.Assignment;
 using TheRandomizer.Generators.Dice;
 using TheRandomizer.Generators.List;
-using TheRandomizer.Generators.LUA;
+using TheRandomizer.Generators.Lua;
 using TheRandomizer.Generators.Phonotactics;
 using TheRandomizer.Generators.Parameter;
 using TheRandomizer.Generators.Table;

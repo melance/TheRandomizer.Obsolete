@@ -17,7 +17,7 @@ namespace TheRandomizer.WinApp.Commands
                 return new DelegateCommand<Window>(
                     w =>
                     {
-                        w.DialogResult = false;
+                        try { w.DialogResult = false; } catch { }
                         w.Close();
                     });
             }
@@ -30,7 +30,7 @@ namespace TheRandomizer.WinApp.Commands
                 return new DelegateCommand<Window>(
                     w=>
                     {
-                        w.DialogResult = true;
+                        try { w.DialogResult = true; } catch { }
                         w.Close();
                     });
             }

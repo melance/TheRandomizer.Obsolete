@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace TheRandomizer.WinApp.Models
 {
-    class GeneratorError
+    public class GeneratorError
     {
         public GeneratorError(string filePath, string message)
         {

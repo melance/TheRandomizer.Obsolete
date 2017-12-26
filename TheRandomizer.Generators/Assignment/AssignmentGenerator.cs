@@ -21,8 +21,8 @@ namespace TheRandomizer.Generators.Assignment
     {
         #region Constants
         private const string START_ITEM = "Start";
-        private const Int32 MAX_RECURSION_DEPTH = 100;
-        private const Int32 MAX_LOOP_COUNT = 1000000;
+        private const Int32 MAX_RECURSION_DEPTH = 1000;
+        private const Int32 MAX_LOOP_COUNT = 10000000;
         #endregion
 
         #region Static Methods
@@ -173,6 +173,7 @@ namespace TheRandomizer.Generators.Assignment
         /// <exception cref="MaxLoopCountException">The evaluate method was called too many times in one run.</exception>
         private string Evaluate(LineItem item)
         {
+            var result = string.Empty;
             _recursionDepth ++;
             _loopCount++;
             if (_recursionDepth > MAX_RECURSION_DEPTH)
@@ -192,8 +193,7 @@ namespace TheRandomizer.Generators.Assignment
                     if (string.IsNullOrWhiteSpace(item.Variable))
                     {
                         // Evaluate the expression and return its value
-                        _recursionDepth--;
-                        return Evaluate(item.Expression);
+                        result = Evaluate(item.Expression);
                     }
                     else
                     {
@@ -206,9 +206,14 @@ namespace TheRandomizer.Generators.Assignment
                         Variables[item.Variable] = Evaluate(item.Expression);
                     }
                 }
+                if (!string.IsNullOrWhiteSpace(item.Next))
+                {
+                    var nextItem = ChooseItemByName(item.Next);
+                    result += Evaluate(nextItem);
+                }
             }
             _recursionDepth--;
-            return string.Empty;
+            return result;
         }
 
         /// <summary>
@@ -225,46 +230,55 @@ namespace TheRandomizer.Generators.Assignment
                 var value = new StringBuilder();
                 foreach (var token in tokens)
                 {
-                    switch (token.TokenType)
+                    try
                     {
-                        case TokenType.String:
-                            // String tokens are added to the value as is
-                            value.Append(token.TokenValue);
-                            break;
-                        case TokenType.Item:
-                            string name = token.TokenValue;
-                            // Check the parameters for the name and replace if necessary
-                            if (Parameters.Contains(token.TokenValue))
-                            {
-                                name = Parameters[token.TokenValue].Value;
-                            }
-                            // An item must be reevaluated to allow nested item names
-                            name = Evaluate(name);
-                            // Select a random item containing the name in the item
-                            var item = ChooseItemByName(name);
-                            // Add the evaluated value
-                            value.Append(Evaluate(item));
-                            break;
-                        case TokenType.Variable:
-                            // A variable is found in the base grammar variable list
-                            if (Variables.ContainsKey(token.TokenValue))
-                            {
-                                value.Append(Variables[token.TokenValue]);
-                            }
-                            else if (Parameters.Contains(token.TokenValue))
-                            {
-                                value.Append(Parameters[token.TokenValue].Value);
-                            }
-                            break;
-                        case TokenType.WhiteSpace:
-                            // Currently whitespace is included in the string token
-                            // this is here in case it is needed later
-                            value.Append(token.TokenValue);
-                            break;
-                        case TokenType.Equation:
-                            // Calculate the equation using the ncalc engine
-                            value.Append(Calculate(token.TokenValue));
-                            break;
+                        switch (token.TokenType)
+                        {
+                            case TokenType.String:
+                                // String tokens are added to the value as is
+                                value.Append(token.TokenValue);
+                                break;
+                            case TokenType.Item:
+                                string name = token.TokenValue;
+                                // Check the parameters for the name and replace if necessary
+                                if (Parameters.Contains(token.TokenValue))
+                                {
+                                    name = Parameters[token.TokenValue].Value;
+                                }
+                                // An item must be reevaluated to allow nested item names
+                                name = Evaluate(name);
+                                // Select a random item containing the name in the item
+                                var item = ChooseItemByName(name);
+                                // Add the evaluated value
+                                value.Append(Evaluate(item));
+                                break;
+                            case TokenType.Variable:
+                                // A variable is found in the base grammar variable list
+                                if (Variables.ContainsKey(token.TokenValue))
+                                {
+                                    value.Append(Variables[token.TokenValue]);
+                                }
+                                else if (Parameters.Contains(token.TokenValue))
+                                {
+                                    value.Append(Parameters[token.TokenValue].Value);
+                                }
+                                break;
+                            case TokenType.WhiteSpace:
+                                // Currently whitespace is included in the string token
+                                // this is here in case it is needed later
+                                value.Append(token.TokenValue);
+                                break;
+                            case TokenType.Equation:
+                                // Calculate the equation using the ncalc engine
+                                value.Append(Calculate(token.TokenValue));
+                                break;
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        if (!ex.Data.Contains("TokenType")) ex.Data.Add("TokenType", token.TokenType);
+                        if (!ex.Data.Contains("TokenValue")) ex.Data.Add("TokenValue", token.TokenValue);
+                        throw ex;
                     }
                 }
                 return value.ToString();

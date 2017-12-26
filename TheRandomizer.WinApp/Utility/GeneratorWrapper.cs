@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Web.UI;
 using System.Windows;
 using System.Windows.Input;
@@ -30,9 +32,17 @@ namespace TheRandomizer.WinApp.Utility
         public GeneratorWrapper(BaseGenerator generator, string filePath)
         {
             FilePath = filePath;
-            if (_generator != null) _generator.RequestGenerator -= RequestGenerator;
+            if (_generator != null)
+            {
+                _generator.RequestFileText -= RequestFileText;
+                _generator.RequestGenerator -= RequestGenerator;
+            }
             _generator = generator;
-            if (_generator != null) _generator.RequestGenerator += RequestGenerator;            
+            if (_generator != null)
+            {
+                _generator.RequestFileText += RequestFileText;
+                _generator.RequestGenerator += RequestGenerator;
+            }
         }
         #endregion
 
@@ -57,7 +67,9 @@ namespace TheRandomizer.WinApp.Utility
             }
         }
 
-        public string FilePath { get; set; }
+        public string FilePath { get { return GetProperty<string>(); } set { SetProperty(value); OnPropertyChanged("FileName"); } }
+
+        public string FileName { get { return Path.GetFileName(FilePath); } }
 
         public string Description
         {
@@ -220,18 +232,23 @@ namespace TheRandomizer.WinApp.Utility
         {
             try
             {
+                Application.Current.MainWindow.Cursor = Cursors.Wait;
                 Results = FormatResults(_generator?.Generate(Repeat, MaxLength), _generator?.CSS);
             }
             catch (Generators.Exceptions.LibraryNotFoundException ex)
             {
                 Results = ex.Message;
             }
+            finally
+            {
+                Application.Current.MainWindow.Cursor = null;
+            }
             OnPropertyChanged("Results");
         }
         
         public static string FormatResults(IEnumerable<string> results, string css)
         {            
-            using (StringWriter sWriter = new StringWriter())
+            using (UTF8StringWriter sWriter = new UTF8StringWriter())
             {
                 using (HtmlTextWriter writer = new HtmlTextWriter(sWriter))
                 {
@@ -239,13 +256,16 @@ namespace TheRandomizer.WinApp.Utility
                     writer.WriteFullBeginTag("head");
                     writer.WriteFullBeginTag("style");
                     writer.WriteLine("body { font-family: Consolas, Courier New, Monospace; }");
-                    writer.WriteLine("div.even { background-color: #F8F8F8; }");
+                    writer.WriteLine("div.even { background-color: #E9E9E9; }");
                     writer.WriteLine("div.error { color: red; font-weight: bold; }");
                     if (!string.IsNullOrWhiteSpace(css))
                     {
                         writer.WriteLine(css);
                     }
                     writer.WriteEndTag("style");
+                    writer.WriteBeginTag("meta");
+                    writer.WriteAttribute("charset", "utf-8");
+                    writer.Write(HtmlTextWriter.SelfClosingTagEnd);
                     writer.WriteEndTag("head");
                     writer.WriteFullBeginTag("body");
                     if (results != null && results.ToList().Count > 0)
@@ -276,18 +296,27 @@ namespace TheRandomizer.WinApp.Utility
                 return sWriter.ToString();
             }
         }
-
         #endregion
 
         #region Event Handlers
         public void RequestGenerator(object sender, RequestGeneratorEventArgs e)
         {
             var filePath = Environment.ExpandEnvironmentVariables(e.Name);
-            if (!Path.IsPathRooted(e.Name)) filePath = Path.Combine(Properties.Settings.Default.GeneratorDirectory, e.Name);
-            filePath = Environment.ExpandEnvironmentVariables(filePath);
+            if (!Path.IsPathRooted(e.Name)) filePath = Path.Combine(Settings.GeneratorPath, e.Name);
+            if (!Path.HasExtension(filePath)) filePath += ".rgen";
             if (File.Exists(filePath))
             {
                 e.Generator = BaseGenerator.Deserialize(File.ReadAllText(filePath));
+            }
+        }
+
+        public void RequestFileText(object sender, RequestFileTextEventArgs e)
+        {
+            var filePath = e.FileName;
+            if (!Path.IsPathRooted(e.FileName)) filePath = Path.Combine(Settings.GeneratorPath, filePath);
+            if (File.Exists(filePath))
+            {
+                e.FileText = File.ReadAllText(filePath);
             }
         }
         #endregion

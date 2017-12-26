@@ -136,7 +136,7 @@ namespace TheRandomizer.WinApp.ViewModels
                         new Models.DropDownButtonItem("Assignment Generator", "Create a new Assignment Generator", New(typeof(Generators.Assignment.AssignmentGenerator))),
                         new Models.DropDownButtonItem("Dice Generator", "Create a new Dice Generator", New(typeof(Generators.Dice.DiceGenerator))),
                         new Models.DropDownButtonItem("List Generator", "Create a new List Generator", New(typeof(Generators.List.ListGenerator))),
-                        new Models.DropDownButtonItem("Lua Generator", "Create a new Lua Generator", New (typeof(Generators.LUA.LuaGenerator))),
+                        new Models.DropDownButtonItem("Lua Generator", "Create a new Lua Generator", New (typeof(Generators.Lua.LuaGenerator))),
                         new Models.DropDownButtonItem("Phonotactics Generator", "Create a new Phonotactics Generator", New (typeof(Generators.Phonotactics.PhonotacticsGenerator))),
                         new Models.DropDownButtonItem("Table Generator", "Create a new Table Generator", New (typeof(Generators.Table.TableGenerator)))
                     };

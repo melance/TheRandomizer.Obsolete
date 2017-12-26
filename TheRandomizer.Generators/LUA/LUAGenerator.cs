@@ -8,7 +8,7 @@ using NLua;
 using TheRandomizer.Generators.Attributes;
 using NLua.Exceptions;
 
-namespace TheRandomizer.Generators.LUA
+namespace TheRandomizer.Generators.Lua
 {
     [XmlType("Lua")]
     [GeneratorDisplay(Generators.GeneratorType.Lua, "A LUA scripting language based generator.")]
@@ -19,20 +19,30 @@ namespace TheRandomizer.Generators.LUA
         /// </summary>
         [XmlElement("script")]
         [LuaHide]
-        public string Script { get; set; }
+        public string Script { get { return GetProperty<string>(); } set { SetProperty(value); } }
+
+        /// <summary>
+        /// The path to a Lua script to run instead of the <see cref="Script"/> 
+        /// </summary>
+        [XmlElement("scriptPath")]
+        [LuaHide]
+        public string ScriptPath { get { return GetProperty<string>(); } set { SetProperty(value); } }
 
         [XmlIgnore]
+        [LuaHide]
         public override bool? SupportsMaxLength { get { return null; } set { } }
 
         private StringBuilder Result { get; } = new StringBuilder();
 
-        private Lua _lua;
+        private NLua.Lua _lua;
 
         protected override string GenerateInternal(int? maxLength)
         {
             try
             {
-                _lua = new Lua();
+                var scriptText = Script;
+
+                _lua = new NLua.Lua();
                 Result.Clear();
                 foreach (var parameter in Parameters)
                 {
@@ -45,8 +55,14 @@ namespace TheRandomizer.Generators.LUA
                 // Prevent imports to sandbox the script
                 _lua.DoString("import = function () end");
 
+                // If the script path is set, load that script
+                if (!string.IsNullOrWhiteSpace(ScriptPath))
+                {
+                    scriptText = OnRequestFileText(ScriptPath);
+                }
+
                 // Run the script
-                _lua.DoString(Script, Name);
+                _lua.DoString(scriptText, Name);
 
                 // Return the values printed to the Results
                 return Result.ToString().Trim();
@@ -56,7 +72,7 @@ namespace TheRandomizer.Generators.LUA
                 throw new Exception($"Error encountered in the Lua script:<br /> {ex.Source}<br /> {ex.Message}");
             }
         }
-
+        
         /// <summary>
         /// Prints a blank line to the Results
         /// </summary>
@@ -75,8 +91,7 @@ namespace TheRandomizer.Generators.LUA
         {
             Result.AppendLine(value.ToString());
         }
-
-
+        
         /// <summary>
         /// Prints a line of text to the Results if <paramref name="Condition"/> is true;
         /// </summary>
@@ -87,8 +102,7 @@ namespace TheRandomizer.Generators.LUA
         {
             if (condition) PrintLine(value);
         }
-
-
+        
         /// <summary>
         /// Prints a formatted line of text to the Results
         /// </summary>
@@ -150,6 +164,24 @@ namespace TheRandomizer.Generators.LUA
         public string NCalc(string expression)
         {
             return Calculate(expression);
+        }
+
+        [LuaGlobal(Name = "rnd")]
+        public int GetRandomNumber()
+        {
+            return Random.Next();
+        }
+
+        [LuaGlobal(Name = "rnd")]
+        public int GetRandomNumber(int maxValue)
+        {
+            return Random.Next(maxValue);
+        }
+
+        [LuaGlobal(Name = "rnd")]
+        public int GetRandomNumber(int minValue, int maxValue)
+        {
+            return Random.Next(minValue, maxValue);
         }
 
         /// <summary>

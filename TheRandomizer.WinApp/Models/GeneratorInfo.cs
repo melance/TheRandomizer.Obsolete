@@ -11,8 +11,7 @@ using TheRandomizer.WinApp.Commands;
 
 namespace TheRandomizer.WinApp.Models
 {
-    [Serializable]
-    class GeneratorInfo
+    public class GeneratorInfo
     {
         public GeneratorInfo() { }
 
@@ -21,14 +20,14 @@ namespace TheRandomizer.WinApp.Models
             GetGenertorFromFile(filePath);
         }
         
-        public string Name { get; private set; }
-        public string Author { get; private set; }
-        public string Description { get; private set; }
-        public string FilePath { get; private set; }
+        public string Name { get; set; }
+        public string Author { get; set; }
+        public string Description { get; set; }
+        public string FilePath { get; set; }
         public ObservableCollection<Generators.Tag> Tags { get; set; }
-        public DateTime LastModified { get; private set; }
-        public GeneratorType GeneratorType { get; private set; }
-        public bool IsLibrary { get; private set; } = false;
+        public DateTime LastModified { get; set; }
+        public GeneratorType GeneratorType { get; set; }
+        public bool IsLibrary { get; set; } = false;
 
         private void GetGenertorFromFile(string filePath)
         {

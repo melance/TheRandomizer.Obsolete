@@ -307,7 +307,7 @@
 <tr valign="top">
 <td width="184" valign="top" style="border-color : #000000 #000000 #000000 #000000; border-style: solid; padding: 0px 6px;"><p class="rvps7"><span class="rvts19">LastRoll (detail)</span></p>
 </td>
-<td width="650" valign="top" style="border-color : #000000 #000000 #000000 #000000; border-style: solid; padding: 0px 6px;"><p class="rvps7"><span class="rvts6">Returns the </span><span class="rvts61">detail </span><span class="rvts6">of the last roll. &nbsp;Detail is a string that can be: Result, ResultList, Successes, Failures, or Botches.</span></p>
+<td width="650" valign="top" style="border-color : #000000 #000000 #000000 #000000; border-style: solid; padding: 0px 6px;"><p class="rvps7"><span class="rvts6">Returns the </span><span class="rvts61">detail </span><span class="rvts6">of the last roll. &nbsp;Detail is a string that can be:</span><span class="rvts61"> Result, ResultList, Successes, Failures</span><span class="rvts6">, or </span><span class="rvts61">Botches</span><span class="rvts6">.</span></p>
 </td>
 <td width="446" valign="top" style="border-color : #000000 #000000 #000000 #000000; border-style: solid; padding: 0px 6px;"><p class="rvps7"><span class="rvts62">LastRoll("ResultList") Returns all die rolls from the last roll separated by commas</span></p>
 </td>
@@ -387,6 +387,156 @@
 </table>
 </div>
 <p class="rvps2"><span class="rvts16"><br/></span></p>
+<h1 class="rvps6"><span class="rvts0"><span class="rvts15">Roll Options</span></span></h1>
+<p class="rvps2"><span class="rvts6">The roll function has several different options that allow it to handle most dice roll types.</span></p>
+<p class="rvps2"><span class="rvts6"><br/></span></p>
+<div class="rvps2"><table width="100%" border="1" cellpadding="3" cellspacing="0" style="border-color: #000000; border-style: solid; border-spacing: 0px;">
+<tr valign="top">
+<td width="66" valign="top" style="border-color : #000000 #000000 #000000 #000000; border-style: solid; padding: 0px 6px; background-color: #c0c0c0;"><p class="rvps7"><span class="rvts20">Option</span></p>
+</td>
+<td width="186" valign="top" style="border-color : #000000 #000000 #000000 #000000; border-style: solid; padding: 0px 6px; background-color: #c0c0c0;"><p class="rvps7"><span class="rvts20">Name</span></p>
+</td>
+<td width="350" valign="top" style="border-color : #000000 #000000 #000000 #000000; border-style: solid; padding: 0px 6px; background-color: #c0c0c0;"><p class="rvps7"><span class="rvts20">Description</span></p>
+</td>
+<td width="257" valign="top" style="border-color : #000000 #000000 #000000 #000000; border-style: solid; padding: 0px 6px; background-color: #c0c0c0;"><p class="rvps7"><span class="rvts20">Variable</span></p>
+</td>
+<td width="446" valign="top" style="border-color : #000000 #000000 #000000 #000000; border-style: solid; padding: 0px 6px; background-color: #c0c0c0;"><p class="rvps7"><span class="rvts20">Sample</span></p>
+</td>
+</tr>
+<tr valign="top">
+<td width="66" valign="top" style="border-color : #000000 #000000 #000000 #000000; border-style: solid; padding: 0px 6px;"><p class="rvps7"><span class="rvts19">DH</span></p>
+</td>
+<td width="186" valign="top" style="border-color : #000000 #000000 #000000 #000000; border-style: solid; padding: 0px 6px;"><p class="rvps7"><span class="rvts6">Drop Highest</span></p>
+</td>
+<td width="350" valign="top" style="border-color : #000000 #000000 #000000 #000000; border-style: solid; padding: 0px 6px;"><p class="rvps7"><span class="rvts6">Drops the highest die roll(s)</span></p>
+</td>
+<td width="257" valign="top" style="border-color : #000000 #000000 #000000 #000000; border-style: solid; padding: 0px 6px;"><p class="rvps7"><span class="rvts6">Optional: Number of dice to drop</span></p>
+</td>
+<td width="446" valign="top" style="border-color : #000000 #000000 #000000 #000000; border-style: solid; padding: 0px 6px;"><p class="rvps7"><span class="rvts62">Roll(2,20,'DH') = 12,8; Result = 8</span></p>
+</td>
+</tr>
+<tr valign="top">
+<td width="66" valign="top" style="border-color : #000000 #000000 #000000 #000000; border-style: solid; padding: 0px 6px;"><p class="rvps7"><span class="rvts19">DL</span></p>
+</td>
+<td width="186" valign="top" style="border-color : #000000 #000000 #000000 #000000; border-style: solid; padding: 0px 6px;"><p class="rvps7"><span class="rvts6">Drop Lowest</span></p>
+</td>
+<td width="350" valign="top" style="border-color : #000000 #000000 #000000 #000000; border-style: solid; padding: 0px 6px;"><p class="rvps7"><span class="rvts6">Drops the lowest die roll(s)</span></p>
+</td>
+<td width="257" valign="top" style="border-color : #000000 #000000 #000000 #000000; border-style: solid; padding: 0px 6px;"><p class="rvps7"><span class="rvts6">Optional: Number of dice to drop</span></p>
+</td>
+<td width="446" valign="top" style="border-color : #000000 #000000 #000000 #000000; border-style: solid; padding: 0px 6px;"><p class="rvps7"><span class="rvts62">Roll(5,6,'DL',2) = 4,4,6,2,1; Result = 14</span></p>
+</td>
+</tr>
+<tr valign="top">
+<td width="66" valign="top" style="border-color : #000000 #000000 #000000 #000000; border-style: solid; padding: 0px 6px;"><p class="rvps7"><span class="rvts19">EX</span></p>
+</td>
+<td width="186" valign="top" style="border-color : #000000 #000000 #000000 #000000; border-style: solid; padding: 0px 6px;"><p class="rvps7"><span class="rvts6">Exploding Dice</span></p>
+</td>
+<td width="350" valign="top" style="border-color : #000000 #000000 #000000 #000000; border-style: solid; padding: 0px 6px;"><p class="rvps7"><span class="rvts6">Reroll any roll that is the highest value and add to the results.</span></p>
+</td>
+<td width="257" valign="top" style="border-color : #000000 #000000 #000000 #000000; border-style: solid; padding: 0px 6px;"><p class="rvps7"><span class="rvts6"><br/></span></p>
+</td>
+<td width="446" valign="top" style="border-color : #000000 #000000 #000000 #000000; border-style: solid; padding: 0px 6px;"><p class="rvps7"><span class="rvts62">Roll(3,6,'EX') = 4,4,</span><span class="rvts63">6</span><span class="rvts62">,</span><span class="rvts64">6</span><span class="rvts62">; Result = 20</span></p>
+</td>
+</tr>
+<tr valign="top">
+<td width="66" valign="top" style="border-color : #000000 #000000 #000000 #000000; border-style: solid; padding: 0px 6px;"><p class="rvps7"><span class="rvts19">CX</span></p>
+</td>
+<td width="186" valign="top" style="border-color : #000000 #000000 #000000 #000000; border-style: solid; padding: 0px 6px;"><p class="rvps7"><span class="rvts6">Compound Exploding Dice</span></p>
+</td>
+<td width="350" valign="top" style="border-color : #000000 #000000 #000000 #000000; border-style: solid; padding: 0px 6px;"><p class="rvps7"><span class="rvts6">Reroll any roll that is the highest value and add to the results. Continue until no highest value dice are rolled.</span></p>
+</td>
+<td width="257" valign="top" style="border-color : #000000 #000000 #000000 #000000; border-style: solid; padding: 0px 6px;"><p class="rvps7"><span class="rvts6"><br/></span></p>
+</td>
+<td width="446" valign="top" style="border-color : #000000 #000000 #000000 #000000; border-style: solid; padding: 0px 6px;"><p class="rvps7"><span class="rvts62">Roll(3,6,'EX') = 4,4,</span><span class="rvts63">6</span><span class="rvts62">,</span><span class="rvts63">6</span><span class="rvts62">,</span><span class="rvts63">6</span><span class="rvts62">,</span><span class="rvts64">3</span><span class="rvts62">; Result = 29</span></p>
+</td>
+</tr>
+<tr valign="top">
+<td width="66" valign="top" style="border-color : #000000 #000000 #000000 #000000; border-style: solid; padding: 0px 6px;"><p class="rvps7"><span class="rvts19">GT</span></p>
+</td>
+<td width="186" valign="top" style="border-color : #000000 #000000 #000000 #000000; border-style: solid; padding: 0px 6px;"><p class="rvps7"><span class="rvts6">Greater Than Target</span></p>
+</td>
+<td width="350" valign="top" style="border-color : #000000 #000000 #000000 #000000; border-style: solid; padding: 0px 6px;"><p class="rvps7"><span class="rvts6">Count any roll greater than the target number as a success.</span></p>
+</td>
+<td width="257" valign="top" style="border-color : #000000 #000000 #000000 #000000; border-style: solid; padding: 0px 6px;"><p class="rvps7"><span class="rvts6">Target Number</span></p>
+</td>
+<td width="446" valign="top" style="border-color : #000000 #000000 #000000 #000000; border-style: solid; padding: 0px 6px;"><p class="rvps7"><span class="rvts62">Roll(4,8,'GT',4) = 4,2,3,</span><span class="rvts64">8</span><span class="rvts62">; Successes = 1</span></p>
+</td>
+</tr>
+<tr valign="top">
+<td width="66" valign="top" style="border-color : #000000 #000000 #000000 #000000; border-style: solid; padding: 0px 6px;"><p class="rvps7"><span class="rvts19">GE</span></p>
+</td>
+<td width="186" valign="top" style="border-color : #000000 #000000 #000000 #000000; border-style: solid; padding: 0px 6px;"><p class="rvps7"><span class="rvts6">Greater Than or Equal to Target</span></p>
+</td>
+<td width="350" valign="top" style="border-color : #000000 #000000 #000000 #000000; border-style: solid; padding: 0px 6px;"><p class="rvps7"><span class="rvts6">Count any roll greater than or equal to the target number as a success.</span></p>
+</td>
+<td width="257" valign="top" style="border-color : #000000 #000000 #000000 #000000; border-style: solid; padding: 0px 6px;"><p class="rvps7"><span class="rvts6">Target Number</span></p>
+</td>
+<td width="446" valign="top" style="border-color : #000000 #000000 #000000 #000000; border-style: solid; padding: 0px 6px;"><p class="rvps7"><span class="rvts62">Roll(4,8,'GE',4) = </span><span class="rvts64">4</span><span class="rvts62">,2,3,</span><span class="rvts64">8</span><span class="rvts62">; Successes = 2</span></p>
+</td>
+</tr>
+<tr valign="top">
+<td width="66" valign="top" style="border-color : #000000 #000000 #000000 #000000; border-style: solid; padding: 0px 6px;"><p class="rvps7"><span class="rvts19">LT</span></p>
+</td>
+<td width="186" valign="top" style="border-color : #000000 #000000 #000000 #000000; border-style: solid; padding: 0px 6px;"><p class="rvps7"><span class="rvts6">Less Than Target</span></p>
+</td>
+<td width="350" valign="top" style="border-color : #000000 #000000 #000000 #000000; border-style: solid; padding: 0px 6px;"><p class="rvps7"><span class="rvts6">Count any roll less than the target number as a success</span></p>
+</td>
+<td width="257" valign="top" style="border-color : #000000 #000000 #000000 #000000; border-style: solid; padding: 0px 6px;"><p class="rvps7"><span class="rvts6">Target Number</span></p>
+</td>
+<td width="446" valign="top" style="border-color : #000000 #000000 #000000 #000000; border-style: solid; padding: 0px 6px;"><p class="rvps7"><span class="rvts62">Roll(4,8,'LT',4) = 4,</span><span class="rvts64">2</span><span class="rvts62">,</span><span class="rvts64">3</span><span class="rvts62">,</span><span class="rvts65">8</span><span class="rvts62">; Successes = 2</span></p>
+</td>
+</tr>
+<tr valign="top">
+<td width="66" valign="top" style="border-color : #000000 #000000 #000000 #000000; border-style: solid; padding: 0px 6px;"><p class="rvps7"><span class="rvts19">LE</span></p>
+</td>
+<td width="186" valign="top" style="border-color : #000000 #000000 #000000 #000000; border-style: solid; padding: 0px 6px;"><p class="rvps7"><span class="rvts6">Less Than or Equal to Target</span></p>
+</td>
+<td width="350" valign="top" style="border-color : #000000 #000000 #000000 #000000; border-style: solid; padding: 0px 6px;"><p class="rvps7"><span class="rvts6">Count any roll less than or equal to the target number as a success</span></p>
+</td>
+<td width="257" valign="top" style="border-color : #000000 #000000 #000000 #000000; border-style: solid; padding: 0px 6px;"><p class="rvps7"><span class="rvts6">Target Number</span></p>
+</td>
+<td width="446" valign="top" style="border-color : #000000 #000000 #000000 #000000; border-style: solid; padding: 0px 6px;"><p class="rvps7"><span class="rvts62">Roll(4,8,'LE',4) = </span><span class="rvts64">4</span><span class="rvts62">,</span><span class="rvts64">2</span><span class="rvts62">,</span><span class="rvts64">3</span><span class="rvts62">,</span><span class="rvts65">8</span><span class="rvts62">; Successes = 3</span></p>
+</td>
+</tr>
+<tr valign="top">
+<td width="66" valign="top" style="border-color : #000000 #000000 #000000 #000000; border-style: solid; padding: 0px 6px;"><p class="rvps7"><span class="rvts19">R1</span></p>
+</td>
+<td width="186" valign="top" style="border-color : #000000 #000000 #000000 #000000; border-style: solid; padding: 0px 6px;"><p class="rvps7"><span class="rvts6">Rule of One</span></p>
+</td>
+<td width="350" valign="top" style="border-color : #000000 #000000 #000000 #000000; border-style: solid; padding: 0px 6px;"><p class="rvps7"><span class="rvts6">Count 1's as botches </span></p>
+</td>
+<td width="257" valign="top" style="border-color : #000000 #000000 #000000 #000000; border-style: solid; padding: 0px 6px;"><p class="rvps7"><span class="rvts6"><br/></span></p>
+</td>
+<td width="446" valign="top" style="border-color : #000000 #000000 #000000 #000000; border-style: solid; padding: 0px 6px;"><p class="rvps7"><span class="rvts62">Roll(3,10,'GE',6,'R1') = 9,7,1; Successes = 2, Botches = 1</span></p>
+</td>
+</tr>
+<tr valign="top">
+<td width="66" valign="top" style="border-color : #000000 #000000 #000000 #000000; border-style: solid; padding: 0px 6px;"><p class="rvps7"><span class="rvts19">RA</span></p>
+</td>
+<td width="186" valign="top" style="border-color : #000000 #000000 #000000 #000000; border-style: solid; padding: 0px 6px;"><p class="rvps7"><span class="rvts6">Reroll Above</span></p>
+</td>
+<td width="350" valign="top" style="border-color : #000000 #000000 #000000 #000000; border-style: solid; padding: 0px 6px;"><p class="rvps7"><span class="rvts6">Reroll any roll above the target number and replace that roll</span></p>
+</td>
+<td width="257" valign="top" style="border-color : #000000 #000000 #000000 #000000; border-style: solid; padding: 0px 6px;"><p class="rvps7"><span class="rvts6">Target Number</span></p>
+</td>
+<td width="446" valign="top" style="border-color : #000000 #000000 #000000 #000000; border-style: solid; padding: 0px 6px;"><p class="rvps7"><span class="rvts62">Roll(4,6,'RA',5) = 2,3,</span><span class="rvts66">6</span><span class="rvts62">,</span><span class="rvts64">5</span><span class="rvts62">,3; Result = 10</span></p>
+</td>
+</tr>
+<tr valign="top">
+<td width="66" valign="top" style="border-color : #000000 #000000 #000000 #000000; border-style: solid; padding: 0px 6px;"><p class="rvps7"><span class="rvts19">RB</span></p>
+</td>
+<td width="186" valign="top" style="border-color : #000000 #000000 #000000 #000000; border-style: solid; padding: 0px 6px;"><p class="rvps7"><span class="rvts6">Reroll Below</span></p>
+</td>
+<td width="350" valign="top" style="border-color : #000000 #000000 #000000 #000000; border-style: solid; padding: 0px 6px;"><p class="rvps7"><span class="rvts6">Reroll any roll below the target number and replace that roll</span></p>
+</td>
+<td width="257" valign="top" style="border-color : #000000 #000000 #000000 #000000; border-style: solid; padding: 0px 6px;"><p class="rvps7"><span class="rvts6">Target Number</span></p>
+</td>
+<td width="446" valign="top" style="border-color : #000000 #000000 #000000 #000000; border-style: solid; padding: 0px 6px;"><p class="rvps7"><span class="rvts62">Roll(4,6,'RB',2) = </span><span class="rvts66">1</span><span class="rvts62">,</span><span class="rvts64">2</span><span class="rvts62">,5,4,6; Result = 17</span></p>
+</td>
+</tr>
+</table>
+</div>
 <p></p>
 <p class="rvps5" style="clear: both;"><span class="rvts13">Created with the Personal Edition of HelpNDoc: </span><a class="rvts14" href="https://www.helpndoc.com/feature-tour">Easily create PDF Help documents</a></p>
 

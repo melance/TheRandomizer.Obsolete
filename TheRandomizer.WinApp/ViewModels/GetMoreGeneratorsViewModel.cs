@@ -20,7 +20,7 @@ namespace TheRandomizer.WinApp.ViewModels
     {
         private const string GIT_HUB_USER = "melance";
         private const string GIT_HUB_REPOSITORY = "TheRandomizerCustomizations";
-        private const string GIT_HUB_FOLDER = "Grammars";
+        private const string GIT_HUB_FOLDER = "Generators";
 
         public GetMoreGeneratorsViewModel()
         {
@@ -90,17 +90,19 @@ namespace TheRandomizer.WinApp.ViewModels
                             using (var web = new WebClient())
                             {
                                 web.DownloadFile(SelectedRepository.DownloadUrl, path);
-                                foreach (var import in GetImports(Selected))
+                                foreach (var dependency in GetDependencies(Selected))
                                 {
-                                    var found = Generators.FirstOrDefault(rc => rc.Name.Equals(import, StringComparison.InvariantCultureIgnoreCase));
-                                    if (found != null)
-                                    {
-                                        var local = Path.Combine(GeneratorPath, found.Name);
-                                        if (!File.Exists(local))
-                                        {
-                                            web.DownloadFile(found.DownloadUrl, local);
-                                        }
-                                    }
+                                    var local = Path.Combine(GeneratorPath, dependency);
+                                    //var found = Generators.FirstOrDefault(rc => rc.Name.Equals(dependency, StringComparison.InvariantCultureIgnoreCase));
+                                    //if (found != null)
+                                    //{
+                                    //    var local = Path.Combine(GeneratorPath, found.Name);
+                                    //    if (!File.Exists(local))
+                                    //    {
+                                    //        web.DownloadFile(found.DownloadUrl, local);
+                                    //    }[]
+                                    //}
+                                    web.DownloadFile(GetDependencyDownloadUrl(SelectedRepository, dependency), local);
                                 }
                             }
                             main?.LoadGenerators();
@@ -112,15 +114,31 @@ namespace TheRandomizer.WinApp.ViewModels
             }
         }
 
-        public List<string> GetImports(BaseGenerator generator)
+        public string GetDependencyDownloadUrl(RepositoryContent content, string path)
         {
-            var imports = new List<string>();
+            if (content == null) return string.Empty;
+            var url = Path.GetDirectoryName(content.Path);
+            url = Path.Combine(url, path);
+            return url;
+        }
+
+        public List<string> GetDependencies(BaseGenerator generator)
+        {
+            var dependencies = new List<string>();
             if (HasImportsInternal(generator))
             {
                 var assignment = (Generators.Assignment.AssignmentGenerator)generator;
-                return assignment.Imports.Select(i => i.Value).ToList();
+                dependencies.AddRange(assignment.Imports.Select(i => i.Value));
             }
-            return imports;
+            if (generator.GeneratorType == GeneratorType.Lua)
+            {
+                var scriptPath = ((Generators.Lua.LuaGenerator)generator).ScriptPath;
+                if (!string.IsNullOrWhiteSpace(scriptPath))
+                {                    
+                    dependencies.Add(scriptPath);
+                }
+            }
+            return dependencies;
         }
 
         private bool HasImportsInternal(BaseGenerator generator)

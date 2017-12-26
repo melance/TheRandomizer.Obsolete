@@ -32,7 +32,7 @@
     <UserControl.CommandBindings>
         <CommandBinding Command="Copy" Executed="Copy" CanExecute="HasResults" />
         <CommandBinding Command="Delete" Executed="Clear" CanExecute="HasResults" />
-        <CommandBinding Command="Print" Executed="Print" CanExecute="HasResults" />
+        <CommandBinding Command="Print" Executed="Print" CanExecute="CanPrint" />
         <CommandBinding Command="Save" Executed="Save" CanExecute="HasResults" />
         <CommandBinding Command="SelectAll" Executed="SelectAll" CanExecute="HasResults" />
         <CommandBinding Command="{StaticResource Cancel}" Executed="Cancel" CanExecute="HasGenerator" />
@@ -82,6 +82,10 @@
                                 <TextBlock Text="{Binding Generator.Author}" Height="auto" />
                             </DockPanel>
                             <DockPanel LastChildFill="True">
+                                <TextBlock Text="File: " FontWeight="Bold" />
+                                <TextBlock Text="{Binding Generator.FileName}" Height="auto" />
+                            </DockPanel>
+                            <DockPanel LastChildFill="True">
                                 <TextBlock FontWeight="Bold"><Hyperlink Name="lnkEditTags" Command="{Binding Generator.EditTags}" ><Run Text="Tags: "></Run></Hyperlink></TextBlock>
                                 <TextBlock Text="{Binding Generator.TagList}" Height="auto" TextWrapping="Wrap" />                                
                             </DockPanel>
@@ -107,39 +111,45 @@
                         </ItemsControl.ItemsPanel>
                         <ItemsControl.Resources>
                             <DataTemplate x:Key="Text" DataType="param:Configuration">
-                                <DockPanel LastChildFill="True" Height="26">
+                                <DockPanel LastChildFill="True" Height="Auto">
                                     <TextBlock Text="{Binding DisplayName}" DockPanel.Dock="Left" Margin="3"/>
                                     <TextBox Text="{Binding Value}" DockPanel.Dock="Left" Margin="3" />
                                 </DockPanel>
                             </DataTemplate>
                             <DataTemplate x:Key="Integer" DataType="param:Configuration">
-                                <DockPanel LastChildFill="True" Height="26">
+                                <DockPanel LastChildFill="True" Height="Auto">
                                     <TextBlock Text="{Binding DisplayName}" DockPanel.Dock="Left" Margin="3" />
                                     <metro:NumericUpDown Value="{Binding Value}" HasDecimals="False" DockPanel.Dock="Right" HorizontalContentAlignment="Right" Margin="3" />
                                 </DockPanel>
                             </DataTemplate>
                             <DataTemplate x:Key="Decimal" DataType="param:Configuration">
-                                <DockPanel LastChildFill="True" Height="26">
+                                <DockPanel LastChildFill="True" Height="Auto">
                                     <TextBlock Text="{Binding DisplayName}" DockPanel.Dock="Left" Margin="3" />
                                     <metro:NumericUpDown Value="{Binding Value}" HasDecimals="True" DockPanel.Dock="Right" HorizontalContentAlignment="Right" Margin="3" />
                                 </DockPanel>
                             </DataTemplate>
                             <DataTemplate x:Key="List" DataType="param:Configuration">
-                                <DockPanel LastChildFill="True">
+                                <DockPanel LastChildFill="True" Height="Auto">
                                     <Label Content="{Binding DisplayName}" DockPanel.Dock="Left" Margin="3" />
                                     <ComboBox ItemsSource="{Binding Options}" SelectedValue="{Binding Value}" DockPanel.Dock="Right" Margin="3" DisplayMemberPath="DisplayName" SelectedValuePath="Value" />
                                 </DockPanel>
                             </DataTemplate>
                             <DataTemplate x:Key="Date" DataType="param:Configuration">
-                                <DockPanel LastChildFill="True" Height="26">
+                                <DockPanel LastChildFill="True" Height="Auto">
                                     <TextBlock Text="{Binding DisplayName}" DockPanel.Dock="Left" Margin="3" />
                                     <DatePicker SelectedDate="{Binding Value}" DockPanel.Dock="Right" Margin="3" />
+                                </DockPanel>
+                            </DataTemplate>
+                            <DataTemplate x:Key="Boolean" DataType="param:Configuration">
+                                <DockPanel LastChildFill="True" Height="Auto">
+                                    <TextBlock Text="{Binding DisplayName}" DockPanel.Dock="Left" Margin="3" />
+                                    <CheckBox IsChecked="{Binding Value}" DockPanel.Dock="Right" Margin="3" />
                                 </DockPanel>
                             </DataTemplate>
                         </ItemsControl.Resources>
                         <ItemsControl.ItemTemplate>
                             <DataTemplate>
-                                <ContentControl Content="{Binding .}">
+                                <ContentControl Content="{Binding .}" IsTabStop="False">
                                     <ContentControl.Style>
                                         <Style TargetType="ContentControl">
                                             <Style.Triggers>
@@ -157,6 +167,9 @@
                                                 </DataTrigger>
                                                 <DataTrigger Binding="{Binding Type}" Value="{x:Static param:Configuration+ParameterType.Date}">
                                                     <Setter Property="ContentTemplate" Value="{StaticResource Date}" />
+                                                </DataTrigger>
+                                                <DataTrigger Binding="{Binding Type}" Value="{x:Static param:Configuration+ParameterType.Boolean}">
+                                                    <Setter Property="ContentTemplate" Value="{StaticResource Boolean}" />
                                                 </DataTrigger>
                                             </Style.Triggers>
                                         </Style>
@@ -178,7 +191,7 @@
                         </Rectangle.OpacityMask>
                     </Rectangle>
                 </Button>
-                <Button ToolTip="Print" Command="Print" DockPanel.Dock="Right" Padding="12" Margin="3,3,0,3" Style="{DynamicResource MetroCircleButtonStyle}">
+                <Button ToolTip="Print" Command="Print" Visibility="Collapsed" DockPanel.Dock="Right" Padding="12" Margin="3,3,0,3" Style="{DynamicResource MetroCircleButtonStyle}">
                     <Rectangle Width="12" Height="12" Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
                         <Rectangle.OpacityMask>
                             <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_printer}" />

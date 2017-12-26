@@ -14,13 +14,15 @@ namespace TheRandomizer.Generators.Dice
             new Dictionary<string, Func<DiceRollOption>>()
             {
                 { "DL", () => new DiceRollOption() { Option = DiceRollOptions.DropLowest, HasVariable = true, DefaultValue = 1 } },
-                { "DH", () => new DiceRollOption() { Option = DiceRollOptions.DropHighest, DefaultValue = 1 } },
+                { "DH", () => new DiceRollOption() { Option = DiceRollOptions.DropHighest, HasVariable = true, DefaultValue = 1 } },
                 { "EX", () => new DiceRollOption() { Option = DiceRollOptions.Explode, HasVariable = false } },
                 { "CX", () => new DiceRollOption() { Option = DiceRollOptions.CompoundExplode, HasVariable = false } },
                 { "RB", () => new DiceRollOption() { Option = DiceRollOptions.RerollBelow, VariableIsRequired = true } },
                 { "RA", () => new DiceRollOption() { Option = DiceRollOptions.RerollAbove, VariableIsRequired = true } },
                 { "GT", () => new DiceRollOption() { Option = DiceRollOptions.GreaterThan, VariableIsRequired = true } },
                 { "LT", () => new DiceRollOption() { Option = DiceRollOptions.LessThan, VariableIsRequired = true } },
+                { "GE", () => new DiceRollOption() { Option = DiceRollOptions.GreaterThan, VariableIsRequired = true } },
+                { "LE", () => new DiceRollOption() { Option = DiceRollOptions.LessThan, VariableIsRequired = true } },
                 { "R1", () => new DiceRollOption() { Option = DiceRollOptions.RuleOfOne, HasVariable = false } }
             };
         #endregion
@@ -213,7 +215,7 @@ namespace TheRandomizer.Generators.Dice
                         {
                             Botches++;
                         }
-                        else if (roll + Modifier >= Target)
+                        else if (roll + Modifier > Target)
                         {
                             Successes++;
                         }
@@ -223,6 +225,26 @@ namespace TheRandomizer.Generators.Dice
                         }
                         break;
                     case TargetType.LessThan:
+                        if (roll + Modifier < Target)
+                        {
+                            Successes++;
+                        }
+                        else
+                        {
+                            Failures++;
+                        }
+                        break;
+                    case TargetType.GreaterOrEqual:
+                        if (roll + Modifier >= Target)
+                        {
+                            Successes++;
+                        }
+                        else
+                        {
+                            Failures++;
+                        }
+                        break;
+                    case TargetType.LessOrEqual:
                         if (roll + Modifier <= Target)
                         {
                             Successes++;
@@ -323,6 +345,14 @@ namespace TheRandomizer.Generators.Dice
                             break;
                         case DiceRollOptions.LessThan:
                             TargetType = TargetType.LessThan;
+                            Target = option.Variable;
+                            break;
+                        case DiceRollOptions.GreaterOrEqual:
+                            TargetType = TargetType.GreaterOrEqual;
+                            Target = option.Variable;
+                            break;
+                        case DiceRollOptions.LessOrEqual:
+                            TargetType = TargetType.LessOrEqual;
                             Target = option.Variable;
                             break;
                     }

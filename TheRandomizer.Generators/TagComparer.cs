@@ -25,7 +25,7 @@ namespace TheRandomizer.Generators
 
         public int GetHashCode(Tag obj)
         {
-            return obj.Value.GetHashCode();
+            return obj.Value == null ? obj.GetHashCode() : obj.Value.GetHashCode();
         }
     }
 }

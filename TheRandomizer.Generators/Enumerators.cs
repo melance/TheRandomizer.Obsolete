@@ -36,13 +36,17 @@ namespace TheRandomizer.Generators
         {
             None,
             LessThan,
-            GreaterThan
+            GreaterThan,
+            LessOrEqual,
+            GreaterOrEqual
         }
 
         public enum DiceRollOptions
         {
             GreaterThan,
             LessThan,
+            GreaterOrEqual,
+            LessOrEqual,
             Explode,
             CompoundExplode,
             DropLowest,

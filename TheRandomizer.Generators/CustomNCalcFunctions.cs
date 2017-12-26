@@ -19,7 +19,7 @@ namespace TheRandomizer.Generators
     internal sealed class CustomNCalcFunctions
     {
         private static Dictionary<string, Action<FunctionArgs>> _dictionary;
-        private static Random Random { get; set; }
+        private static Random Random { get; set; } = new Random();
         private static Dice.DiceRoll _lastRoll;
 
         public static Dictionary<string, Action<FunctionArgs>> Functions
@@ -197,13 +197,13 @@ namespace TheRandomizer.Generators
                 else if (e.Parameters.Count() == 1)
                 {
                     var parameters = e.EvaluateParameters();
-                    switch (parameters[0].ToString())
+                    switch (parameters[0].ToString().ToLower())
                     {
-                        case "Result": e.Result = _lastRoll.Result; break;
-                        case "ResultList": e.Result = String.Join(", ", _lastRoll.ResultList.ConvertAll(i => i.ToString())); break;
-                        case "Successes": e.Result = _lastRoll.Successes; break;
-                        case "Failures": e.Result = _lastRoll.Failures; break;
-                        case "Botches": e.Result = _lastRoll.Botches; break;
+                        case "result": e.Result = _lastRoll.Result; break;
+                        case "resultlist": e.Result = String.Join(", ", _lastRoll.ResultList.ConvertAll(i => i.ToString())); break;
+                        case "successes": e.Result = _lastRoll.Successes; break;
+                        case "failures": e.Result = _lastRoll.Failures; break;
+                        case "botches": e.Result = _lastRoll.Botches; break;
                         default: throw new EvaluationException($"Unrecognized parameter for {Common.GetCaller()} function: {parameters[0].ToString()}.");
                     }
                 }
