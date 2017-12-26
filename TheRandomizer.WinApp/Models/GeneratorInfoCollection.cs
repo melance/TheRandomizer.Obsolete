@@ -6,11 +6,11 @@ using System.Linq;
 using System.Runtime.Serialization.Formatters.Binary;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 
 namespace TheRandomizer.WinApp.Models
 {
-    [Serializable]
-    class GeneratorInfoCollection : ObservableCollection<GeneratorInfo>
+    public class GeneratorInfoCollection : ObservableCollection<GeneratorInfo>
     {        
         #region Constants
         private const string GENERATOR_LIST_FILE_NAME = "Generators.lst";
@@ -68,30 +68,25 @@ namespace TheRandomizer.WinApp.Models
         #endregion
         
         #region Public Static Methods
-        public static GeneratorInfoCollection LoadGeneratorList(Action<string> progressCallback)
+        public static GeneratorInfoCollection LoadGeneratorList(Action<string, int, int> progressCallback)
         {
             GeneratorLoadErrors.Clear();
-            GeneratorInfoCollection values;
+            var values = new GeneratorInfoCollection(); ;
             if (File.Exists(GeneratorListPath))
             {
                 try
                 {
                     // If the generator list file exists deserialize it
-                    var serializer = new BinaryFormatter();
-                    using (var stream = new FileStream(GeneratorListPath, FileMode.Open, FileAccess.Read))
+                    var serializer = new XmlSerializer(typeof(GeneratorInfoCollection));
+                    using (var reader = new StringReader(File.ReadAllText(GeneratorListPath)))
                     {
-                        values = (GeneratorInfoCollection)serializer.Deserialize(stream);
+                        values = (GeneratorInfoCollection)serializer.Deserialize(reader);
                     }
                 }
-                catch
+                catch (Exception ex)
                 {
-                    values = new GeneratorInfoCollection();
+                    Utility.ExceptionHandling.LogException(ex);
                 }
-            }
-            else
-            {
-                // If the file doesn't exist, create a new collection
-                values = new GeneratorInfoCollection();
             }
 
             // Remove generators from the list that do not exist in the file system
@@ -106,28 +101,28 @@ namespace TheRandomizer.WinApp.Models
 
             // Loop through all generator files in the directory and update those that have been changed
             var files = new List<string>(Directory.GetFiles(GeneratorPath, GENERATOR_FILE_FILTER));
+            var count = 0;
+            var max = files.Count();
+
             files.AddRange(Directory.GetFiles(GeneratorPath, GRAMMAR_FILE_FILTER));
             foreach (string filePath in files)
             {
-                progressCallback?.Invoke(Path.GetFileNameWithoutExtension(filePath));
+                count++;
+                progressCallback?.Invoke(Path.GetFileNameWithoutExtension(filePath), count, max);
                 try
                 {
-                    var generator = new GeneratorInfo(filePath);
-                    if (!generator.IsLibrary)
+                    var found = values.Where(gi => gi.FilePath.Equals(filePath, StringComparison.InvariantCultureIgnoreCase));
+                    if (found.Any())
                     {
-                        var found = values.Where(gi => gi.FilePath.Equals(filePath, StringComparison.InvariantCultureIgnoreCase));
-                        if (found.Any())
+                        if (found.First().LastModified < File.GetLastWriteTime(filePath))
                         {
-                            if (found.First().LastModified < File.GetLastWriteTime(filePath))
-                            {
-                                values.Remove(found.First());
-                                values.Add(new GeneratorInfo(filePath));
-                            }
-                        }
-                        else
-                        {
+                            values.Remove(found.First());
                             values.Add(new GeneratorInfo(filePath));
                         }
+                    }
+                    else
+                    {
+                        values.Add(new GeneratorInfo(filePath));
                     }
                 }
                 catch (Exception ex)
@@ -136,7 +131,7 @@ namespace TheRandomizer.WinApp.Models
                 }
             }            
             values.SaveGeneratorList();
-            _generatorList = new GeneratorInfoCollection(values.OrderBy(gi => gi.Name ));
+            _generatorList = new GeneratorInfoCollection(values.Where(gi => !gi.IsLibrary).OrderBy(gi => gi.Name ));
             return _generatorList;
         }
         #endregion
@@ -150,20 +145,24 @@ namespace TheRandomizer.WinApp.Models
                 tags.AddRange(item.Tags.Select(t => t.Value));
             }
             tags = tags.Distinct(StringComparer.InvariantCultureIgnoreCase).ToList();
-            return tags.Select(s => new Tag(s)).ToList();
+            return tags.Select(s => new Tag(s)).OrderBy(t => t.Name).ToList();
         }
 
         public void SaveGeneratorList()
         {
             try
             {
-                var serializer = new BinaryFormatter();
-                using (var file = new FileStream(GeneratorListPath, FileMode.Create, FileAccess.Write, FileShare.None))
+                var serializer = new XmlSerializer(typeof(GeneratorInfoCollection));
+                using (var writer = new StringWriter())
                 {
-                    serializer.Serialize(file, this);
+                    serializer.Serialize(writer, this);
+                    File.WriteAllText(GeneratorListPath, writer.ToString());
                 }
             }
-            catch { }
+            catch (Exception ex)
+            {
+                Utility.ExceptionHandling.LogException(ex);
+            }
         }
         #endregion 
 

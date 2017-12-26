@@ -90,7 +90,7 @@ namespace TheRandomizer.WinApp.ViewModels
             get
             {
                 return new List<DetailListItem> { new DetailListItem("Lance Boudreaux", "Developer", "https://github.com/melance", "melance on GitHub"),
-                                                  new DetailListItem("Hubert Tomaszewski","Icon Design","http://rndmnm.deviantart.com/", "rndmnm on Deviant Art") };
+                                                  new DetailListItem("Hubert Tomaszewski","Icon Design","https://rndmnm.deviantart.com/", "rndmnm on Deviant Art") };
             }
         }
 
@@ -100,8 +100,11 @@ namespace TheRandomizer.WinApp.ViewModels
             {
                 return new List<DetailListItem> { new DetailListItem("NLua","Lua Generator", "https://github.com/NLua/NLua", "NLua on GitHub"),
                                                   new DetailListItem("NCalc","Calculations","https://github.com/sheetsync/NCalc","NCalc on GitHub"),
-                                                  new DetailListItem("MahApps.Metro", "UI Styles", "http://mahapps.com/", "MahApps Home"),
-                                                  new DetailListItem("Dragablz", "Tab Control", "http://dragablz.net/", "Dragablz Home")};
+                                                  new DetailListItem("MahApps.Metro", "UI Styles", "https://mahapps.com/", "MahApps Home"),
+                                                  new DetailListItem("Dragablz", "Tab Control", "https://dragablz.net/", "Dragablz Home"),
+                                                  new DetailListItem("NLog", "Logging", "https://github.com/NLog/NLog", "NLog on GitHub"),
+                                                  new DetailListItem("MathConverter","Binding Converter","https://github.com/hexinnovation/MathConverter","Math Converter on GitHub"),
+                                                  new DetailListItem("Octokit","GitHub API", "https://github.com/octokit/octokit.net","Octokit on GitHub")};
             }
         }
     }

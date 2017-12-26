@@ -15,11 +15,12 @@
                    xmlns:assign="clr-namespace:TheRandomizer.Generators.Assignment;assembly=TheRandomizer.Generators"
                    xmlns:dice="clr-namespace:TheRandomizer.Generators.Dice;assembly=TheRandomizer.Generators"
                    xmlns:list="clr-namespace:TheRandomizer.Generators.List;assembly=TheRandomizer.Generators"
-                   xmlns:lua="clr-namespace:TheRandomizer.Generators.LUA;assembly=TheRandomizer.Generators"
+                   xmlns:lua="clr-namespace:TheRandomizer.Generators.Lua;assembly=TheRandomizer.Generators"
                    xmlns:phono="clr-namespace:TheRandomizer.Generators.Phonotactics;assembly=TheRandomizer.Generators"
                    xmlns:table="clr-namespace:TheRandomizer.Generators.Table;assembly=TheRandomizer.Generators"
                    xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
                    xmlns:system="clr-namespace:System;assembly=mscorlib"
+                   xmlns:math="http://hexinnovation.com/math"
                    Style="{DynamicResource WindowStyle}"
                    dialog:DialogParticipation.Register="{Binding}"
                    mc:Ignorable="d"
@@ -38,6 +39,11 @@
     <Window.Resources>
         <ResourceDictionary>
             <VisualBrush x:Key="DonateIcon" Visual="{StaticResource appbar_paypal}" />
+            <math:MathConverter x:Key="math" />
+            <ContextMenu x:Key="mnuTab">
+                <MenuItem Header="Close All" Command="{Binding CloseAllGenerators}" />
+                <MenuItem Header="Close All Others" Command="{Binding CloseAllOtherGenerators}" />
+            </ContextMenu>
         </ResourceDictionary>
     </Window.Resources>
     <metro:MetroWindow.LeftWindowCommands>
@@ -73,10 +79,37 @@
         <metro:FlyoutsControl>
             <metro:Flyout Name="flyTools" Header="Tools" IsPinned="False" Theme="Inverse" Position="Left" IsModal="True" TitleVisibility="Visible" CloseButtonVisibility="Visible">
                 <StackPanel Margin="3,0,3,0">
-                    <Button Content="Generator Editor" Margin="3" ToolTip="Create or Edit Generators" Command="{Binding CreateGenerator}"/>
-                    <Button Content="Convert Grammar" Margin="3" ToolTip="Convert an old Grammar to the new format" Command="{Binding ConvertGenerator}" />
+                    <Button Margin="3" ToolTip="Create or Edit Generators" Command="{Binding CreateGenerator}">
+                        <DockPanel>
+                            <Rectangle DockPanel.Dock="Left" Width="12" Height="12" Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
+                                <Rectangle.OpacityMask>
+                                    <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_edit}" />
+                                </Rectangle.OpacityMask>
+                            </Rectangle>
+                            <TextBlock Padding="3,0,0,0" Text="Generator Editor" />
+                        </DockPanel>
+                    </Button>
+                    <Button Margin="3" ToolTip="Convert an old Grammar to the new format" Command="{Binding ConvertGenerator}">
+                        <DockPanel>
+                            <Rectangle DockPanel.Dock="Left" Width="12" Height="12" Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
+                                <Rectangle.OpacityMask>
+                                    <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_layer_arrange_bringforward}" />
+                                </Rectangle.OpacityMask>
+                            </Rectangle>
+                            <TextBlock Padding="3,0,0,0" Text="Convert Grammar" />
+                        </DockPanel>
+                    </Button>
                     <Separator />
-                    <Button Content="Donate" Margin="3" ToolTip="Donate via Paypal" Command="{x:Static util:BrowserBehavior.OpenURL}" CommandParameter="https://www.paypal.me/LanceBoudreaux" Visibility="{util:SettingBinding ShowDonateButton, Converter={StaticResource BooleanToVisibilityConverter}}"  />
+                    <Button Margin="3" ToolTip="Donate via Paypal" Command="{x:Static util:BrowserBehavior.OpenURL}" CommandParameter="https://www.paypal.me/LanceBoudreaux" Visibility="{util:SettingBinding ShowDonateButton, Converter={StaticResource BooleanToVisibilityConverter}}">
+                        <DockPanel>
+                            <Rectangle DockPanel.Dock="Left" Width="12" Height="12" Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
+                                <Rectangle.OpacityMask>
+                                    <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_currency_dollar}" />
+                                </Rectangle.OpacityMask>
+                            </Rectangle>
+                            <TextBlock Padding="3,0,0,0" Text="Donate" />
+                        </DockPanel>
+                    </Button>
                 </StackPanel>
             </metro:Flyout>
             <metro:Flyout Name="flySettings" Header="Settings" IsPinned="False" Theme="Inverse" Position="Right" IsModal="True">
@@ -98,6 +131,18 @@
             <ColumnDefinition Width="3" />
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
+        <Popup PlacementTarget="{Binding ElementName=winMain}" Placement="Relative" IsOpen="{Binding LoadingGenerators}" Width="{Binding ActualWidth, ElementName=winMain}" HorizontalOffset="{Binding ActualWidth, RelativeSource={RelativeSource Self}, Converter={StaticResource math}, ConverterParameter=(x/2)*-1}" VerticalOffset="{Binding ActualHeight, RelativeSource={RelativeSource Self}, Converter={StaticResource math}, ConverterParameter=(x/2)*-1}">
+            <Border BorderThickness="4" BorderBrush="{DynamicResource AccentColorBrush}">
+                <DockPanel>
+                    <Label DockPanel.Dock="Top" Margin="12" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center">
+                        Loading generators
+                    </Label>
+                    <Label Margin="12" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center">
+                    Please wait
+                    </Label>
+                </DockPanel>
+            </Border>
+        </Popup>
         <Expander Margin="0" BorderBrush="Transparent" IsExpanded="True" ExpandDirection="Down" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="3" >
             <Expander.Header>
                 <DockPanel>
@@ -182,10 +227,10 @@
         </DockPanel>
         <GridSplitter Grid.Row="1" Grid.Column="1" Width="3" HorizontalAlignment="Stretch" ResizeDirection="Columns" ResizeBehavior="PreviousAndNext" Margin="0" />
         <DockPanel Grid.Row="1" Grid.Column="2" LastChildFill="True">
-            <Label Content="" Style="{DynamicResource TitleLabel}" FontWeight="Bold" DockPanel.Dock="Top" />
+            <Label Content="" Style="{DynamicResource TitleLabel}" FontWeight="Bold" DockPanel.Dock="Top" Visibility="Collapsed" />
             <Grid>
                 <dockablz:Layout>
-                    <dragablz:TabablzControl HeaderMemberPath="Name" SelectedValue="{Binding SelectedGenerator}" ShowDefaultCloseButton="True" AddLocationHint="After" ItemsSource="{Binding LoadedGenerators}">
+                    <dragablz:TabablzControl HeaderMemberPath="Name" ContextMenu="{StaticResource mnuTab}" SelectedValue="{Binding SelectedGenerator}" ShowDefaultCloseButton="True" AddLocationHint="After" ItemsSource="{Binding LoadedGenerators}">
                         <dragablz:TabablzControl.ContentTemplate>
                             <DataTemplate DataType="{x:Type util:GeneratorWrapper}">
                                 <controls:GeneratorTabItem Generator="{Binding}" />

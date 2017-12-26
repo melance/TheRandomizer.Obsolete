@@ -88,6 +88,7 @@
     <Compile Include="Lexer\Tokenizer.cs" />
     <Compile Include="Assignment\LineItem.cs" />
     <Compile Include="LUA\LUAGenerator.cs" />
+    <Compile Include="RequestFileTextEventArgs.cs" />
     <Compile Include="Parameter\OptionList.cs" />
     <Compile Include="Parameter\OptionListConverter.cs" />
     <Compile Include="Phonotactics\Definition.cs" />
@@ -100,7 +101,6 @@
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
     <Compile Include="RequestGeneratorEventArgs.cs" />
-    <Compile Include="Assignment\RequestImportEventArgs.cs" />
     <Compile Include="CustomNCalcFunctions.cs" />
     <Compile Include="Dice\DiceRoll.cs" />
     <Compile Include="Enumerators.cs" />

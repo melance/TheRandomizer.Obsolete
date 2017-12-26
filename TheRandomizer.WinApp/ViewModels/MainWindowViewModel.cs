@@ -58,6 +58,8 @@ namespace TheRandomizer.WinApp.ViewModels
         #endregion
 
         #region Properties
+        public bool LoadingGenerators { get { return GetProperty(false); } set { SetProperty(value); } }
+
         private MainWindow MainWindowInstance { get { return Application.Current.MainWindow as MainWindow; } }
         private IDialogCoordinator DialogCoordinator { get; set; }
 
@@ -109,6 +111,25 @@ namespace TheRandomizer.WinApp.ViewModels
         #endregion  
 
         #region Commands
+        public ICommand CloseAllGenerators
+        {
+            get
+            {
+                return new DelegateCommand(() => { LoadedGenerators.Clear(); });
+            }
+        }
+
+        public ICommand CloseAllOtherGenerators
+        {
+            get
+            {
+                return new DelegateCommand(() =>
+                {
+                    LoadedGenerators.RemoveAll(gw => gw != SelectedGenerator);
+                });
+            }
+        }
+
         public ICommand ShowLoadErrors
         {
             get
@@ -190,6 +211,7 @@ namespace TheRandomizer.WinApp.ViewModels
                     var convert = new Views.ConvertGenerator();
                     convert.Owner = MainWindowInstance;
                     convert.ShowDialog();
+                    MainWindowInstance.flyTools.IsOpen = false;
                 });
             }
         }
@@ -293,7 +315,7 @@ namespace TheRandomizer.WinApp.ViewModels
         {
             if (Directory.Exists(GeneratorInfoCollection.GeneratorPath))
             {
-                e.Result = GeneratorInfoCollection.LoadGeneratorList(LoadGenerators_Progress);                
+                e.Result = GeneratorInfoCollection.LoadGeneratorList(LoadGenerators_Progress);
             }
             else
             {
@@ -301,18 +323,17 @@ namespace TheRandomizer.WinApp.ViewModels
             }
         }
 
-        private void LoadGenerators_Progress(string fileName)
+        private void LoadGenerators_Progress(string fileName, int count, int max)
         {
-
         }
                 
         private void LoadGenerators_Completed(object sender, RunWorkerCompletedEventArgs e)
         {
             Generators = e.Result as GeneratorInfoCollection;
             Tags.Clear();
-            Tags.AddRange(Generators.GetTags());
+            if (Generators != null) Tags.AddRange(Generators.GetTags());
             OnPropertyChanged("FilteredGenerators");
-            OnPropertyChanged("LoadErrorCount");
+            OnPropertyChanged("LoadErrorCount");            
             Cursor = null;
         }
         #endregion

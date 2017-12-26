@@ -345,6 +345,27 @@ span.rvts62
 {
  font-family: 'Consolas';
 }
+span.rvts63
+{
+ font-family: 'Consolas';
+ color: #8b0000;
+}
+span.rvts64
+{
+ font-family: 'Consolas';
+ color: #2f6b55;
+}
+span.rvts65
+{
+ font-family: 'Consolas';
+ color: ;
+}
+span.rvts66
+{
+ font-family: 'Consolas';
+ color: #8b0000;
+ text-decoration: line-through;
+}
 /* ========== Para Styles ========== */
 p,ul,ol /* Paragraph Style */
 {

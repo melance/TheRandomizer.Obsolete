@@ -71,17 +71,23 @@ namespace TheRandomizer.WinApp.Utility
 
         public static string OpenGrammarFileDialog(string defaultPath)
         {
+            return OpenGrammarFileDialog(defaultPath, false).FirstOrDefault();
+        }
+
+        public static List<string> OpenGrammarFileDialog(string defaultPath, bool multiSelect)
+        {
             if (CommonFileDialog.IsPlatformSupported)
             {
                 var dialog = new CommonOpenFileDialog();
                 dialog.DefaultDirectory = defaultPath;
                 dialog.EnsureFileExists = true;
                 dialog.DefaultExtension = "xml";
+                dialog.Multiselect = multiSelect;
                 dialog.Filters.Add(new CommonFileDialogFilter("Grammar Files", "*.xml"));
                 dialog.Filters.Add(new CommonFileDialogFilter("All Files", "*.*"));
                 if (dialog.ShowDialog() == CommonFileDialogResult.Ok)
                 {
-                    return dialog.FileName;
+                    return new List<string>(dialog.FileNames);
                 }
             }
             else
@@ -91,10 +97,10 @@ namespace TheRandomizer.WinApp.Utility
                 dialog.Filter = "Grammar Files (*.rnd.xml)|*.rnd.xml|All Files (*.*)|*.*";
                 if (dialog.ShowDialog() == DialogResult.OK)
                 {
-                    return dialog.FileName;
+                    return new List<string>(dialog.FileNames);
                 }
             }
-            return defaultPath;
+            return new List<string>(new string[] { defaultPath });
         }
 
         public static string OpenGeneratorFileDialog(string defaultPath)

@@ -12,6 +12,7 @@ using LiteDB;
 using TheRandomizer.Generators.Attributes;
 using System.Collections.ObjectModel;
 using TheRandomizer.Utility;
+using TheRandomizer.Generators.Lua;
 
 namespace TheRandomizer.Generators
 {
@@ -73,6 +74,8 @@ namespace TheRandomizer.Generators
         #region Events
         /// <summary>Requests the calling application provide the configured generator</summary>
         public event EventHandler<RequestGeneratorEventArgs> RequestGenerator;
+        /// <summary>Requests the calling application provide the configured string</summary>
+        public event EventHandler<RequestFileTextEventArgs> RequestFileText;
         #endregion
 
         #region Constants
@@ -122,8 +125,6 @@ namespace TheRandomizer.Generators
         public string Url { get { return GetProperty<string>(); } set { SetProperty(value); } }
         public bool UrlSpecified { get { return !string.IsNullOrWhiteSpace(Url); } }
         /// <summary>The format of the generator results</summary>
-        //[XmlElement("outputFormat")]
-        //[Display(Name = "Output Format")]
         [XmlIgnore]
         public OutputFormat OutputFormat { get { return GetProperty(OutputFormat.Html); } set { SetProperty(value); } } 
         /// <summary>A list of tags used to categorize the generator</summary>
@@ -131,6 +132,8 @@ namespace TheRandomizer.Generators
         [XmlArrayItem("tag")]
         public ObservableCollection<Tag> Tags { get; } = new ObservableCollection<Tag>();
         public bool TagsSpecified { get { return Tags.Count > 0; } }
+
+        protected int MaxLength { get; set; }
 
         [XmlIgnore]
         [Required]
@@ -244,7 +247,8 @@ namespace TheRandomizer.Generators
         {
             var values = new List<string>();
             _generating = true;
-            if (SupportsMaxLength == true && maxLength == 0) maxLength = Int32.MaxValue;
+            if (!maxLength.HasValue || (SupportsMaxLength == true && maxLength == 0)) maxLength = Int32.MaxValue;
+            MaxLength = (int)maxLength;
 
             AssignParameterValues();
 
@@ -394,13 +398,13 @@ namespace TheRandomizer.Generators
                             BaseGenerator generator;
                             OnRequestGenerator(arg);
                             generator = arg.Generator;
+                            var maxLength = Int32.MaxValue;
                             if (parameters.Count() > 1)
                             {
                                 for (var i = 1; i < parameters.Count(); i += 2)
                                 {
                                     var paramName = parameters[i].ToString();
-                                    var maxLength = Int32.MaxValue;
-                                    if (paramName == "MaxLength")
+                                    if (paramName.Equals("MaxLength", StringComparison.InvariantCultureIgnoreCase))
                                     {
                                         maxLength = Int32.Parse(parameters[i + 1].ToString());
                                     }
@@ -410,7 +414,11 @@ namespace TheRandomizer.Generators
                                     }
                                 }
                             }
-                            e.Result = generator.Generate();
+                            generator.RequestGenerator += RequestGenerator;
+                            generator.RequestFileText += RequestFileText;
+                            e.Result = generator.Generate(1, maxLength).First();
+                            generator.RequestGenerator -= RequestGenerator;
+                            generator.RequestFileText -= RequestFileText;
                         }
                         else
                         {
@@ -433,8 +441,12 @@ namespace TheRandomizer.Generators
             {
                 e.Result = Variables[name];
             }
-            else
+            else if (name.Equals("_maxLength", StringComparison.InvariantCultureIgnoreCase))
             {
+                e.Result = MaxLength;
+            }
+            else
+            { 
                 EvaluateParameter(name, e);
             }
         }
@@ -444,7 +456,14 @@ namespace TheRandomizer.Generators
         /// </summary>
         protected void OnRequestGenerator(RequestGeneratorEventArgs e)
         {
-            RequestGenerator(this, e);
+            RequestGenerator?.Invoke(this, e);
+        }
+
+        protected string OnRequestFileText(string fileName)
+        {
+            var e = new RequestFileTextEventArgs(fileName);
+            RequestFileText?.Invoke(this, e);
+            return e.FileText;
         }
         #endregion
     }

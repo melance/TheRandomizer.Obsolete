@@ -44,12 +44,15 @@ namespace TheRandomizer.WinApp
                 { "r=|repeat=", "If used in conjunction with 'generate', provides the number of times to run the generator.", GetRepeat },
                 { "p=|parameter=", "If used in conjunction with 'generate', adds a parameter. The parameter takes the form Name=Value.", GetParameter },
                 { "g=|generate=", "Runs the provided generator and opens the results in your default web browser.", v => generatorPath = v },
-                { "?|help", "Shows this help.", v => help = true } };
+                { "?|help", "Shows this help.", v => help = true },
+                { "l=|logging=", "Sets the logging level. Values are either 'true' or 'false'.", v => SetLoggingLevel(v) } };
             
             p.Parse(e.Args);
 
             if (!string.IsNullOrWhiteSpace(generatorPath)) RunGenerator(generatorPath);
             if (help) PrintHelp(p);
+
+            Utility.ExceptionHandling.LogInfo("Starting Application");
 
             if (_showGUI)
             {
@@ -103,6 +106,39 @@ namespace TheRandomizer.WinApp
             {
                 Current.Shutdown();
             }
+        }
+
+        private static void SetLoggingLevel(string value)
+        {
+            // d = debug, e = error, i = info, w = warning
+            
+            if (!string.IsNullOrWhiteSpace(value))
+            {
+                var levels = value.ToLower().Split(',');
+                foreach (var level in levels)
+                {
+                    switch (level)
+                    {
+                        case "d":
+                        case "debug":
+                            Utility.ExceptionHandling.EnableDebugLogging = true;
+                            break;
+                        case "e":
+                        case "error":
+                            Utility.ExceptionHandling.EnableErrorLogging = true;
+                            break;
+                        case "i":
+                        case "info":
+                            Utility.ExceptionHandling.EnableInfoLogging = true;
+                            break;
+                        case "w":
+                        case "warning":
+                            Utility.ExceptionHandling.EnableWarningLogging = true;
+                            break;
+                    }
+                }
+            }
+            
         }
         
         private static Mode SetMode(string value)

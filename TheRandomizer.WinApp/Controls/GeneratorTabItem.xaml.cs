@@ -18,6 +18,7 @@ using System.IO;
 using TheRandomizer.WinApp.Utility;
 using TheRandomizer.WinApp.Commands;
 using TheRandomizer.WinApp.Views;
+using System.Collections;
 
 namespace TheRandomizer.WinApp.Controls
 {
@@ -46,7 +47,7 @@ namespace TheRandomizer.WinApp.Controls
         {
             get
             {
-                return webBrowser.Document as mshtml.IHTMLDocument2;
+                return webBrowser?.Document as mshtml.IHTMLDocument2;
             }
         }
 
@@ -102,18 +103,38 @@ namespace TheRandomizer.WinApp.Controls
             }
             catch (Exception ex)
             {
-                Generator.Results = $"An error occured during generations:<br />{ex.Message}";
+                Generator.Results = $"An error occured during generation:<br />{FormatException(ex)}";
             }
+        }
+
+        private string FormatException(Exception ex)
+        {
+            var message = new StringBuilder();
+            message.AppendLine($"{ex.Message}<br />");
+            foreach (DictionaryEntry data in ex.Data)
+            {
+                message.AppendLine($"{data.Key} = {data.Value}<br />");
+            }
+            return message.ToString();
         }
 
         private void Print(object sender, ExecutedRoutedEventArgs e)
         {
-            Document?.execCommand("Print", true);
+            //Document?.execCommand("Print", true, null);
+        }
+
+        private void CanPrint(object sender, CanExecuteRoutedEventArgs e)
+        {   
+            //if (Document?.queryCommandSupported("Print") == true && Document?.queryCommandEnabled("Print") == true)
+            //{
+            //    e.CanExecute = true;
+            //}
+            e.CanExecute = false;
         }
 
         private void Save(object sender, ExecutedRoutedEventArgs e)
         {
-            Document?.execCommand("Save", true);
+            Document?.execCommand("SaveAs", true);
         }
         
         private void SelectAll(object sender, ExecutedRoutedEventArgs e)

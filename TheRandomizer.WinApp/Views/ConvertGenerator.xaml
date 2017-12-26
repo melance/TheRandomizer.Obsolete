@@ -7,52 +7,84 @@
                    xmlns:metro="http://metro.mahapps.com/winfx/xaml/controls"
                    xmlns:viewModels="clr-namespace:TheRandomizer.WinApp.ViewModels"
                    xmlns:cmds="clr-namespace:TheRandomizer.WinApp.Commands"
+                   xmlns:dragablz="clr-namespace:Dragablz;assembly=Dragablz"
                    Style="{DynamicResource WindowStyle}"
                    Icon="/TheRandomizer;component/TheRandomizer.ico"
+                   ShowMaxRestoreButton="False"
+                   ShowMinButton="False"
                    mc:Ignorable="d"
                    x:Name="ConvertGeneratorWindow"
                    Title="Convert Generator" 
-                   Height="149" 
-                   Width="404">
+                   Height="213" 
+                   Width="543">
     <metro:MetroWindow.DataContext>
         <viewModels:ConvertGeneratorViewModel />
     </metro:MetroWindow.DataContext>
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="Auto" />
-            <RowDefinition Height="*" />
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
-        <Grid.ColumnDefinitions>
-            <ColumnDefinition Width="Auto" />
-            <ColumnDefinition Width="*" />
-        </Grid.ColumnDefinitions>
-        <Label Content="Source File" Grid.Column="0" Grid.Row="0" Margin="3" />
-        <DockPanel Grid.Column="1" Grid.Row="0" Margin="3">
-            <Button Command="{Binding GetSourceFile}" DockPanel.Dock="Right">
-                <Rectangle Width="12" Height="12" Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
-                    <Rectangle.OpacityMask>
-                        <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_save}" />
-                    </Rectangle.OpacityMask>
-                </Rectangle>
-            </Button>
-            <TextBox Text="{Binding SourceFile}" />
-        </DockPanel>
-        <Label Content="Target File" Grid.Column="0" Grid.Row="1" Margin="3" />
-        <DockPanel Grid.Column="1" Grid.Row="1" Margin="3">
-            <Button Command="{Binding GetTargetFile}" DockPanel.Dock="Right">
-                <Rectangle Width="12" Height="12" Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
-                    <Rectangle.OpacityMask>
-                        <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_save}" />
-                    </Rectangle.OpacityMask>
-                </Rectangle>
-            </Button>
-            <TextBox Text="{Binding TargetFile}" />
-        </DockPanel>
-        <DockPanel Grid.Row="2" Grid.ColumnSpan="2" LastChildFill="False" VerticalAlignment="Bottom">
-            <Button Command="{Binding Ok}" CommandParameter="{Binding ElementName=ConvertGeneratorWindow}" DockPanel.Dock="Right" Width="80" Content="Ok" Margin="3" />
-            <Button Command="{x:Static cmds:DialogCommands.Cancel}" CommandParameter="{Binding ElementName=ConvertGeneratorWindow}" DockPanel.Dock="Right" Width="80" Content="Cancel" Margin="3" />
-        </DockPanel>
-    </Grid>
+    <DockPanel>
+        <dragablz:TabablzControl Name="tabType">
+            <TabItem Header="Single" Name="pagSingle">
+                <Grid>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="Auto" />
+                        <RowDefinition Height="*" />
+                        <RowDefinition Height="Auto" />
+                    </Grid.RowDefinitions>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto" />
+                        <ColumnDefinition Width="*" />
+                    </Grid.ColumnDefinitions>
+                    <Label Content="Source File" Grid.Column="0" Grid.Row="0" Margin="3" />
+                    <DockPanel Grid.Column="1" Grid.Row="0" Margin="3">
+                        <Button Command="{Binding GetSourceFile}" DockPanel.Dock="Right">
+                            <Rectangle Width="12" Height="12" Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
+                                <Rectangle.OpacityMask>
+                                    <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_folder_open}" />
+                                </Rectangle.OpacityMask>
+                            </Rectangle>
+                        </Button>
+                        <TextBox Text="{Binding SourceFile}" />
+                    </DockPanel>
+                    <Label Content="Target File" Grid.Column="0" Grid.Row="1" Margin="3" />
+                    <DockPanel Grid.Column="1" Grid.Row="1" Margin="3">
+                        <Button Command="{Binding GetTargetFile}" DockPanel.Dock="Right">
+                            <Rectangle Width="12" Height="12" Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
+                                <Rectangle.OpacityMask>
+                                    <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_save}" />
+                                </Rectangle.OpacityMask>
+                            </Rectangle>
+                        </Button>
+                        <TextBox Text="{Binding TargetFile}" />
+                    </DockPanel>
+                    <DockPanel Grid.Row="2" Grid.ColumnSpan="2" LastChildFill="False" VerticalAlignment="Bottom">
+                        <Button Command="{Binding ConvertSingle}" CommandParameter="{Binding ElementName=ConvertGeneratorWindow}" DockPanel.Dock="Right" Width="80" Content="Convert" Margin="3" IsDefault="True" />
+                        <Button Command="{x:Static cmds:DialogCommands.Cancel}" CommandParameter="{Binding ElementName=ConvertGeneratorWindow}" DockPanel.Dock="Right" Width="80" Content="Close" Margin="3" IsCancel="True" />
+                    </DockPanel>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Batch" Name="pagBatch">
+                <DockPanel>
+                    <DockPanel DockPanel.Dock="Top">
+                        <Button Command="{Binding GetBatchFiles}" DockPanel.Dock="Right" Width="24" HorizontalAlignment="Right" Margin="0,0,3,0">
+                            <Rectangle Width="12" Height="12" Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
+                                <Rectangle.OpacityMask>
+                                    <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_folder_open}" />
+                                </Rectangle.OpacityMask>
+                            </Rectangle>
+                        </Button>
+                        <Label DockPanel.Dock="Left">Grammar Files:</Label>
+                    </DockPanel>
+                    <DockPanel DockPanel.Dock="Bottom" LastChildFill="False" VerticalAlignment="Bottom">
+                        <Button Command="{Binding ConvertBatch}" CommandParameter="{Binding ElementName=ConvertGeneratorWindow}" DockPanel.Dock="Right" Width="80" Content="Convert" Margin="3" IsDefault="True" />
+                        <Button Command="{x:Static cmds:DialogCommands.Cancel}" CommandParameter="{Binding ElementName=ConvertGeneratorWindow}" DockPanel.Dock="Right" Width="80" Content="Close" Margin="3" IsCancel="True" />
+                    </DockPanel>
+                    <ListBox ItemsSource="{Binding BatchFiles}" Margin="3">
+                        
+                    </ListBox>
+                    <!--<TextBox Text="{Binding BatchFiles}" AcceptsReturn="True" Height="Auto" ScrollViewer.VerticalScrollBarVisibility="Auto" ScrollViewer.HorizontalScrollBarVisibility="Auto" Margin="3" />-->
+                </DockPanel>
+            </TabItem>
+        </dragablz:TabablzControl>
+
+    </DockPanel>
 </metro:MetroWindow>

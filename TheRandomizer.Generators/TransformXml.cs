@@ -118,13 +118,13 @@ namespace TheRandomizer.Generators
                     // Update the value of the @type attribute
                     type = root.Attribute(XName.Get("type", "http://www.w3.org/2001/XMLSchema-instance"));
 
-                    switch (type.Value)
+                    switch (type.Value.ToLower())
                     {
-                        case "AssignmentGrammar": type.Value = "Assignment"; break;
-                        case "DiceRoll": type.Value = "Dice"; break;
-                        case "LuaGrammar": type.Value = "Lua"; break;
-                        case "PhonotacticsGrammar": type.Value = "Phonotactics"; break;
-                        case "TableGrammar": type.Value = "Table"; break;
+                        case "assignmentgrammar": type.Value = "Assignment"; break;
+                        case "diceroll": type.Value = "Dice"; break;
+                        case "luagrammar": type.Value = "Lua"; break;
+                        case "phonotacticsgrammar": type.Value = "Phonotactics"; break;
+                        case "tablegrammar": type.Value = "Table"; break;
                     }
 
                     // Move Cateogry, System, and genre to tags
@@ -142,6 +142,18 @@ namespace TheRandomizer.Generators
                     if (category != null) { tags.Add(new XElement(XName.Get("tag"), category.Value)); }
                     if (system != null) { tags.Add(new XElement(XName.Get("tag"), system.Value)); }
                     if (genre != null) { tags.Add(new XElement(XName.Get("tag"), genre.Value)); }
+
+                    //Change "Checkbox" parameters to "Boolean"
+                    var parameters = root.XPathSelectElements("/generator/parameters/parameter");
+                    
+                    foreach (var parameter in parameters)
+                    {
+                        var parameterType = parameter.Attribute("type");
+                        if (parameterType.Value.Equals("checkbox", StringComparison.InvariantCultureIgnoreCase))
+                        {
+                            parameterType.Value = "Boolean";
+                        }
+                    }
 
                     //Update table elements to the new names
                     if (type.Value == "Table")

@@ -1,7 +1,7 @@
 ﻿using System;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TheRandomizer.Generators.Assignment;
-using TheRandomizer.Generators.Parameter;
+using TheRandomizer.Generators;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Xml;
@@ -236,7 +236,7 @@ namespace TheRandomizer.Generators.UnitTests
             }
         }
 
-        private void RequestLibraryHandler(object sender, RequestImportEventArgs e)
+        private void RequestLibraryHandler(object sender, RequestGeneratorEventArgs e)
         {
             if (e.Name == "Test")
             {
@@ -244,7 +244,8 @@ namespace TheRandomizer.Generators.UnitTests
                             <Library xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance' xmlns:xsd='http://www.w3.org/2001/XMLSchema'>
                                 <item name='Test'>Test</item>
                             </Library>";
-                e.Library = xml;
+                var generator = BaseGenerator.Deserialize(xml);
+                e.Generator = generator;
             }
         }
 

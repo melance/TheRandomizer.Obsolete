@@ -67,28 +67,37 @@ namespace TheRandomizer.Generators.Table
         /// </summary>
         private string FillOutput()
         {
-            var result = new StringBuilder();
             if (!string.IsNullOrEmpty(Output))
             {
-                var lexer = new Lexer.AssignmentLexer(Output);
+                return Evaluate(Output);
+            }
+            return "Output is empty";
+        }
 
-                foreach (var token in lexer.Lex().ToList())
+        private string Evaluate(string expression)
+        {
+            var lexer = new Lexer.AssignmentLexer(expression);
+            var result = new StringBuilder();
+            foreach (var token in lexer.Lex().ToList())
+            {
+                var value = string.Empty;
+                switch (token.TokenType)
                 {
-                    switch (token.TokenType)
-                    {
-                        case Lexer.TokenType.String: 
-                        case Lexer.TokenType.WhiteSpace:
-                            result.Append(token.TokenValue);
-                            break;
-                        case Lexer.TokenType.Item:
-                        case Lexer.TokenType.Variable:
-                            result.Append(Calculate($"[{token.TokenValue}]"));
-                            break;
-                        case Lexer.TokenType.Equation:
-                            result.Append(Calculate(token.TokenValue));
-                            break;
-                    }
+                    case Lexer.TokenType.String:
+                    case Lexer.TokenType.WhiteSpace:
+                        value += token.TokenValue;
+                        break;
+                    case Lexer.TokenType.Item:
+                    case Lexer.TokenType.Variable:
+                        var variableValue = Calculate($"[{token.TokenValue}]");
+                        value += Evaluate(variableValue);
+                        break;
+                    case Lexer.TokenType.Equation:
+                        var equationValue = Calculate(token.TokenValue);
+                        value += Evaluate(equationValue);
+                        break;
                 }
+                result.Append(value);
             }
             return result.ToString();
         }
