@@ -34,7 +34,14 @@ namespace TheRandomizer.WinApp.Converters
             var table = value as DataTable;
             if (table != null)
             {
-                return BaseTable.TableToString(table);
+                try
+                {
+                    return BaseTable.TableToString(table);
+                }
+                catch (Exception ex)
+                {
+                    Utility.ExceptionHandling.LogException(ex);
+                }
             }
             throw new ArgumentException("value must be a DataTable");
         }

@@ -13,6 +13,7 @@
              xmlns:conv="clr-namespace:TheRandomizer.WinApp.Converters"
              xmlns:diag="clr-namespace:System.Diagnostics;assembly=WindowsBase"
              xmlns:toolkit="http://schemas.microsoft.com/wpf/2008/toolkit"
+             xmlns:math="http://hexinnovation.com/math"
              Name="usrTable"
              mc:Ignorable="d" 
              d:DesignHeight="300" d:DesignWidth="300">
@@ -88,7 +89,7 @@
                             </DockPanel>
                             <DockPanel>
                                 <Label Content="Repeat Join" Margin="3"  Width="80"/>
-                                <TextBox Text="{Binding RepeateJoin}" Margin="3" VerticalContentAlignment="Center" />
+                                <TextBox Text="{Binding RepeatJoin}" Margin="3" VerticalContentAlignment="Center" />
                             </DockPanel>
                             <DockPanel>
                                 <Label Content="Skip Table" Margin="3"  Width="80"/>
@@ -96,13 +97,11 @@
                             </DockPanel>
                             <ContentControl DockPanel.Dock="Top" Content="{Binding}" ContentTemplateSelector="{StaticResource TableTemplateSelector}" />
                         </UniformGrid>
-                        <TextBox AcceptsReturn="True" AcceptsTab="True" TextWrapping="NoWrap" FontFamily="Consolas" Text="{Binding Value}" />
-                        <!--<DockPanel DockPanel.Dock="Top" LastChildFill="False">                            
-                            <Button Margin="3" Command="{Binding DataContext.AddColumn, ElementName=winGeneratorEditor}" CommandParameter="{Binding}" DockPanel.Dock="Right" Content="Add Column" />
-                            <Button Margin="3" Command="{Binding DataContext.DeleteColumn, ElementName=winGeneratorEditor}" CommandParameter="{Binding}" DockPanel.Dock="Right" Content="Delete Column" />
+                        <DockPanel DockPanel.Dock="Top" LastChildFill="False">
+                            <Button Command="{Binding DataContext.AddColumn, ElementName=winGeneratorEditor}" CommandParameter="{Binding}" Name="btnAddColumn" Margin="3" DockPanel.Dock="Right" Content="Add Column" diag:PresentationTraceSources.TraceLevel="High" />
+                            <Button Command="{Binding DataContext.DeleteColumn, ElementName=winGeneratorEditor}" CommandParameter="{Binding}" Margin="3" DockPanel.Dock="Right" Content="Delete Column" />
                         </DockPanel>
-                        
-                        <DataGrid ItemsSource="{Binding Value, Converter={StaticResource TableConverter}}" AutoGenerateColumns="True" CanUserAddRows="True" CanUserDeleteRows="True" CanUserReorderColumns="True" CanUserResizeColumns="True" CanUserResizeRows="False" CanUserSortColumns="True"/>-->
+                        <DataGrid Name="grdTable" ItemsSource="{Binding Value, Converter={StaticResource TableConverter}}" AutoGenerateColumns="True" CanUserAddRows="True" CanUserDeleteRows="True" CanUserReorderColumns="True" CanUserResizeColumns="True" CanUserResizeRows="False" CanUserSortColumns="True"/>
                     </DockPanel>
                 </DataTemplate>
             </dragablz:TabablzControl.ContentTemplate>

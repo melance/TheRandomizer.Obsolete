@@ -30,8 +30,6 @@
                    Height="600" 
                    Width="800"
                    Cursor="{Binding Cursor}"
-                   Loaded="MetroWindow_Loaded"
-                   Closed="MetroWindow_Closed"
                    ShowIconOnTitleBar="False">
     <Window.DataContext>
         <viewModels:MainWindowViewModel />
@@ -51,7 +49,7 @@
             <ToggleButton IsChecked="{Binding ElementName=flyTools, Path=IsOpen}">
                 <Rectangle Width="20" Height="20" Fill="{Binding RelativeSource={RelativeSource AncestorType=ToggleButton}, Path=Foreground}">
                     <Rectangle.OpacityMask>
-                        <VisualBrush Stretch="Fill" Visual="{iconPacks:PackIconEntypo Kind=Menu}" />
+                        <VisualBrush Stretch="Fill" Visual="{iconPacks:Entypo Kind=Menu}" />
                     </Rectangle.OpacityMask>
                 </Rectangle>
             </ToggleButton>

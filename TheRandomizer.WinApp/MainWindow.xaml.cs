@@ -26,22 +26,13 @@ namespace TheRandomizer.WinApp
         public MainWindow()
         {
             InitializeComponent();
-            DataContext = new MainWindowViewModel(DialogCoordinator.Instance);
-            (DataContext as MainWindowViewModel)?.LoadGenerators();
-        }
-        
-        private void MetroWindow_Loaded(object sender, RoutedEventArgs e)
-        {
+            var viewModel = new MainWindowViewModel(DialogCoordinator.Instance);            
+            DataContext = viewModel;
         }
 
-        private void MetroWindow_Closed(object sender, EventArgs e)
+        public void LoadGenerators()
         {
-            Application.Current.Shutdown();
-        }
-
-        private void MenuItem_Click(object sender, RoutedEventArgs e)
-        {
-
+            ((MainWindowViewModel)DataContext).Generators = Models.GeneratorInfoCollection.GeneratorList;
         }
     }
 }

@@ -20,7 +20,6 @@ namespace TheRandomizer.WinApp.ViewModels
 {
     class GeneratorEditorViewModel : ObservableBase
     {
-
         #region Constructors
         public GeneratorEditorViewModel()
         {
@@ -292,8 +291,45 @@ namespace TheRandomizer.WinApp.ViewModels
                         {
                             var converter = new Converters.TableConverter();
                             var data = (DataTable)converter.Convert(table.Value, typeof(DataTable), null, System.Globalization.CultureInfo.CurrentCulture);
-                            data.Columns.Add(name);
-                            table.Value = (string)converter.ConvertBack(data, typeof(string), null, System.Globalization.CultureInfo.CurrentCulture);
+                            if (!data.Columns.Contains(name))
+                            {
+                                data.Columns.Add(name);
+                                var value = (string)converter.ConvertBack(data, typeof(string), null, System.Globalization.CultureInfo.CurrentCulture);
+                                table.Value = value;
+                            }
+                            else
+                            {
+                                await DialogCoordinator.ShowMessageAsync(this, "Already Exists", $"A column with the name '{name}' already exists.");
+                            }
+                        }
+                    }
+                });
+            }
+        }
+
+        public ICommand DeleteColumn
+        {
+            get
+            {
+                return new DelegateCommand<BaseTable>(async table =>
+                {
+                    if (table != null)
+                    {
+                        var name = await DialogCoordinator.ShowInputAsync(this, "Delete Column", "Enter the column name to be deleted");
+                        if (!string.IsNullOrWhiteSpace(name))
+                        {
+                            var converter = new Converters.TableConverter();
+                            var data = (DataTable)converter.Convert(table.Value, typeof(DataTable), null, System.Globalization.CultureInfo.CurrentCulture);
+                            if (data.Columns.Contains(name))
+                            {
+                                data.Columns.Remove(name);
+                                var value = (string)converter.ConvertBack(data, typeof(string), null, System.Globalization.CultureInfo.CurrentCulture);
+                                table.Value = value;
+                            }
+                            else
+                            {
+                                await DialogCoordinator.ShowMessageAsync(this, "Does Not Exists", $"Could not find column '{name}'.");
+                            }
                         }
                     }
                 });
