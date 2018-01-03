@@ -43,5 +43,18 @@ namespace TheRandomizer.WinApp.Utility
                 return new DelegateCommand<TableGenerator>(g => g.Tables.Add(new SelectTable() { Name = "Select Table" } ));
             }
         }
+
+        public static ICommand AddColumn
+        {
+            get
+            {
+                return new DelegateCommand<BaseTable>(bt =>
+                    {
+                        var table = BaseTable.StringToTable(bt.Value);
+                        
+                        
+                    });
+            }
+        }
     }
 }

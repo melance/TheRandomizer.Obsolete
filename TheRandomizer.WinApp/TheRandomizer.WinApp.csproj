@@ -47,8 +47,8 @@
       <HintPath>..\packages\JetBrains.MahApps.Metro.1.5.0.1\lib\net45\MahApps.Metro.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="MahApps.Metro.IconPacks.Entypo, Version=1.9.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\MahApps.Metro.IconPacks.Entypo.1.9.1\lib\net46\MahApps.Metro.IconPacks.Entypo.dll</HintPath>
+    <Reference Include="MahApps.Metro.IconPacks.Entypo, Version=2.0.0.31, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MahApps.Metro.IconPacks.Entypo.2.0.0\lib\net46\MahApps.Metro.IconPacks.Entypo.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="MathConverter, Version=1.2.1.2, Culture=neutral, processorArchitecture=MSIL">

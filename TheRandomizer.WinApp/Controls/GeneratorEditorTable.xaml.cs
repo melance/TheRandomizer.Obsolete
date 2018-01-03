@@ -38,6 +38,6 @@ namespace TheRandomizer.WinApp.Controls
             }
 
             return (T)parent;
-        }
+        }        
     }
 }

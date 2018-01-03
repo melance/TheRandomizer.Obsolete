@@ -65,7 +65,7 @@ namespace TheRandomizer.WinApp.ViewModels
 
         public Cursor Cursor { get { return GetProperty<Cursor>(); } set { SetProperty(value); } }
         public ObservableList<Models.Tag> Tags { get; private set; } 
-        public GeneratorInfoCollection Generators { get; private set; }
+        public GeneratorInfoCollection Generators { get; set; }
         public GeneratorInfoCollection FilteredGenerators
         {
             get

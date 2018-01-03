@@ -54,5 +54,10 @@ namespace TheRandomizer.WinApp.Views
                 }
             }
         }
+
+        private void winGeneratorEditor_Closed(object sender, EventArgs e)
+        {
+            //if (Application.Current.Windows.Count == 0) Application.Current.Shutdown();
+        }
     }
 }

@@ -36,10 +36,10 @@ namespace TheRandomizer.WinApp
         {
             var help = false;
             var generatorPath = string.Empty;
-            var mode = Mode.Standard;
+            var selectedMode = Mode.Standard;
 
             var p = new OptionSet() {
-                { "m=|mode=", "Set the application mode, 'Standard' or 'Editor'", v => mode = SetMode(v) },
+                { "m=|mode=", "Set the application mode, 'Standard' or 'Editor'", v => selectedMode = SetMode(v) },
                 { "ml=|maxlength=", "If used in conjunction with 'generate', provides the max length to the generator.", GetMaxLength },
                 { "r=|repeat=", "If used in conjunction with 'generate', provides the number of times to run the generator.", GetRepeat },
                 { "p=|parameter=", "If used in conjunction with 'generate', adds a parameter. The parameter takes the form Name=Value.", GetParameter },
@@ -56,51 +56,52 @@ namespace TheRandomizer.WinApp
 
             if (_showGUI)
             {
-                LoadCustomAccents();
-                ChangeAppStyle();
-                
-                switch (mode)
+                switch (selectedMode)
                 {
 #if DEBUG
                     case Mode.Test:
                         StartupUri = new Uri(@"Views/Test.xaml", UriKind.Relative);
+                        MainWindow = new Views.Test();
                         break;
 #endif
                     case Mode.Editor:
                         StartupUri = new Uri(@"Views/GeneratorEditor.xaml", UriKind.Relative);
+                        MainWindow = new Views.GeneratorEditor();
                         break;
                     default:
                         StartupUri = new Uri("MainWindow.xaml", UriKind.Relative);
+                        MainWindow = new MainWindow();
                         break;
                 }
 
+                LoadCustomAccents();
+                ChangeAppStyle();                               
               
-                ShutdownMode = ShutdownMode.OnLastWindowClose;
-
                 if (WinApp.Properties.Settings.Default.ShowSplash)
                 {
                     var timer = new Stopwatch();
                     var splash = new Views.SplashScreen();
                     timer.Start();
-
-                    base.OnStartup(e);
-
+                    
                     splash.Show();
 
-                    var mainWindow = new MainWindow();
+                    if (selectedMode != Mode.Editor)
+                        Models.GeneratorInfoCollection.LoadGeneratorList(null);
 
                     timer.Stop();
 
                     var remainingSplashTime = SPLASH_DISPLAY_MILLISECONDS - timer.ElapsedMilliseconds;
                     if (remainingSplashTime > 0)
-                        System.Threading.Thread.Sleep((int)remainingSplashTime);
+                        System.Threading.Thread.Sleep((int)remainingSplashTime);                 
 
                     splash.Close();
                 }
-                else
-                {
-                    base.OnStartup(e);
-                }
+
+               
+                //MainWindow.ShowActivated = true;
+                //MainWindow.Show();
+                if (MainWindow.GetType() == typeof(MainWindow)) ((MainWindow)MainWindow).LoadGenerators();
+                base.OnStartup(e);
             }
             else
             {

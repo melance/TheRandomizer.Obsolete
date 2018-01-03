@@ -13,6 +13,7 @@
                    Style="{DynamicResource WindowStyle}"
                    dialogs:DialogParticipation.Register="{Binding}"
                    Closing="MetroWindow_Closing"
+                   Closed="winGeneratorEditor_Closed"
                    mc:Ignorable="d"
                    Title="{Binding FileName, StringFormat=Generator Editor - {0}, TargetNullValue='Generator Editor'}" 
                    Height="600" 

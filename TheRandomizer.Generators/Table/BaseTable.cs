@@ -58,11 +58,7 @@ namespace TheRandomizer.Generators.Table
 
             foreach (DataRow row in value.Rows)
             {
-                foreach (var item in row.ItemArray)
-                {
-                    builder.Append($"{item} {DELIMITER_TOKEN}");
-                }
-                builder.AppendLine();
+                builder.AppendLine(string.Join(DELIMITER_TOKEN, row.ItemArray.Select(i => i.ToString())));
             }
 
             return builder.ToString();

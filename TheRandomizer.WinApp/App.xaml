@@ -4,7 +4,8 @@
              xmlns:metro="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
              xmlns:dragablz="clr-namespace:Dragablz;assembly=Dragablz"             
              xmlns:local="clr-namespace:TheRandomizer.WinApp"
-             xmlns:conv="clr-namespace:TheRandomizer.WinApp.Converters">
+             xmlns:conv="clr-namespace:TheRandomizer.WinApp.Converters"
+             ShutdownMode="OnMainWindowClose">
     <Application.Resources>
         <ResourceDictionary>
             <!-- Import Mah Apps -->
