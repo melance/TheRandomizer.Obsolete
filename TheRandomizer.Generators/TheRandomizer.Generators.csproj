@@ -64,6 +64,8 @@
   <ItemGroup>
     <Compile Include="Assignment\AssignmentGenerator.cs" />
     <Compile Include="Assignment\CachedLineItems.cs" />
+    <Compile Include="Assignment\GroupItem.cs" />
+    <Compile Include="Assignment\GroupItemList.cs" />
     <Compile Include="Assignment\Import.cs" />
     <Compile Include="Assignment\LineItemList.cs" />
     <Compile Include="Attributes\CustomNCalcFunctionAttribute.cs" />

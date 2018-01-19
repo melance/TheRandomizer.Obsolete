@@ -63,7 +63,20 @@ namespace TheRandomizer.WinApp.Controls
             {
                 SetValue(GeneratorProperty, value);
             }
-        }        
+        } 
+        
+        public ICommand ReloadFromDisk
+        {
+            get
+            {
+                return new DelegateCommand(() =>
+                {
+                    var filePath = Generator.FilePath;
+                    var generator = BaseGenerator.Deserialize(File.ReadAllText(filePath));
+                    Generator = new GeneratorWrapper(generator, filePath);
+                });
+            }
+        }       
         #endregion
 
         #region Methods
@@ -120,18 +133,9 @@ namespace TheRandomizer.WinApp.Controls
 
         private void Print(object sender, ExecutedRoutedEventArgs e)
         {
-            //Document?.execCommand("Print", true, null);
+            Document?.execCommand("Print", true, null);
         }
-
-        private void CanPrint(object sender, CanExecuteRoutedEventArgs e)
-        {   
-            //if (Document?.queryCommandSupported("Print") == true && Document?.queryCommandEnabled("Print") == true)
-            //{
-            //    e.CanExecute = true;
-            //}
-            e.CanExecute = false;
-        }
-
+        
         private void Save(object sender, ExecutedRoutedEventArgs e)
         {
             Document?.execCommand("SaveAs", true);

@@ -23,7 +23,7 @@ namespace TheRandomizer.WinApp.Utility
     {
         
         #region Members
-        private BaseGenerator _generator;
+        //private BaseGenerator Generator;
         #endregion
 
         #region Constructors
@@ -32,16 +32,16 @@ namespace TheRandomizer.WinApp.Utility
         public GeneratorWrapper(BaseGenerator generator, string filePath)
         {
             FilePath = filePath;
-            if (_generator != null)
+            if (Generator != null)
             {
-                _generator.RequestFileText -= RequestFileText;
-                _generator.RequestGenerator -= RequestGenerator;
+                Generator.RequestFileText -= RequestFileText;
+                Generator.RequestGenerator -= RequestGenerator;
             }
-            _generator = generator;
-            if (_generator != null)
+            Generator = generator;
+            if (Generator != null)
             {
-                _generator.RequestFileText += RequestFileText;
-                _generator.RequestGenerator += RequestGenerator;
+                Generator.RequestFileText += RequestFileText;
+                Generator.RequestGenerator += RequestGenerator;
             }
         }
         #endregion
@@ -54,16 +54,27 @@ namespace TheRandomizer.WinApp.Utility
         {
             get
             {
-                return _generator != null ? _generator.Id : Guid.Empty;
+                return Generator != null ? Generator.Id : Guid.Empty;
             }
         }
 
-        public BaseGenerator Generator { get { return _generator; } private set { _generator = value; } }
+        public BaseGenerator Generator
+        {
+            get
+            {
+                return GetProperty<BaseGenerator>();
+            }
+            private set
+            {
+                SetProperty(value);
+                OnPropertyChanged("");
+            }
+        }
 
         public string Name {
             get
             {
-                return _generator?.Name;
+                return Generator?.Name;
             }
         }
 
@@ -75,7 +86,7 @@ namespace TheRandomizer.WinApp.Utility
         {
             get
             {
-                return _generator?.Description;
+                return Generator?.Description;
             }
         }
 
@@ -83,15 +94,15 @@ namespace TheRandomizer.WinApp.Utility
         {
             get
             {
-                return _generator?.Author;
+                return Generator?.Author;
             }
         }
-
+        
         public string GeneratorType
         {
             get
             {
-                return _generator?.GeneratorType.ToString();
+                return Generator?.GeneratorType.ToString();
             }
         }
 
@@ -99,7 +110,7 @@ namespace TheRandomizer.WinApp.Utility
         {
             get
             {
-                return _generator != null ? _generator.OutputFormat : OutputFormat.Text;
+                return Generator != null ? Generator.OutputFormat : OutputFormat.Text;
             }
         }
 
@@ -107,7 +118,7 @@ namespace TheRandomizer.WinApp.Utility
         {
             get
             {
-                return _generator?.Url;
+                return Generator?.Url;
             }
         }
 
@@ -115,7 +126,7 @@ namespace TheRandomizer.WinApp.Utility
         {
             get
             {
-                return _generator?.Tags;
+                return Generator?.Tags;
             }
         }
         
@@ -123,11 +134,11 @@ namespace TheRandomizer.WinApp.Utility
         {
             get
             {
-                return _generator?.TagList;
+                return Generator?.TagList;
             }
             set
             {
-                _generator.TagList = value;
+                Generator.TagList = value;
             }
         }
 
@@ -135,7 +146,7 @@ namespace TheRandomizer.WinApp.Utility
         {
             get
             {
-                return _generator != null ? _generator.SupportsMaxLength == true : false;
+                return Generator != null ? Generator.SupportsMaxLength == true : false;
             }
         }
 
@@ -143,7 +154,7 @@ namespace TheRandomizer.WinApp.Utility
         {
             get
             {
-                return _generator != null && _generator.Parameters.Count > 0;
+                return Generator != null && Generator.Parameters.Count > 0;
             }
         }
 
@@ -151,7 +162,7 @@ namespace TheRandomizer.WinApp.Utility
         {
             get
             {
-                return _generator?.Parameters;
+                return Generator?.Parameters;
             }
         }
 
@@ -164,6 +175,18 @@ namespace TheRandomizer.WinApp.Utility
             set
             {
                 SetProperty(value);
+            }
+        }
+
+        public ICommand ReloadGenerator
+        {
+            get
+            {
+                return new DelegateCommand(() =>
+                {
+                    Generator = BaseGenerator.Deserialize(File.ReadAllText(FilePath));
+                    Results = "<html><body><h2 style='color:Green'>Generator reloaded from disk</h2></body></html>";
+                });
             }
         }
 
@@ -191,6 +214,8 @@ namespace TheRandomizer.WinApp.Utility
             }
         }
 
+        
+
         public ICommand Save
         {
             get
@@ -198,7 +223,7 @@ namespace TheRandomizer.WinApp.Utility
                 return new DelegateCommand<Window>(w => 
                                                    {
                                                        Tags.RemoveAll(s => string.IsNullOrWhiteSpace(s));
-                                                       File.WriteAllText(FilePath, _generator.Serialize());
+                                                       File.WriteAllText(FilePath, Generator.Serialize());
                                                        w.DialogResult = true;
                                                        w.Close();
                                                    });
@@ -225,7 +250,7 @@ namespace TheRandomizer.WinApp.Utility
         #region Methods
         public void Cancel()
         {
-            _generator?.Cancel();
+            Generator?.Cancel();
         }
 
         public void Generate()
@@ -233,7 +258,7 @@ namespace TheRandomizer.WinApp.Utility
             try
             {
                 Application.Current.MainWindow.Cursor = Cursors.Wait;
-                Results = FormatResults(_generator?.Generate(Repeat, MaxLength), _generator?.CSS);
+                Results = FormatResults(Generator?.Generate(Repeat, MaxLength), Generator?.CSS);
             }
             catch (Generators.Exceptions.LibraryNotFoundException ex)
             {

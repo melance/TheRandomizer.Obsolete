@@ -64,8 +64,21 @@ namespace TheRandomizer.WinApp.ViewModels
         private IDialogCoordinator DialogCoordinator { get; set; }
 
         public Cursor Cursor { get { return GetProperty<Cursor>(); } set { SetProperty(value); } }
-        public ObservableList<Models.Tag> Tags { get; private set; } 
-        public GeneratorInfoCollection Generators { get; set; }
+        public ObservableList<Models.Tag> Tags { get { return GetProperty<ObservableList<Models.Tag>>(); } private set { SetProperty(value); } } 
+        public GeneratorInfoCollection Generators {
+            get
+            {
+                return GetProperty<GeneratorInfoCollection>();
+            }
+            set
+            {
+                SetProperty(value);
+                Tags.Clear();
+                Tags.AddRange(value.GetTags());
+                OnPropertyChanged("FilteredGenerators");
+                OnPropertyChanged("Tags");
+            }
+        }
         public GeneratorInfoCollection FilteredGenerators
         {
             get
@@ -274,6 +287,7 @@ namespace TheRandomizer.WinApp.ViewModels
         public void LoadGenerators()
         {
             Cursor = Cursors.Wait;
+            LoadingGenerators = true;
             _loadGeneratorsWorker = new BackgroundWorker();
             _loadGeneratorsWorker.WorkerReportsProgress = true;
             _loadGeneratorsWorker.DoWork += LoadGenerators_DoWork;
@@ -333,7 +347,8 @@ namespace TheRandomizer.WinApp.ViewModels
             Tags.Clear();
             if (Generators != null) Tags.AddRange(Generators.GetTags());
             OnPropertyChanged("FilteredGenerators");
-            OnPropertyChanged("LoadErrorCount");            
+            OnPropertyChanged("LoadErrorCount");
+            LoadingGenerators = false;
             Cursor = null;
         }
         #endregion
