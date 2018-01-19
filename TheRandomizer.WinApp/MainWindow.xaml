@@ -30,7 +30,7 @@
                    Height="600" 
                    Width="800"
                    Cursor="{Binding Cursor}"
-                   ShowIconOnTitleBar="False">
+                   ShowIconOnTitleBar="True">
     <Window.DataContext>
         <viewModels:MainWindowViewModel />
     </Window.DataContext>
@@ -128,14 +128,14 @@
             <ColumnDefinition Width="210"/>
             <ColumnDefinition Width="3" />
             <ColumnDefinition Width="*"/>
-        </Grid.ColumnDefinitions>
-        <Popup PlacementTarget="{Binding ElementName=winMain}" Placement="Relative" IsOpen="{Binding LoadingGenerators}" Width="{Binding ActualWidth, ElementName=winMain}" HorizontalOffset="{Binding ActualWidth, RelativeSource={RelativeSource Self}, Converter={StaticResource math}, ConverterParameter=(x/2)*-1}" VerticalOffset="{Binding ActualHeight, RelativeSource={RelativeSource Self}, Converter={StaticResource math}, ConverterParameter=(x/2)*-1}">
-            <Border BorderThickness="4" BorderBrush="{DynamicResource AccentColorBrush}">
+        </Grid.ColumnDefinitions>        
+        <Popup PlacementTarget="{Binding ElementName=winMain}" Placement="Relative" IsOpen="{Binding LoadingGenerators}" Width="{Binding ActualWidth, ElementName=winMain}" HorizontalOffset="{Binding ActualWidth, RelativeSource={RelativeSource Self}, Converter={StaticResource math}, ConverterParameter=(x/2)*-1}" VerticalOffset="{Binding ActualHeight, RelativeSource={RelativeSource Self}, Converter={StaticResource math}, ConverterParameter=(x/2)}">
+            <Border Background="{DynamicResource AccentColorBrush}" BorderThickness="4" BorderBrush="{DynamicResource AccentColorBrush}">
                 <DockPanel>
-                    <Label DockPanel.Dock="Top" Margin="12" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center">
+                    <Label Foreground="{DynamicResource IdealForegroundColorBrush}" DockPanel.Dock="Top" Margin="12" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center">
                         Loading generators
                     </Label>
-                    <Label Margin="12" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center">
+                    <Label Foreground="{DynamicResource IdealForegroundColorBrush}" Margin="12" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center">
                     Please wait
                     </Label>
                 </DockPanel>
@@ -204,7 +204,7 @@
                 </Button>
             </DockPanel>
             <Grid>
-                <ListBox Margin="0" ItemsSource="{Binding FilteredGenerators}">
+                <ListBox Name="lstGenerators" Margin="0" ItemsSource="{Binding FilteredGenerators}" KeyUp="lstGenerators_KeyUp">
                     <ListBox.ItemTemplate>
                         <DataTemplate>
                             <TextBlock Text="{Binding Name}">

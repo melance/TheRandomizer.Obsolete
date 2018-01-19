@@ -42,28 +42,8 @@
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>
-        <DockPanel LastChildFill="True" Grid.Row="1">
-            <Button Command="{x:Static cmds:DialogCommands.Ok}" CommandParameter="{Binding ElementName=winLoadErrorDialog}" IsDefault="True" DockPanel.Dock="Right" Width="100" Margin="3">
-                <DockPanel>
-                    <Rectangle Width="12" Height="12" Fill="Green">
-                        <Rectangle.OpacityMask>
-                            <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_check}" />
-                        </Rectangle.OpacityMask>
-                    </Rectangle>
-                    <Label Content="Yes" Padding="6,0" />
-                </DockPanel>
-            </Button>
-            <Button Command="{x:Static cmds:DialogCommands.Cancel}" CommandParameter="{Binding ElementName=winLoadErrorDialog}" IsCancel="True" DockPanel.Dock="Right" Width="100" Margin="3">
-                <DockPanel>
-                    <Rectangle Width="12" Height="12" Fill="Red">
-                        <Rectangle.OpacityMask>
-                            <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_close}" />
-                        </Rectangle.OpacityMask>
-                    </Rectangle>
-                    <Label Content="No" Padding="6,0" />
-                </DockPanel>
-            </Button>
-            <Label Content="Continue opening the application?" DockPanel.Dock="Left" FontWeight="Bold" />
+        <DockPanel LastChildFill="False" Grid.Row="1">
+            <Button Content="Ok" Command="{x:Static cmds:DialogCommands.Ok}" CommandParameter="{Binding ElementName=winLoadErrorDialog}" IsDefault="True" DockPanel.Dock="Right" Width="100" Margin="3" />
         </DockPanel>
     </Grid>
 </metro:MetroWindow>

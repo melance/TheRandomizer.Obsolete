@@ -100,11 +100,11 @@ namespace TheRandomizer.WinApp.Models
             }
 
             // Loop through all generator files in the directory and update those that have been changed
-            var files = new List<string>(Directory.GetFiles(GeneratorPath, GENERATOR_FILE_FILTER));
+            var files = new List<string>(Directory.GetFiles(GeneratorPath, GENERATOR_FILE_FILTER, SearchOption.AllDirectories));
             var count = 0;
             var max = files.Count();
 
-            files.AddRange(Directory.GetFiles(GeneratorPath, GRAMMAR_FILE_FILTER));
+            files.AddRange(Directory.GetFiles(GeneratorPath, GRAMMAR_FILE_FILTER, SearchOption.AllDirectories));
             foreach (string filePath in files)
             {
                 count++;
@@ -127,7 +127,7 @@ namespace TheRandomizer.WinApp.Models
                 }
                 catch (Exception ex)
                 {
-                    GeneratorLoadErrors.Add(new GeneratorError(Path.GetFileName(filePath), ex.Message));
+                    GeneratorLoadErrors.Add(new GeneratorError(Path.GetFileName(filePath), ex.ToString()));
                 }
             }            
             values.SaveGeneratorList();
@@ -144,7 +144,7 @@ namespace TheRandomizer.WinApp.Models
             {
                 tags.AddRange(item.Tags.Select(t => t.Value));
             }
-            tags = tags.Distinct(StringComparer.InvariantCultureIgnoreCase).ToList();
+            tags = tags.Where(t => !string.IsNullOrWhiteSpace(t)).Distinct(StringComparer.InvariantCultureIgnoreCase).ToList();
             return tags.Select(s => new Tag(s)).OrderBy(t => t.Name).ToList();
         }
 

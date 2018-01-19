@@ -51,7 +51,7 @@ namespace TheRandomizer.Generators.Assignment
         }
         #endregion
 
-        #region Constructors
+        #region Constructors        
         #endregion
 
         #region Members
@@ -71,7 +71,8 @@ namespace TheRandomizer.Generators.Assignment
         /// The list of line items used to generate the content
         /// </summary>
         [XmlArray("items")]
-        [XmlArrayItem("item")]
+        [XmlArrayItem("item", Type = typeof(LineItem))]
+        [XmlArrayItem("items", Type = typeof(GroupItemList))]
         [RequireOneElement(ErrorMessage = "You must include at least one Line Item.")]
         public ObservableList<LineItem> LineItems { get; set; } = new ObservableList<LineItem>();
 
@@ -94,6 +95,8 @@ namespace TheRandomizer.Generators.Assignment
         {
             // Request Imports
             RequestImports();
+            // Populate the items from group items
+            ProcessGroupItems();
             // Clear loop and recursion trackers
             _loopCount = 0;
             _recursionDepth = 0;
@@ -150,6 +153,35 @@ namespace TheRandomizer.Generators.Assignment
             }
         }
         
+        /// <summary>
+        /// Combines GroupItems into Items
+        /// </summary>
+        protected void ProcessGroupItems()
+        {
+            var newItems = new List<LineItem>();
+            foreach (var group in LineItems.OfType<GroupItemList>())
+            {
+                foreach (var item in group.GroupItems)
+                {
+                    var lineItem = new LineItem()
+                    {
+                        Name = group.Name,
+                        Next = (string.IsNullOrWhiteSpace(item.Next) ? group.Next : item.Next),
+                        Weight = item.Weight,
+                        Repeat = (string.IsNullOrWhiteSpace(item.Repeat) ? group.Repeat : item.Repeat),
+                        Variable = group.Variable,
+                        Expression = item.Expression
+                    };
+                    newItems.Add(lineItem);
+                }
+            }
+            if (newItems.Count > 0)
+            {
+                LineItems.AddRange(newItems);
+                LineItems.RemoveAll(li => li.GetType() == typeof(GroupItemList));
+            }
+        }
+
         /// <summary>
         /// Evaluates custom parameters for the NCalc engine
         /// </summary>

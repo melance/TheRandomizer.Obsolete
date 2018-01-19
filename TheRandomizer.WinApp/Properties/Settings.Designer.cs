@@ -118,5 +118,17 @@ namespace TheRandomizer.WinApp.Properties {
                 this["EditorMRU"] = value;
             }
         }
+        
+        [global::System.Configuration.UserScopedSettingAttribute()]
+        [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+        [global::System.Configuration.DefaultSettingValueAttribute("False")]
+        public bool IncludeGeneratorSubFolders {
+            get {
+                return ((bool)(this["IncludeGeneratorSubFolders"]));
+            }
+            set {
+                this["IncludeGeneratorSubFolders"] = value;
+            }
+        }
     }
 }

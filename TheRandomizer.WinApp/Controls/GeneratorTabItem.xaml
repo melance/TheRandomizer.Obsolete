@@ -32,11 +32,11 @@
     <UserControl.CommandBindings>
         <CommandBinding Command="Copy" Executed="Copy" CanExecute="HasResults" />
         <CommandBinding Command="Delete" Executed="Clear" CanExecute="HasResults" />
-        <CommandBinding Command="Print" Executed="Print" CanExecute="CanPrint" />
+        <CommandBinding Command="Print" Executed="Print" CanExecute="HasResults" />
         <CommandBinding Command="Save" Executed="Save" CanExecute="HasResults" />
         <CommandBinding Command="SelectAll" Executed="SelectAll" CanExecute="HasResults" />
         <CommandBinding Command="{StaticResource Cancel}" Executed="Cancel" CanExecute="HasGenerator" />
-        <CommandBinding Command="{StaticResource Generate}" Executed="Generate" CanExecute="HasGenerator" /> 
+        <CommandBinding Command="{StaticResource Generate}" Executed="Generate" /> 
         <CommandBinding Command="{StaticResource SelectNone}" Executed="SelectNone" CanExecute="HasResults" />
     </UserControl.CommandBindings>
     <Grid x:Name="LayoutRoot">
@@ -47,6 +47,13 @@
         </Grid.ColumnDefinitions>
         <DockPanel Grid.Column="0" LastChildFill="True">
             <DockPanel x:Name="pnlActions" DockPanel.Dock="Bottom" HorizontalAlignment="Stretch" LastChildFill="False">
+                <Button ToolTip="Reload generator from disk" Command="{Binding Generator.ReloadGenerator}" Style="{DynamicResource SquareButtonStyle}">
+                    <Rectangle Width="12" Height="12" Fill="{Binding Foreground, RelativeSource={RelativeSource AncestorType=Button}}">
+                        <Rectangle.OpacityMask>
+                            <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_refresh}" />
+                        </Rectangle.OpacityMask>
+                    </Rectangle>
+                </Button>
                 <Button Command="{StaticResource Cancel}" Content="Cancel" Visibility="Collapsed" DockPanel.Dock="Left" Width="100" />
                 <Button Command="{StaticResource Generate}" DockPanel.Dock="Right" Width="100" Style="{DynamicResource AccentedSquareButtonStyle}">
                     <StackPanel Orientation="Horizontal">
@@ -69,7 +76,7 @@
             </DockPanel>
             <Expander DockPanel.Dock="Top" HorizontalAlignment="Stretch" IsExpanded="True" BorderThickness="0">
                 <Expander.Header>
-                    <DockPanel>                        
+                    <DockPanel>
                         <TextBlock Text="Details" Foreground="{DynamicResource IdealForegroundColorBrush}" />
                     </DockPanel>
                 </Expander.Header>
@@ -223,6 +230,13 @@
                     <Rectangle Width="12" Height="12" Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
                         <Rectangle.OpacityMask>
                             <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_checkmark}" />
+                        </Rectangle.OpacityMask>
+                    </Rectangle>
+                </Button>
+                <Button ToolTip="Print" Command="Print" DockPanel.Dock="Right" Padding="12" Margin="3,3,0,3" Style="{DynamicResource MetroCircleButtonStyle}">
+                    <Rectangle Width="12" Height="12" Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
+                        <Rectangle.OpacityMask>
+                            <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_printer}" />
                         </Rectangle.OpacityMask>
                     </Rectangle>
                 </Button>
