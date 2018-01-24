@@ -327,8 +327,15 @@ namespace TheRandomizer.WinApp.Utility
         public void RequestGenerator(object sender, RequestGeneratorEventArgs e)
         {
             var filePath = Environment.ExpandEnvironmentVariables(e.Name);
-            if (!Path.IsPathRooted(e.Name)) filePath = Path.Combine(Settings.GeneratorPath, e.Name);
-            if (!Path.HasExtension(filePath)) filePath += ".rgen";
+            if (!Path.HasExtension(filePath) || Path.GetExtension(e.Name) != "rgen") filePath += ".rgen";
+            if (!Path.IsPathRooted(filePath))
+            {
+                var foundFiles = Directory.GetFiles(Settings.GeneratorPath, filePath, SearchOption.AllDirectories);
+                if (foundFiles.Count() > 0)
+                {
+                    filePath = foundFiles.First();
+                }
+            }            
             if (File.Exists(filePath))
             {
                 e.Generator = BaseGenerator.Deserialize(File.ReadAllText(filePath));
