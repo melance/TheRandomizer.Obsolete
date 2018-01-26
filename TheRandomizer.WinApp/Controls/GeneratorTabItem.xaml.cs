@@ -35,6 +35,10 @@ namespace TheRandomizer.WinApp.Controls
         }
         #endregion
 
+        #region Constants
+        const string EMPTY_HTML = "<html></html>";
+        #endregion
+
         #region Dependency Properties
         public static DependencyProperty GeneratorProperty = DependencyProperty.Register("Generator",
                                                                                          typeof(GeneratorWrapper),
@@ -81,7 +85,7 @@ namespace TheRandomizer.WinApp.Controls
 
         private void HasResults(object sender, CanExecuteRoutedEventArgs e)
         {
-            e.CanExecute = Generator != null && !string.IsNullOrEmpty(Generator.Results);
+            e.CanExecute = Generator != null && !string.IsNullOrEmpty(Generator.Results) && !Generator.Results.Equals(EMPTY_HTML, StringComparison.CurrentCultureIgnoreCase); 
         }
         
         private void Cancel(object sender, ExecutedRoutedEventArgs e)
@@ -114,7 +118,7 @@ namespace TheRandomizer.WinApp.Controls
 
         private void Clear(object sender, ExecutedRoutedEventArgs e)
         {
-            Generator.Results = "<Html></Html>";
+            Generator.Results = EMPTY_HTML;
         }
 
         private void Copy(object sender, ExecutedRoutedEventArgs e)
@@ -129,6 +133,16 @@ namespace TheRandomizer.WinApp.Controls
             {
                 File.WriteAllText(fileName, webBrowser.Text);
             }
+        }
+
+        private void SelectAll(object sender, ExecutedRoutedEventArgs e)
+        {
+            
+        }
+
+        private void ClearSelection(object sender, ExecutedRoutedEventArgs e)
+        {
+            webBrowser?.ClearSelection();
         }
         #endregion
     }

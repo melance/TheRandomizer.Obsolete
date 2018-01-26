@@ -34,6 +34,8 @@
         <CommandBinding Command="Copy" Executed="Copy" CanExecute="HasResults" />
         <CommandBinding Command="Delete" Executed="Clear" CanExecute="HasResults" />
         <CommandBinding Command="Save" Executed="Save" CanExecute="HasResults" />
+        <CommandBinding Command="SelectAll" Executed="SelectAll" CanExecute="HasResults" />
+        <CommandBinding Command="{StaticResource SelectNone}" Executed="ClearSelection" CanExecute="HasResults" />
         <CommandBinding Command="{StaticResource Cancel}" Executed="Cancel" CanExecute="HasGenerator" />
         <CommandBinding Command="{StaticResource Generate}" Executed="Generate" /> 
     </UserControl.CommandBindings>
@@ -188,7 +190,7 @@
         </DockPanel>
         <GridSplitter Grid.Column="1" Width="3" ResizeBehavior="PreviousAndNext" />
         <DockPanel Grid.Column="2" LastChildFill="True" HorizontalAlignment="Stretch">
-            <DockPanel x:Name="docResultActions" LastChildFill="False" DockPanel.Dock="Bottom">
+            <DockPanel x:Name="docResultActions" LastChildFill="False" DockPanel.Dock="Bottom">                
                 <Button ToolTip="Save" Command="Save" DockPanel.Dock="Right" Padding="12" Margin="3" Style="{DynamicResource MetroCircleButtonStyle}">
                     <Rectangle Width="12" Height="12" Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
                         <Rectangle.OpacityMask>
@@ -207,6 +209,20 @@
                     <Rectangle Width="12" Height="12" Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
                         <Rectangle.OpacityMask>
                             <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_page_copy}" />
+                        </Rectangle.OpacityMask>
+                    </Rectangle>
+                </Button>
+                <Button ToolTip="Clear selection" Visibility="Collapsed" Command="{StaticResource SelectNone}" DockPanel.Dock="Right" Padding="12" Margin="3,3,0,3" Style="{DynamicResource MetroCircleButtonStyle}">
+                    <Rectangle Width="12" Height="12" Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
+                        <Rectangle.OpacityMask>
+                            <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_checkmark_uncrossed}" />
+                        </Rectangle.OpacityMask>
+                    </Rectangle>
+                </Button>
+                <Button ToolTip="Select all" Visibility="Collapsed" Command="SelectAll" DockPanel.Dock="Right" Padding="12" Margin="3,3,0,3" Style="{DynamicResource MetroCircleButtonStyle}">
+                    <Rectangle Width="12" Height="12" Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
+                        <Rectangle.OpacityMask>
+                            <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_checkmark}" />
                         </Rectangle.OpacityMask>
                     </Rectangle>
                 </Button>
