@@ -10,6 +10,7 @@
              xmlns:models="clr-namespace:TheRandomizer.WinApp.Models"
              xmlns:cmds="clr-namespace:TheRandomizer.WinApp.Commands"
              xmlns:util="clr-namespace:TheRandomizer.WinApp.Utility"
+             xmlns:hr="clr-namespace:TheArtOfDev.HtmlRenderer.WPF;assembly=HtmlRenderer.WPF"
              HorizontalAlignment="Stretch"
              VerticalAlignment="Stretch"
              HorizontalContentAlignment="Stretch"
@@ -32,12 +33,9 @@
     <UserControl.CommandBindings>
         <CommandBinding Command="Copy" Executed="Copy" CanExecute="HasResults" />
         <CommandBinding Command="Delete" Executed="Clear" CanExecute="HasResults" />
-        <CommandBinding Command="Print" Executed="Print" CanExecute="HasResults" />
         <CommandBinding Command="Save" Executed="Save" CanExecute="HasResults" />
-        <CommandBinding Command="SelectAll" Executed="SelectAll" CanExecute="HasResults" />
         <CommandBinding Command="{StaticResource Cancel}" Executed="Cancel" CanExecute="HasGenerator" />
         <CommandBinding Command="{StaticResource Generate}" Executed="Generate" /> 
-        <CommandBinding Command="{StaticResource SelectNone}" Executed="SelectNone" CanExecute="HasResults" />
     </UserControl.CommandBindings>
     <Grid x:Name="LayoutRoot">
         <Grid.ColumnDefinitions>
@@ -90,7 +88,7 @@
                             </DockPanel>
                             <DockPanel LastChildFill="True">
                                 <TextBlock Text="File: " FontWeight="Bold" />
-                                <TextBlock Text="{Binding Generator.FileName}" Height="auto" />
+                                <TextBlock Text="{Binding Generator.FileName}" Height="auto" ToolTip="{Binding Generator.FilePath}" />
                             </DockPanel>
                             <DockPanel LastChildFill="True">
                                 <TextBlock FontWeight="Bold"><Hyperlink Name="lnkEditTags" Command="{Binding Generator.EditTags}" ><Run Text="Tags: "></Run></Hyperlink></TextBlock>
@@ -205,44 +203,23 @@
                         </Rectangle.OpacityMask>
                     </Rectangle>
                 </Button>
-                <Button ToolTip="Copy" Command="Copy" DockPanel.Dock="Right" Padding="12" Margin="3,3,0,3" Style="{DynamicResource MetroCircleButtonStyle}">
+                <Button ToolTip="Copy html to clipboard" Command="Copy" DockPanel.Dock="Right" Padding="12" Margin="3,3,0,3" Style="{DynamicResource MetroCircleButtonStyle}">
                     <Rectangle Width="12" Height="12" Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
                         <Rectangle.OpacityMask>
                             <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_page_copy}" />
                         </Rectangle.OpacityMask>
                     </Rectangle>
                 </Button>
-                <Button ToolTip="Clear" Command="Delete" DockPanel.Dock="Right" Padding="12" Margin="3,3,0,3" Style="{DynamicResource MetroCircleButtonStyle}">
+                <Button ToolTip="Clear the results" Command="Delete" DockPanel.Dock="Right" Padding="12" Margin="3,3,0,3" Style="{DynamicResource MetroCircleButtonStyle}">
                     <Rectangle Width="12" Height="12" Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
                         <Rectangle.OpacityMask>
                             <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_clear}" />
                         </Rectangle.OpacityMask>
                     </Rectangle>
                 </Button>
-                <Button ToolTip="Select None" Command="{StaticResource SelectNone}" DockPanel.Dock="Right" Padding="12" Margin="3,3,0,3" Style="{DynamicResource MetroCircleButtonStyle}">
-                    <Rectangle Width="12" Height="12" Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
-                        <Rectangle.OpacityMask>
-                            <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_checkmark_uncrossed}" />
-                        </Rectangle.OpacityMask>
-                    </Rectangle>
-                </Button>
-                <Button ToolTip="Select All" Command="SelectAll" DockPanel.Dock="Right" Padding="12" Margin="3,3,0,3" Style="{DynamicResource MetroCircleButtonStyle}">
-                    <Rectangle Width="12" Height="12" Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
-                        <Rectangle.OpacityMask>
-                            <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_checkmark}" />
-                        </Rectangle.OpacityMask>
-                    </Rectangle>
-                </Button>
-                <Button ToolTip="Print" Command="Print" DockPanel.Dock="Right" Padding="12" Margin="3,3,0,3" Style="{DynamicResource MetroCircleButtonStyle}">
-                    <Rectangle Width="12" Height="12" Fill="{Binding RelativeSource={RelativeSource AncestorType=Button}, Path=Foreground}">
-                        <Rectangle.OpacityMask>
-                            <VisualBrush Stretch="Fill" Visual="{StaticResource appbar_printer}" />
-                        </Rectangle.OpacityMask>
-                    </Rectangle>
-                </Button>
             </DockPanel>
             <Border BorderBrush="Black" BorderThickness="1">
-                <WebBrowser x:Name="webBrowser" AllowDrop="False" util:BrowserBehavior.Html="{Binding Generator.Results}" />
+                <hr:HtmlPanel Name="webBrowser" Text="{Binding Generator.Results}" IsManipulationEnabled="False" />
             </Border>
         </DockPanel>
     </Grid>

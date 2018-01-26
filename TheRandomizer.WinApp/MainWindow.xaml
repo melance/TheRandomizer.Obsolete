@@ -129,7 +129,7 @@
             <ColumnDefinition Width="3" />
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>        
-        <Popup PlacementTarget="{Binding ElementName=winMain}" Placement="Relative" IsOpen="{Binding LoadingGenerators}" Width="{Binding ActualWidth, ElementName=winMain}" HorizontalOffset="{Binding ActualWidth, RelativeSource={RelativeSource Self}, Converter={StaticResource math}, ConverterParameter=(x/2)*-1}" VerticalOffset="{Binding ActualHeight, RelativeSource={RelativeSource Self}, Converter={StaticResource math}, ConverterParameter=(x/2)}">
+        <Popup PlacementTarget="{Binding ElementName=winMain}" Placement="Center" IsOpen="{Binding LoadingGenerators}" Width="{Binding ActualWidth, ElementName=winMain}" >
             <Border Background="{DynamicResource AccentColorBrush}" BorderThickness="4" BorderBrush="{DynamicResource AccentColorBrush}">
                 <DockPanel>
                     <Label Foreground="{DynamicResource IdealForegroundColorBrush}" DockPanel.Dock="Top" Margin="12" FontSize="24" FontWeight="Bold" HorizontalAlignment="Center">
