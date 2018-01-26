@@ -100,11 +100,12 @@ namespace TheRandomizer.WinApp.Models
             }
 
             // Loop through all generator files in the directory and update those that have been changed
-            var files = new List<string>(Directory.GetFiles(GeneratorPath, GENERATOR_FILE_FILTER, SearchOption.AllDirectories));
+            var searchOption = Properties.Settings.Default.IncludeGeneratorSubFolders ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
+            var files = new List<string>(Directory.GetFiles(GeneratorPath, GENERATOR_FILE_FILTER, searchOption));
             var count = 0;
             var max = files.Count();
 
-            files.AddRange(Directory.GetFiles(GeneratorPath, GRAMMAR_FILE_FILTER, SearchOption.AllDirectories));
+            files.AddRange(Directory.GetFiles(GeneratorPath, GRAMMAR_FILE_FILTER, searchOption));
             foreach (string filePath in files)
             {
                 count++;
