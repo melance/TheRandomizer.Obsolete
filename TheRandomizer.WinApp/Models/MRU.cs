@@ -13,9 +13,8 @@ namespace TheRandomizer.WinApp.Models
     {
         public static MRU LoadMRU()
         {
-            MRU value;
-            var xml = Properties.Settings.Default.EditorMRU;
-            if (!string.IsNullOrWhiteSpace(xml) && xml.TryDeserialize(out value))
+            var xml = Utility.Settings.EditorMRU;
+            if (!string.IsNullOrWhiteSpace(xml) && xml.TryDeserialize(out MRU value))
             {
                 return value;
             }
@@ -73,11 +72,10 @@ namespace TheRandomizer.WinApp.Models
 
         public void Save()
         {
-            string xml;
-            if (this.TrySerialize(out xml))
+            if (this.TrySerialize(out string xml))
             {
-                Properties.Settings.Default.EditorMRU = xml;
-                Properties.Settings.Default.Save();
+                Utility.Settings.EditorMRU = xml;
+                Utility.Settings.Save();
             }
         }
 

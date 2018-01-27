@@ -233,7 +233,7 @@ namespace TheRandomizer.WinApp.ViewModels
         #region Private Methods
         private async void GetReleases()
         {
-            if (Properties.Settings.Default.CheckUpdates)
+            if (Settings.CheckUpdates)
             {
                 var client = new Octokit.GitHubClient(new Octokit.ProductHeaderValue("TheRandomizer"));
                 var releases = await client.Repository.Release.GetAll("melance", "TheRandomizer");
@@ -244,7 +244,7 @@ namespace TheRandomizer.WinApp.ViewModels
                 {
                     foreach (var release in releases)
                     {
-                        if (!release.Prerelease || Properties.Settings.Default.IncludeBeta)
+                        if (!release.Prerelease || Settings.IncludeBeta)
                         {
                             var version = new Version(release.TagName);
                             if (version > CurrentVersion && (newReleaseVersion == null || version > newReleaseVersion))

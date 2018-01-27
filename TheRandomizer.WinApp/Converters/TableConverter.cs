@@ -18,9 +18,8 @@ namespace TheRandomizer.WinApp.Converters
         {
             // string to DataTable
             if (value == null) return new DataTable();
-            
-            var table = value as string;
-            if (table != null)
+
+            if (value is string table)
             {
                 return BaseTable.StringToTable(table);
             }
@@ -31,16 +30,14 @@ namespace TheRandomizer.WinApp.Converters
         {
             // DataTable to string
             if (value == null) return string.Empty;
-            var table = value as DataTable;
-            if (table != null)
+            if (value is DataTable table)
             {
                 try
                 {
                     return BaseTable.TableToString(table);
                 }
-                catch (Exception ex)
+                catch
                 {
-                    Utility.ExceptionHandling.LogException(ex);
                 }
             }
             throw new ArgumentException("value must be a DataTable");

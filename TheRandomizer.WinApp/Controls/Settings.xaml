@@ -46,9 +46,9 @@
             <RowDefinition Height="*" />
         </Grid.RowDefinitions>
         <Label Height="26" Content="Theme" Grid.Row="0" Grid.Column="0" Margin="3" />
-        <ComboBox SelectedValue="{util:SettingBinding Theme}"  SelectedValuePath="Value" Height="28" Grid.Row="0" Grid.Column="1" Margin="3" ItemsSource="{Binding Themes}" ItemTemplate="{StaticResource ColorCombo}" />
+        <ComboBox SelectedValue="{Binding Path=(util:Settings.Theme), Mode=TwoWay}"  SelectedValuePath="Value" Height="28" Grid.Row="0" Grid.Column="1" Margin="3" ItemsSource="{Binding Themes}" ItemTemplate="{StaticResource ColorCombo}" />
         <Label Height="26" Content="Accent" Grid.Row="1" Grid.Column="0" Margin="3" />
-        <ComboBox SelectedValue="{util:SettingBinding Accent}" SelectedValuePath="Value" Height="28" Grid.Row="1" Grid.Column="1" Margin="3" ItemsSource="{Binding Accents}" ItemTemplate="{StaticResource ColorCombo}" />
+        <ComboBox SelectedValue="{Binding Path=(util:Settings.Accent)}" SelectedValuePath="Value" Height="28" Grid.Row="1" Grid.Column="1" Margin="3" ItemsSource="{Binding Accents}" ItemTemplate="{StaticResource ColorCombo}" />
         <Label Height="26" Content="Generator Directory" Grid.Row="2" Grid.Column="0" Margin="3" />
         <DockPanel Grid.Row="2" Grid.Column="1">
             <Button Command="{Binding SelectFolder}" DockPanel.Dock="Right">
@@ -58,16 +58,16 @@
                     </Rectangle.OpacityMask>
                 </Rectangle>
             </Button>
-            <TextBox Height="26" Text="{util:SettingBinding GeneratorDirectory}" ToolTip="{Binding RelativeSource={RelativeSource Self}, Path=Text}" Margin="3" />            
+            <TextBox Height="26" Text="{Binding Path=(util:Settings.GeneratorDirectory)}" ToolTip="{Binding RelativeSource={RelativeSource Self}, Path=Text}" Margin="3" />            
         </DockPanel>
         <Label Height="26" VerticalAlignment="Top" Content="Include Sub Folders" Grid.Row="3" Grid.Column="0" Margin="3" />
-        <metro:ToggleSwitch OnLabel="Yes" OffLabel="No" Margin="3,0,0,0" HorizontalContentAlignment="Right" HorizontalAlignment="Left" IsChecked="{util:SettingBinding IncludeGeneratorSubFolders}" ToolTip="Include sub folders when retrieving generators" Grid.Row="3" Grid.Column="1" />
+        <metro:ToggleSwitch OnLabel="Yes" OffLabel="No" Margin="3,0,0,0" HorizontalContentAlignment="Right" HorizontalAlignment="Left" IsChecked="{Binding Path=(util:Settings.IncludeGeneratorSubFolders)}" ToolTip="Include sub folders when retrieving generators" Grid.Row="3" Grid.Column="1" />
         <Label Height="26" VerticalAlignment="Top" Content="Show Splash Screen" Grid.Row="4" Grid.Column="0" Margin="3" />
-        <metro:ToggleSwitch OnLabel="Yes" OffLabel="No" Margin="3,0,0,0" HorizontalContentAlignment="Right" HorizontalAlignment="Left" IsChecked="{util:SettingBinding ShowSplash}" Grid.Row="4" Grid.Column="1" />
+        <metro:ToggleSwitch OnLabel="Yes" OffLabel="No" Margin="3,0,0,0" HorizontalContentAlignment="Right" HorizontalAlignment="Left" IsChecked="{Binding Path=(util:Settings.ShowSplash)}" Grid.Row="4" Grid.Column="1" />
         <Label Height="26" VerticalAlignment="Top" Content="Check for Updates" Grid.Row="5" Grid.Column="0" Margin="3" />
-        <metro:ToggleSwitch OnLabel="Yes" OffLabel="No" Margin="3,0,0,0" HorizontalContentAlignment="Right" HorizontalAlignment="Left" IsChecked="{util:SettingBinding CheckUpdates}" Grid.Row="5" Grid.Column="1" />
-        <Label Height="26" VerticalAlignment="Top" Content="Include Beta Releases" Grid.Row="6" Grid.Column="0" Margin="3" IsEnabled="{util:SettingBinding CheckUpdates}" />
-        <metro:ToggleSwitch OnLabel="Yes" OffLabel="No" Margin="3,0,0,0" HorizontalContentAlignment="Right" HorizontalAlignment="Left" IsEnabled="{util:SettingBinding CheckUpdates}" IsChecked="{util:SettingBinding IncludeBeta}" Grid.Row="6" Grid.Column="1" />
+        <metro:ToggleSwitch OnLabel="Yes" OffLabel="No" Margin="3,0,0,0" HorizontalContentAlignment="Right" HorizontalAlignment="Left" IsChecked="{Binding Path=(util:Settings.CheckUpdates)}" Grid.Row="5" Grid.Column="1" />
+        <Label Height="26" VerticalAlignment="Top" Content="Include Beta Releases" Grid.Row="6" Grid.Column="0" Margin="3" IsEnabled="{Binding Path=(util:Settings.CheckUpdates)}" />
+        <metro:ToggleSwitch OnLabel="Yes" OffLabel="No" Margin="3,0,0,0" HorizontalContentAlignment="Right" HorizontalAlignment="Left" IsEnabled="{Binding Path=(util:Settings.CheckUpdates)}" IsChecked="{Binding Path=(util:Settings.IncludeBeta)}" Grid.Row="6" Grid.Column="1" />
         
         <DockPanel LastChildFill="False" Grid.Row="7" Grid.Column="0" Grid.ColumnSpan="2">
             <Button DockPanel.Dock="Right" Width="80" Command="{Binding SaveSettings}" Margin="3" Content="_Save" Grid.Row="4" Grid.Column="1" VerticalAlignment="Bottom" HorizontalAlignment="Right"  />
