@@ -48,10 +48,12 @@ namespace TheRandomizer.WinApp.Utility
         {
             if (CommonFileDialog.IsPlatformSupported)
             {
-                var dialog = new CommonOpenFileDialog();
-                dialog.IsFolderPicker = true;
-                dialog.EnsurePathExists = true;
-                dialog.DefaultDirectory = defaultDirectory;
+                var dialog = new CommonOpenFileDialog
+                {
+                    IsFolderPicker = true,
+                    EnsurePathExists = true,
+                    DefaultDirectory = defaultDirectory
+                };
                 if (dialog.ShowDialog() == CommonFileDialogResult.Ok)
                 {
                     return dialog.FileName;
@@ -59,8 +61,10 @@ namespace TheRandomizer.WinApp.Utility
             }
             else
             {
-                var dialog = new FolderBrowserDialog();
-                dialog.SelectedPath = defaultDirectory;
+                var dialog = new FolderBrowserDialog
+                {
+                    SelectedPath = defaultDirectory
+                };
                 if (dialog.ShowDialog() == DialogResult.OK)
                 {
                     return dialog.SelectedPath;
@@ -78,11 +82,13 @@ namespace TheRandomizer.WinApp.Utility
         {
             if (CommonFileDialog.IsPlatformSupported)
             {
-                var dialog = new CommonOpenFileDialog();
-                dialog.DefaultDirectory = defaultPath;
-                dialog.EnsureFileExists = true;
-                dialog.DefaultExtension = "xml";
-                dialog.Multiselect = multiSelect;
+                var dialog = new CommonOpenFileDialog
+                {
+                    DefaultDirectory = defaultPath,
+                    EnsureFileExists = true,
+                    DefaultExtension = "xml",
+                    Multiselect = multiSelect
+                };
                 dialog.Filters.Add(new CommonFileDialogFilter("Grammar Files", "*.xml"));
                 dialog.Filters.Add(new CommonFileDialogFilter("All Files", "*.*"));
                 if (dialog.ShowDialog() == CommonFileDialogResult.Ok)
@@ -92,9 +98,11 @@ namespace TheRandomizer.WinApp.Utility
             }
             else
             {
-                var dialog = new OpenFileDialog();
-                dialog.FileName = defaultPath;
-                dialog.Filter = "Grammar Files (*.rnd.xml)|*.rnd.xml|All Files (*.*)|*.*";
+                var dialog = new OpenFileDialog
+                {
+                    FileName = defaultPath,
+                    Filter = "Grammar Files (*.rnd.xml)|*.rnd.xml|All Files (*.*)|*.*"
+                };
                 if (dialog.ShowDialog() == DialogResult.OK)
                 {
                     return new List<string>(dialog.FileNames);
@@ -107,10 +115,12 @@ namespace TheRandomizer.WinApp.Utility
         {
             if (CommonFileDialog.IsPlatformSupported)
             {
-                var dialog = new CommonOpenFileDialog();
-                dialog.DefaultDirectory = defaultPath;
-                dialog.EnsureFileExists = true;
-                dialog.DefaultExtension = "rgen";
+                var dialog = new CommonOpenFileDialog
+                {
+                    DefaultDirectory = defaultPath,
+                    EnsureFileExists = true,
+                    DefaultExtension = "rgen"
+                };
                 dialog.Filters.Add(new CommonFileDialogFilter("Generator Files", "*.rgen"));
                 dialog.Filters.Add(new CommonFileDialogFilter("All Files", "*.*"));
                 if (dialog.ShowDialog() == CommonFileDialogResult.Ok)
@@ -120,9 +130,11 @@ namespace TheRandomizer.WinApp.Utility
             }
             else
             {
-                var dialog = new OpenFileDialog();
-                dialog.FileName = defaultPath;
-                dialog.Filter = "Generator Files (*.regen)|*.rgen|All Files (*.*)|*.*";
+                var dialog = new OpenFileDialog
+                {
+                    FileName = defaultPath,
+                    Filter = "Generator Files (*.regen)|*.rgen|All Files (*.*)|*.*"
+                };
                 if (dialog.ShowDialog() == DialogResult.OK)
                 {
                     return dialog.FileName;
@@ -135,11 +147,13 @@ namespace TheRandomizer.WinApp.Utility
         {
             if (CommonFileDialog.IsPlatformSupported)
             {
-                var dialog = new CommonSaveFileDialog();
-                dialog.DefaultDirectory = defaultPath;
-                dialog.EnsureFileExists = false;
-                dialog.DefaultExtension = "rgen";
-                dialog.CreatePrompt = true;
+                var dialog = new CommonSaveFileDialog
+                {
+                    DefaultDirectory = defaultPath,
+                    EnsureFileExists = false,
+                    DefaultExtension = "rgen",
+                    CreatePrompt = true
+                };
                 dialog.Filters.Add(new CommonFileDialogFilter("Generator Files", "*.rgen"));
                 dialog.Filters.Add(new CommonFileDialogFilter("All Files", "*.*"));
                 if (dialog.ShowDialog() == CommonFileDialogResult.Ok)
@@ -149,12 +163,14 @@ namespace TheRandomizer.WinApp.Utility
             }
             else
             {
-                var dialog = new SaveFileDialog();
-                dialog.FileName = defaultPath;
-                dialog.Filter = "Generator Files (*.rgen)|*.rnd.xml|All Files (*.*)|*.*";
-                dialog.AddExtension = true;
-                dialog.CreatePrompt = true;
-                dialog.DefaultExt = "rgen";
+                var dialog = new SaveFileDialog
+                {
+                    FileName = defaultPath,
+                    Filter = "Generator Files (*.rgen)|*.rnd.xml|All Files (*.*)|*.*",
+                    AddExtension = true,
+                    CreatePrompt = true,
+                    DefaultExt = "rgen"
+                };
                 if (dialog.ShowDialog() == DialogResult.OK)
                 {
                     return dialog.FileName;
@@ -167,10 +183,12 @@ namespace TheRandomizer.WinApp.Utility
                                        bool ensureExists,
                                        string filter)
         {
-            var dialog = new OpenFileDialog();
-            dialog.CheckFileExists = ensureExists;
-            dialog.Filter = filter;
-            dialog.FilterIndex = 0;
+            var dialog = new OpenFileDialog
+            {
+                CheckFileExists = ensureExists,
+                Filter = filter,
+                FilterIndex = 0
+            };
             if (dialog.ShowDialog() == DialogResult.OK)
             {
                 return dialog.FileName;
