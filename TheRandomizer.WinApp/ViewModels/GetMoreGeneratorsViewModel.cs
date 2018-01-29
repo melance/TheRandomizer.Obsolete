@@ -28,7 +28,7 @@ namespace TheRandomizer.WinApp.ViewModels
         }
 
         private GitHubClient Client { get; } = new GitHubClient(new ProductHeaderValue("TheRandomizer")); 
-        private string GeneratorPath { get { return Environment.ExpandEnvironmentVariables(Properties.Settings.Default.GeneratorDirectory); } }
+        private string GeneratorPath { get { return Environment.ExpandEnvironmentVariables(Utility.Settings.GeneratorDirectory); } }
 
         public Cursor Cursor { get { return GetProperty<Cursor>(); } set { SetProperty(value); } }
         public BaseGenerator Selected { get { return GetProperty<BaseGenerator>(); } set { SetProperty(value); } }

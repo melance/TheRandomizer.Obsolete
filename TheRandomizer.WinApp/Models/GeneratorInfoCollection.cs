@@ -35,7 +35,7 @@ namespace TheRandomizer.WinApp.Models
         {
             get
             {
-                var value = Environment.ExpandEnvironmentVariables(Properties.Settings.Default.GeneratorDirectory);
+                var value = Environment.ExpandEnvironmentVariables(Utility.Settings.GeneratorDirectory);
                 Directory.CreateDirectory(value);
                 return value;
             }
@@ -83,9 +83,8 @@ namespace TheRandomizer.WinApp.Models
                         values = (GeneratorInfoCollection)serializer.Deserialize(reader);
                     }
                 }
-                catch (Exception ex)
+                catch
                 {
-                    Utility.ExceptionHandling.LogException(ex);
                 }
             }
 
@@ -160,9 +159,8 @@ namespace TheRandomizer.WinApp.Models
                     File.WriteAllText(GeneratorListPath, writer.ToString());
                 }
             }
-            catch (Exception ex)
+            catch
             {
-                Utility.ExceptionHandling.LogException(ex);
             }
         }
         #endregion 

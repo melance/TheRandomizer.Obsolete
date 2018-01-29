@@ -70,7 +70,7 @@ namespace TheRandomizer.WinApp.Controls
             {
                 return new DelegateCommand(() =>
                 {
-                    Properties.Settings.Default.Save();
+                    Utility.Settings.Save();
                     var main = (Application.Current.MainWindow as MainWindow);
                     if (main != null)
                     {
@@ -86,7 +86,7 @@ namespace TheRandomizer.WinApp.Controls
             {
                 return new DelegateCommand(() =>
                 {
-                    Properties.Settings.Default.Reload();
+                    Utility.Settings.Reload();
                     var main = (Application.Current.MainWindow as MainWindow);
                     if (main != null)
                     {
@@ -141,12 +141,12 @@ namespace TheRandomizer.WinApp.Controls
             var main = Application.Current.MainWindow as MetroWindow;
             var result = await main?.ShowMessageAsync("Confirm", "Are you sure you want to reset all settings?", MessageDialogStyle.AffirmativeAndNegative);
             if (result == MessageDialogResult.Affirmative)
-                Properties.Settings.Default.Reset();
+                Utility.Settings.Reset();
         }
 
         private void SelectFolderAction()
         {             
-            Properties.Settings.Default.GeneratorDirectory = Utility.Dialogs.OpenFolderDialog(Models.GeneratorInfoCollection.GeneratorPath);
+            Utility.Settings.GeneratorDirectory = Utility.Dialogs.OpenFolderDialog(Models.GeneratorInfoCollection.GeneratorPath);
         }        
     }
 }

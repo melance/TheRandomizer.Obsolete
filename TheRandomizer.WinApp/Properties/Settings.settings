@@ -1,33 +1,5 @@
 ﻿<?xml version='1.0' encoding='utf-8'?>
-<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)" GeneratedClassNamespace="TheRandomizer.WinApp.Properties" GeneratedClassName="Settings">
+<SettingsFile xmlns="http://schemas.microsoft.com/VisualStudio/2004/01/settings" CurrentProfile="(Default)">
   <Profiles />
-  <Settings>
-    <Setting Name="DefaultDetailWidth" Type="System.Int32" Scope="User">
-      <Value Profile="(Default)">0</Value>
-    </Setting>
-    <Setting Name="GeneratorDirectory" Type="System.String" Scope="User">
-      <Value Profile="(Default)">%appdata%\TheRandomizer\</Value>
-    </Setting>
-    <Setting Name="Theme" Type="System.String" Scope="User">
-      <Value Profile="(Default)">BaseLight</Value>
-    </Setting>
-    <Setting Name="Accent" Type="System.String" Scope="User">
-      <Value Profile="(Default)">Blue</Value>
-    </Setting>
-    <Setting Name="ShowSplash" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">True</Value>
-    </Setting>
-    <Setting Name="CheckUpdates" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">True</Value>
-    </Setting>
-    <Setting Name="IncludeBeta" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
-    </Setting>
-    <Setting Name="EditorMRU" Type="System.String" Scope="User">
-      <Value Profile="(Default)" />
-    </Setting>
-    <Setting Name="IncludeGeneratorSubFolders" Type="System.Boolean" Scope="User">
-      <Value Profile="(Default)">False</Value>
-    </Setting>
-  </Settings>
+  <Settings />
 </SettingsFile>

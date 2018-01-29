@@ -31,40 +31,7 @@ namespace TheRandomizer.WinApp
             Editor,
             Test
         }
-        
-        private static void SetLoggingLevel(string value)
-        {
-            // d = debug, e = error, i = info, w = warning
-            
-            if (!string.IsNullOrWhiteSpace(value))
-            {
-                var levels = value.ToLower().Split(',');
-                foreach (var level in levels)
-                {
-                    switch (level)
-                    {
-                        case "d":
-                        case "debug":
-                            Utility.ExceptionHandling.EnableDebugLogging = true;
-                            break;
-                        case "e":
-                        case "error":
-                            Utility.ExceptionHandling.EnableErrorLogging = true;
-                            break;
-                        case "i":
-                        case "info":
-                            Utility.ExceptionHandling.EnableInfoLogging = true;
-                            break;
-                        case "w":
-                        case "warning":
-                            Utility.ExceptionHandling.EnableWarningLogging = true;
-                            break;
-                    }
-                }
-            }
-            
-        }
-        
+                
         private static Mode SetMode(string value)
         {
             var result = Mode.Standard;
@@ -86,8 +53,7 @@ namespace TheRandomizer.WinApp
 
         private static void GetMaxLength(string value)
         {
-            int parsed;
-            if (int.TryParse(value, out parsed))
+            if (int.TryParse(value, out int parsed))
             {
                 _maxLength = parsed;
             }
@@ -140,8 +106,8 @@ namespace TheRandomizer.WinApp
 
         public static void ChangeAppStyle()
         {
-            var theme = ThemeManager.GetAppTheme(WinApp.Properties.Settings.Default.Theme);
-            var accent = ThemeManager.GetAccent(WinApp.Properties.Settings.Default.Accent);
+            var theme = ThemeManager.GetAppTheme(Utility.Settings.Theme);
+            var accent = ThemeManager.GetAccent(Utility.Settings.Accent);
             if (theme != null && accent != null)
                 ThemeManager.ChangeAppStyle(Current, accent, theme);
         }
@@ -151,6 +117,18 @@ namespace TheRandomizer.WinApp
             var help = false;
             var generatorPath = string.Empty;
             var selectedMode = Mode.Standard;
+            var settingsPath = "settings.json";
+
+            Boolean.TryParse(ConfigurationManager.AppSettings["PortableMode"], out bool portableMode);
+
+            if (!portableMode)
+            {
+                settingsPath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData),
+                                            Path.GetFileNameWithoutExtension(AppDomain.CurrentDomain.FriendlyName),
+                                            settingsPath);
+            }
+
+            Utility.Settings.Load(settingsPath);
 
             var p = new OptionSet() {
                             { "m=|mode=", "Set the application mode, 'Standard' or 'Editor'", v => selectedMode = SetMode(v) },
@@ -158,16 +136,13 @@ namespace TheRandomizer.WinApp
                             { "r=|repeat=", "If used in conjunction with 'generate', provides the number of times to run the generator.", GetRepeat },
                             { "p=|parameter=", "If used in conjunction with 'generate', adds a parameter. The parameter takes the form Name=Value.", GetParameter },
                             { "g=|generate=", "Runs the provided generator and opens the results in your default web browser.", v => generatorPath = v },
-                            { "?|help", "Shows this help.", v => help = true },
-                            { "l=|logging=", "Sets the logging level. Values are either 'true' or 'false'.", v => SetLoggingLevel(v) } };
+                            { "?|help", "Shows this help.", v => help = true }};
 
             p.Parse(e.Args);
 
             if (!string.IsNullOrWhiteSpace(generatorPath)) RunGenerator(generatorPath);
             if (help) PrintHelp(p);
-
-            Utility.ExceptionHandling.LogInfo("Starting Application");
-
+            
             if (_showGUI)
             {
                 LoadCustomAccents();
@@ -186,7 +161,7 @@ namespace TheRandomizer.WinApp
                         MainWindow = new MainWindow();
                         break;
                 }
-                if (WinApp.Properties.Settings.Default.ShowSplash)
+                if (Utility.Settings.ShowSplash)
                 {
                     var timer = new Stopwatch();
                     var splash = new Views.SplashScreen();
