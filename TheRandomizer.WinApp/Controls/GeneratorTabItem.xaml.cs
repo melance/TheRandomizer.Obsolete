@@ -35,6 +35,10 @@ namespace TheRandomizer.WinApp.Controls
         }
         #endregion
 
+        #region Constants
+        const string EMPTY_HTML = "<html></html>";
+        #endregion
+
         #region Dependency Properties
         public static DependencyProperty GeneratorProperty = DependencyProperty.Register("Generator",
                                                                                          typeof(GeneratorWrapper),
@@ -43,14 +47,6 @@ namespace TheRandomizer.WinApp.Controls
         #endregion
 
         #region Properties
-        public mshtml.IHTMLDocument2 Document
-        {
-            get
-            {
-                return webBrowser?.Document as mshtml.IHTMLDocument2;
-            }
-        }
-
         internal GeneratorWrapper Generator
         {
             get
@@ -89,25 +85,14 @@ namespace TheRandomizer.WinApp.Controls
 
         private void HasResults(object sender, CanExecuteRoutedEventArgs e)
         {
-            e.CanExecute = Generator != null && !string.IsNullOrEmpty(Generator.Results);
+            e.CanExecute = Generator != null && !string.IsNullOrEmpty(Generator.Results) && !Generator.Results.Equals(EMPTY_HTML, StringComparison.CurrentCultureIgnoreCase); 
         }
         
         private void Cancel(object sender, ExecutedRoutedEventArgs e)
         {
             Generator?.Cancel();
-        }
-        
-        private void Clear(object sender, ExecutedRoutedEventArgs e)
-        {
-            Generator.Results = "<Html></Html>";
-        }
+        }        
 
-        private void Copy(object sender, ExecutedRoutedEventArgs e)
-        {
-            Document?.execCommand("SelectAll");
-            Document?.execCommand("Copy");
-        }
-        
         private void Generate(object sender, ExecutedRoutedEventArgs e)
         {
             try
@@ -131,24 +116,33 @@ namespace TheRandomizer.WinApp.Controls
             return message.ToString();
         }
 
-        private void Print(object sender, ExecutedRoutedEventArgs e)
+        private void Clear(object sender, ExecutedRoutedEventArgs e)
         {
-            Document?.execCommand("Print", true, null);
-        }
-        
-        private void Save(object sender, ExecutedRoutedEventArgs e)
-        {
-            Document?.execCommand("SaveAs", true);
-        }
-        
-        private void SelectAll(object sender, ExecutedRoutedEventArgs e)
-        {
-            Document?.execCommand("SelectAll");
+            Generator.Results = EMPTY_HTML;
         }
 
-        private void SelectNone(object sender, ExecutedRoutedEventArgs e)
+        private void Copy(object sender, ExecutedRoutedEventArgs e)
         {
-            Document?.execCommand("Unselect");
+            Clipboard.SetText(webBrowser.Text);
+        }
+
+        private void Save(object sender, ExecutedRoutedEventArgs e)
+        {
+            var fileName = Dialogs.SaveHtml();
+            if (!string.IsNullOrWhiteSpace(fileName))
+            {
+                File.WriteAllText(fileName, webBrowser.Text);
+            }
+        }
+
+        private void SelectAll(object sender, ExecutedRoutedEventArgs e)
+        {
+            
+        }
+
+        private void ClearSelection(object sender, ExecutedRoutedEventArgs e)
+        {
+            webBrowser?.ClearSelection();
         }
         #endregion
     }

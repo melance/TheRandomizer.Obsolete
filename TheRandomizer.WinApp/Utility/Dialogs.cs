@@ -166,7 +166,7 @@ namespace TheRandomizer.WinApp.Utility
                 var dialog = new SaveFileDialog
                 {
                     FileName = defaultPath,
-                    Filter = "Generator Files (*.rgen)|*.rnd.xml|All Files (*.*)|*.*",
+                    Filter = "Generator Files (*.rgen)|*.rgen|All Files (*.*)|*.*",
                     AddExtension = true,
                     CreatePrompt = true,
                     DefaultExt = "rgen"
@@ -196,6 +196,33 @@ namespace TheRandomizer.WinApp.Utility
             return defaultPath;
         }
 
-       
+       public static string SaveHtml()
+       {
+            if (CommonFileDialog.IsPlatformSupported)
+            {
+                var dialog = new CommonOpenFileDialog
+                {
+                    DefaultExtension = "html"
+                };
+                dialog.Filters.Add(new CommonFileDialogFilter("Webpage", "*.html"));
+                dialog.Filters.Add(new CommonFileDialogFilter("All Files", "*.*"));
+                if (dialog.ShowDialog() == CommonFileDialogResult.Ok)
+                {
+                    return dialog.FileName;
+                }
+            }
+            else
+            {
+                var dialog = new OpenFileDialog
+                {
+                    Filter = "Webpage (*.html)|*.html|All Files (*.*)|*.*"
+                };
+                if (dialog.ShowDialog() == DialogResult.OK)
+                {
+                    return dialog.FileName;
+                }
+            }
+            return string.Empty;
+       }
     }
 }
