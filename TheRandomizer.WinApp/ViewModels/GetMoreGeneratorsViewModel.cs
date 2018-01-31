@@ -93,15 +93,7 @@ namespace TheRandomizer.WinApp.ViewModels
                                 foreach (var dependency in GetDependencies(Selected))
                                 {
                                     var local = Path.Combine(GeneratorPath, dependency);
-                                    //var found = Generators.FirstOrDefault(rc => rc.Name.Equals(dependency, StringComparison.InvariantCultureIgnoreCase));
-                                    //if (found != null)
-                                    //{
-                                    //    var local = Path.Combine(GeneratorPath, found.Name);
-                                    //    if (!File.Exists(local))
-                                    //    {
-                                    //        web.DownloadFile(found.DownloadUrl, local);
-                                    //    }[]
-                                    //}
+                                    Directory.CreateDirectory(GeneratorPath);
                                     web.DownloadFile(GetDependencyDownloadUrl(SelectedRepository, dependency), local);
                                 }
                             }

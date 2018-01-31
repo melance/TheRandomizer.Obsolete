@@ -15,6 +15,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TheRandomizer.WinApp", "The
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
 		Debug|x64 = Debug|x64
 		Debug|x86 = Debug|x86
 		Portable|Any CPU = Portable|Any CPU
@@ -30,7 +31,9 @@ Global
 		{EBFB306F-121D-4C80-84C3-F7C334BA6C91}.Debug|x64.ActiveCfg = Debug|x64
 		{EBFB306F-121D-4C80-84C3-F7C334BA6C91}.Debug|x64.Build.0 = Debug|x64
 		{EBFB306F-121D-4C80-84C3-F7C334BA6C91}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{EBFB306F-121D-4C80-84C3-F7C334BA6C91}.Debug|x86.Build.0 = Debug|Any CPU
 		{EBFB306F-121D-4C80-84C3-F7C334BA6C91}.Portable|Any CPU.ActiveCfg = Portable|Any CPU
+		{EBFB306F-121D-4C80-84C3-F7C334BA6C91}.Portable|Any CPU.Build.0 = Portable|Any CPU
 		{EBFB306F-121D-4C80-84C3-F7C334BA6C91}.Portable|x64.ActiveCfg = Portable|x64
 		{EBFB306F-121D-4C80-84C3-F7C334BA6C91}.Portable|x86.ActiveCfg = Portable|Any CPU
 		{EBFB306F-121D-4C80-84C3-F7C334BA6C91}.Portable|x86.Build.0 = Portable|Any CPU
@@ -43,7 +46,9 @@ Global
 		{DCEFF6E4-A559-4006-B5BF-80D84CC67D05}.Debug|x64.ActiveCfg = Debug|x64
 		{DCEFF6E4-A559-4006-B5BF-80D84CC67D05}.Debug|x64.Build.0 = Debug|x64
 		{DCEFF6E4-A559-4006-B5BF-80D84CC67D05}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{DCEFF6E4-A559-4006-B5BF-80D84CC67D05}.Debug|x86.Build.0 = Debug|Any CPU
 		{DCEFF6E4-A559-4006-B5BF-80D84CC67D05}.Portable|Any CPU.ActiveCfg = Portable|Any CPU
+		{DCEFF6E4-A559-4006-B5BF-80D84CC67D05}.Portable|Any CPU.Build.0 = Portable|Any CPU
 		{DCEFF6E4-A559-4006-B5BF-80D84CC67D05}.Portable|x64.ActiveCfg = Portable|x64
 		{DCEFF6E4-A559-4006-B5BF-80D84CC67D05}.Portable|x86.ActiveCfg = Portable|Any CPU
 		{DCEFF6E4-A559-4006-B5BF-80D84CC67D05}.Portable|x86.Build.0 = Portable|Any CPU
@@ -56,7 +61,9 @@ Global
 		{C5B02E8B-61BD-4C02-B43B-080519A225C5}.Debug|x64.ActiveCfg = Debug|x64
 		{C5B02E8B-61BD-4C02-B43B-080519A225C5}.Debug|x64.Build.0 = Debug|x64
 		{C5B02E8B-61BD-4C02-B43B-080519A225C5}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{C5B02E8B-61BD-4C02-B43B-080519A225C5}.Debug|x86.Build.0 = Debug|Any CPU
 		{C5B02E8B-61BD-4C02-B43B-080519A225C5}.Portable|Any CPU.ActiveCfg = Portable|Any CPU
+		{C5B02E8B-61BD-4C02-B43B-080519A225C5}.Portable|Any CPU.Build.0 = Portable|Any CPU
 		{C5B02E8B-61BD-4C02-B43B-080519A225C5}.Portable|x64.ActiveCfg = Portable|x64
 		{C5B02E8B-61BD-4C02-B43B-080519A225C5}.Portable|x86.ActiveCfg = Portable|Any CPU
 		{C5B02E8B-61BD-4C02-B43B-080519A225C5}.Portable|x86.Build.0 = Portable|Any CPU
